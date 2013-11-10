@@ -15,7 +15,7 @@ OBJ=window.o engine.o
 $(PRG): $(OBJ) 
 	$(CC) $(OBJ) $(LIBS) -o $@ 
 
-window.o: window.h engine.o
+window.o: window.h window_impl.h engine.o
 
 engine.o: engine.h
 
