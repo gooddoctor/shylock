@@ -4,7 +4,6 @@
 #include <wx/wx.h>
 #include <iostream>
 #include <vector>
-#include <boost/any.hpp>
 
 namespace engine {
   template <typename T>
@@ -17,15 +16,7 @@ namespace engine {
     using wxString::wxString;
   };
 
-  class Any : public boost::any {
-  public:
-    using boost::any::any;
-    template <typename T>
-    T to() {
-      return boost::any_cast<T>(*this);
-    }
-  };
-    
+  
 
   std::ostream& operator<< (std::ostream& os, const String& obj);
 };

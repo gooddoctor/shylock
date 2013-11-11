@@ -1,33 +1,41 @@
 #include "window.h"
-#include "window_impl.h"
 
 
-window::Window* window::Window::attach_to(const wxWindow* other) {
-    create[type]({
-	    {_("parent"), other}
-	});
-    return this;
-}
-
-window::Window::Window(const engine::String& i, const engine::String& c,
-		       int p, int f, int b) : id_value(i), 
-					      class_value(c), 
-					      proportion_value(p), flag_value(f), 
-					      border_value(b) { type = _("window");}
+window::Window::Window(const engine::String& id_value, 
+		       const engine::String& category_value) : id(id_value), 
+							       category(category_value) {}
 
 
-bool window::init() {
-    create[_("window")] = [](std::map<engine::String, engine::Any> args) {
-	    return new wxWindow(args[_("parent")].to<wxWindow*>(), wxID_ANY);
-    };
-    return true;
+window::Window* window::Window::create(wxWindow* parent, wxSizer* sizer, 
+				       int proportion, int flag, 
+				       int border) {
+  win = new wxWindow(parent, wxID_ANY);
+  sizer->Add(win, proportion, flag, border);
+  return this;
 }
 
 
+window::Label::Label(const engine::String& id_value,
+		      const engine::String& category_value,
+		      const engine::String& text_value) : 
+  Label(id_value, category_value) {
+  text = text_value;
+}
+
+window::Label* window::Label::create(wxWindow* parent, wxSizer* sizer, 
+				     int proportion, int flag, 
+				     int border) {
+  win = new wxStaticText(parent, wxID_ANY, text);
+  sizer->Add(win, proportion, flag, border);
+  return this;
+}
 
 
 
 
+// Name:        minimal.cpp
+// Purpose:     Minimal wxWidgets sample
+// Author:      Julian Smart
 // Declare the application class
 class MyApp : public wxApp
 {
@@ -63,11 +71,18 @@ bool MyApp::OnInit()
 {
     // Create the main application window
     MyFrame *frame = new MyFrame(wxT("Minimal wxWidgets App"));
-    frame->SetSizer(new wxBoxSizer(wxHORIZONTAL));
+    wxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
+
+    window::Label* label = window::W<window::Label>(engine::String(_("unknown")),
+						    engine::String(_("Unknown")),
+						    engine::String(_("unknown soldier")));
+    label->create(frame, sizer);
+    
+    
 
     // Show it
     frame->Show(true);
-    
+
     // Start the event loop
     return true;
 }
@@ -95,9 +110,12 @@ void MyFrame::OnQuit(wxCommandEvent& event)
     Close();
 }
 
+
 MyFrame::MyFrame(const wxString& title)
        : wxFrame(NULL, wxID_ANY, title)
 {
+
+
     // Create a menu bar
     wxMenu *fileMenu = new wxMenu;
 
@@ -121,9 +139,4 @@ MyFrame::MyFrame(const wxString& title)
     CreateStatusBar(2);
     SetStatusText(wxT("Welcome to wxWidgets!"));
 }
-
-
-
-
-
 
