@@ -1,17 +1,21 @@
 #include "window.h"
 
 
+std::list<window::Window*> window::Window::all_of_them;
+
 window::Window::Window(const engine::String& id_value, 
-		       const engine::String& category_value) : id(id_value), 
-							       category(category_value) {}
+		       const engine::String& category_value) : 
+    id(id_value), category(category_value) {
+    all_of_them.push_back(this);
+}
 
-
-window::Window* window::Window::create(wxWindow* parent, wxSizer* sizer, 
+window::Window* window::Window::create(wxWindow* parent, wxSizer* sizer_value, 
 				       int proportion, int flag, 
 				       int border) {
-  win = new wxWindow(parent, wxID_ANY);
-  sizer->Add(win, proportion, flag, border);
-  return this;
+    assert(win);
+    sizer_value->Add(win, proportion, flag, border);
+    sizer = sizer_value;
+    return this;
 }
 
 
@@ -26,7 +30,7 @@ window::Label* window::Label::create(wxWindow* parent, wxSizer* sizer,
 				     int proportion, int flag, 
 				     int border) {
   win = new wxStaticText(parent, wxID_ANY, text);
-  sizer->Add(win, proportion, flag, border);
+  Window::create(parent, sizer, proportion, flag, border);
   return this;
 }
 
@@ -73,20 +77,16 @@ bool MyApp::OnInit()
 
     wxSizer* main_sizer = new wxBoxSizer(wxVERTICAL);
 
-    wxSizer* first_row = new wxBoxSizer(wxHORIZONTAL);
-    
+     //list
     [frame](wxSizer* sizer) {
       window::W<window::Label>(engine::String(_("list")),
 			       engine::String(_("none")),
 			       engine::String(_("list")))->
       create(frame, sizer,
 	     1, wxEXPAND);
-    }(first_row);
+    }(new wxBoxSizer(wxHORIZONTAL));
 
     wxSizer* buttons = new wxBoxSizer(wxVERTICAL);
-
-    wxSizer* first_row_of_buttons = new wxBoxSizer(wxHORIZONTAL);
-    //first row of buttons
     [frame](wxSizer* sizer) {
       window::W<window::Label>(engine::String(_("1")),
 			       engine::String(_("none")),
@@ -103,10 +103,9 @@ bool MyApp::OnInit()
 			       engine::String(_("3")))->
 	create(frame, sizer,
 	     1, wxEXPAND);
-    }(first_row_of_buttons);
-    buttons->Add(first_row_of_buttons);
+    }(new wxBoxSizer(wxHORIZONTAL));
+    buttons->Add(window::W<wxSizer>(_("1")));
 
-    wxSizer* second_row_of_buttons = new wxBoxSizer(wxHORIZONTAL);
     [frame](wxSizer* sizer) {
       window::W<window::Label>(engine::String(_("4")),
 			       engine::String(_("none")),
@@ -123,30 +122,28 @@ bool MyApp::OnInit()
 			       engine::String(_("6")))->
 	create(frame, sizer,
 	       1, wxEXPAND);
-    }(second_row_of_buttons);
-    buttons->Add(second_row_of_buttons);
+    }(new wxBoxSizer(wxHORIZONTAL));
+    buttons->Add(window::W<wxSizer>(_("4")));
 
-    wxSizer* third_row_of_buttons = new wxBoxSizer(wxHORIZONTAL);
     [frame](wxSizer* sizer) {
-      window::W<window::Label>(engine::String(_("7")),
-			       engine::String(_("none")),
-			       engine::String(_("7")))->
-	create(frame, sizer,
-	       1, wxEXPAND);
-      window::W<window::Label>(engine::String(_("8")),
-			       engine::String(_("none")),
-			       engine::String(_("8")))->
-	create(frame, sizer,
-	       1, wxEXPAND);
-      window::W<window::Label>(engine::String(_("9")),
-			       engine::String(_("none")),
-			       engine::String(_("9")))->
-	create(frame, sizer,
-	       1, wxEXPAND);
-    }(third_row_of_buttons);
-    buttons->Add(third_row_of_buttons);
+	window::W<window::Label>(engine::String(_("7")),
+				 engine::String(_("none")),
+				 engine::String(_("7")))->
+	    create(frame, sizer,
+		   1, wxEXPAND);
+	window::W<window::Label>(engine::String(_("8")),
+				 engine::String(_("none")),
+				 engine::String(_("8")))->
+	    create(frame, sizer,
+		   1, wxEXPAND);
+	window::W<window::Label>(engine::String(_("9")),
+				 engine::String(_("none")),
+				 engine::String(_("9")))->
+	    create(frame, sizer,
+		   1, wxEXPAND);
+    }(new wxBoxSizer(wxHORIZONTAL));
+    buttons->Add(window::W<wxSizer>(_("7")));
 
-    wxSizer* fourth_row_of_buttons = new wxBoxSizer(wxHORIZONTAL);
     [frame](wxSizer* sizer) {
 	window::W<window::Label>(engine::String(_("0")),
 				 engine::String(_("none")),
@@ -158,10 +155,9 @@ bool MyApp::OnInit()
 				 engine::String(_("enter")))->
 	  create(frame, sizer,
 		 1, wxEXPAND);
-      }(fourth_row_of_buttons);
-    buttons->Add(fourth_row_of_buttons);
+    }(new wxBoxSizer(wxHORIZONTAL));
+    buttons->Add(window::W<wxSizer>(_("0")));
 
-    wxSizer* fifth_row_of_buttons = new wxBoxSizer(wxHORIZONTAL);
     [frame](wxSizer* sizer) {
       window::W<window::Label>(engine::String(_("DELL_BTN")),
 			       engine::String(_("none")),
@@ -173,8 +169,8 @@ bool MyApp::OnInit()
 			       engine::String(_("поиск")))->
 	create(frame, sizer,
 	       1, wxEXPAND);
-    }(fifth_row_of_buttons);
-    buttons->Add(fifth_row_of_buttons);
+    }(new wxBoxSizer(wxHORIZONTAL));
+    buttons->Add(window::W<wxSizer>(_("DELL_BTN")));
 
     [frame](wxSizer* sizer) {
       window::W<window::Label>(engine::String(_("BACK_BTN")),
@@ -184,9 +180,6 @@ bool MyApp::OnInit()
 	       1, wxEXPAND);
     }(buttons);
 
-    first_row->Add(buttons);
-
-    wxSizer* more_buttons = new wxBoxSizer(wxVERTICAL);
     [frame](wxSizer* sizer) {
       window::W<window::Label>(engine::String(_("ADD_BTN")),
 			       engine::String(_("none")),
@@ -210,20 +203,21 @@ bool MyApp::OnInit()
 			       engine::String(_("Редактировать")))->
 	create(frame, sizer, 
 	       1, wxEXPAND);
-    }(more_buttons);
-    first_row->Add(more_buttons);
+    }(new wxBoxSizer(wxVERTICAL));
+    
+    window::W<wxSizer>(_("list"))->Add(buttons);
+    window::W<wxSizer>(_("list"))->Add(window::W<wxSizer>(_("EDIT_BTN")));
 
-    wxSizer* second_row = new wxBoxSizer(wxHORIZONTAL);
     [frame](wxSizer* sizer) {
       window::W<window::Label>(engine::String(_("KEYBOARD")),
 			       engine::String(_("none")),
 			       engine::String(_("клавиатура")))->
 	create(frame, sizer, 
 	       1, wxEXPAND);
-    }(second_row);
+    }(new wxBoxSizer(wxHORIZONTAL));
 
-    main_sizer->Add(first_row);
-    main_sizer->Add(second_row);
+    main_sizer->Add(window::W<wxSizer>(_("list")));
+    main_sizer->Add(window::W<wxSizer>(_("KEYBOARD")));
 
     frame->SetSizerAndFit(main_sizer);
     frame->Show(true);
