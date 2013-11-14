@@ -4,14 +4,15 @@
 #include "engine.h"
 
 #include <list>
+#include <initializer_list>
 
 namespace window {
 
   template <typename T, typename... Args>
-  T* W(Args... args);
+  T W(Args... args);
 
   class Window {
-    friend wxSizer* W<wxSizer>(const engine::String& name);
+    friend wxSizer* W<wxSizer*>(const engine::String& name);
   public:
     Window(const engine::String& id_value, const engine::String& category_value);
     virtual Window* create(wxWindow* parent, wxSizer* sizer_value,
@@ -50,7 +51,7 @@ namespace window {
   }
 
   template <>
-  wxSizer* W<wxSizer>(const engine::String& name) {
+  wxSizer* W(const engine::String& name) {
     using iter = std::list<Window*>::iterator;
     for (iter it = Window::all_of_them.begin(); it != Window::all_of_them.end(); it++) {
       if ((*it)->id == name) {
@@ -58,12 +59,16 @@ namespace window {
       }
     }
     wxASSERT_MSG(0, name + _(" not found"));
-    assert(0);
   }
 
   template <>
-  wxSizer* W<wxSizer>(const wchar_t* name) {
-    return W<wxSizer, const engine::String&>(engine::String(name));
+  wxSizer* W(const wchar_t* name) {
+    return W<wxSizer*, const engine::String&>(engine::String(name));
+  }
+  
+  template <>
+  wxSize W<wxSize>(int width, int height) {
+    return wxSize(width, height);
   }
 }
 
