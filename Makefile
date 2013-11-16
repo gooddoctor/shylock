@@ -11,9 +11,9 @@ LIBS+=-lX11
 PRG=shylock
 OBJ=window.o engine.o
 
-
-$(PRG): $(OBJ) 
-	$(CC) $(OBJ) $(LIBS) -o $@ 
+$(PRG): $(OBJ) wxShylockWidget
+	$(MAKE) -w -C wxShylockWidget
+	$(CC) $(OBJ) wxShylockWidget/*.o $(LIBS) -o $@ 
 
 window.o: window.h  engine.o
 
@@ -27,6 +27,7 @@ run:
 	./$(PRG)
 clean:
 	rm -rf $(OBJ) $(PRG)
+	$(MAKE) clean -w -C wxShylockWidget
 
 
 

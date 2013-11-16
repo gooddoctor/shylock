@@ -1,4 +1,5 @@
 #include "window.h"
+#include "wxShylockWidget/widget.h"
 
 
 std::list<window::Window*> window::Window::all_of_them;
@@ -34,8 +35,20 @@ window::Label* window::Label::create(wxWindow* parent, const wxSize& size, wxSiz
     return this;
 }
 
+window::Button::Button(const engine::String& id_value,
+		       const engine::String& category_value,
+		       const engine::String& text_value) : Button(id_value, category_value) {
+    text = text_value;
+}
 
-
+window::Button* window::Button::create(wxWindow* parent, const wxSize& size, wxSizer* sizer,
+				       int proportion, int flag, 
+				       int border) {
+    win = new wxShylockButton(parent, wxID_ANY, text, 
+			      wxDefaultPosition, size);
+    Window::create(parent, size, sizer, proportion, flag, border);
+    return this;
+}
 
 // Name:        minimal.cpp
 // Purpose:     Minimal wxWidgets sample
@@ -82,129 +95,111 @@ bool MyApp::OnInit()
 	window::W<window::Label*>(engine::String(_("list")),
 				  engine::String(_("none")),
 				  engine::String(_("list")))->
-	    create(frame, window::W<wxSize>(100, 200), sizer,
+	    create(frame, window::W<wxSize>(500, 0), sizer,
 		   1, wxEXPAND);
     }(window::W<wxSizer*>(wxHORIZONTAL));
 
     wxSizer* buttons = window::W<wxSizer*>(wxVERTICAL);
     [frame](wxSizer* sizer) {
-	window::W<window::Label*>(engine::String(_("1")),
-				  engine::String(_("none")),
-				  engine::String(_("1")))->
-	    create(frame, window::W<wxSize>(30, 30), sizer,
-		   1, wxEXPAND);
-	window::W<window::Label*>(engine::String(_("2")),
+	window::W<window::Button*>(engine::String(_("1")),
+				   engine::String(_("none")),
+				   engine::String(_("1")))->
+	    create(frame, window::W<wxSize>(60, 45), sizer);
+	window::W<window::Button*>(engine::String(_("2")),
 				  engine::String(_("none")),
 				  engine::String(_("2")))->
-	    create(frame, window::W<wxSize>(30, 30), sizer,
-		   1, wxEXPAND);
-	window::W<window::Label*>(engine::String(_("3")),
+	    create(frame, window::W<wxSize>(60, 45), sizer);
+	window::W<window::Button*>(engine::String(_("3")),
 				  engine::String(_("none")),
 				  engine::String(_("3")))->
-	    create(frame, window::W<wxSize>(30, 30), sizer, 1, wxEXPAND);
+	    create(frame, window::W<wxSize>(60, 45), sizer);
     }(window::W<wxSizer*>(wxHORIZONTAL));
     buttons->Add(window::W<wxSizer*>(_("1")));
 
     [frame](wxSizer* sizer) {
-	window::W<window::Label*>(engine::String(_("4")),
+	window::W<window::Button*>(engine::String(_("4")),
 				  engine::String(_("none")),
 				  engine::String(_("4")))->
-	    create(frame, window::W<wxSize>(30, 30), sizer,
-		   1, wxEXPAND);
-	window::W<window::Label*>(engine::String(_("5")),
+	    create(frame, window::W<wxSize>(60, 45), sizer);
+	window::W<window::Button*>(engine::String(_("5")),
 				  engine::String(_("none")),
 				  engine::String(_("5")))->
-	    create(frame, window::W<wxSize>(30, 30), sizer,
-		   1, wxEXPAND);
-	window::W<window::Label*>(engine::String(_("6")),
-				  engine::String(_("none")),
-				  engine::String(_("6")))->
-	    create(frame, window::W<wxSize>(30, 30), sizer,
-		   1, wxEXPAND);
+	    create(frame, window::W<wxSize>(60, 45), sizer);
+	window::W<window::Button*>(engine::String(_("6")),
+				   engine::String(_("none")),
+				   engine::String(_("6")))->
+	    create(frame, window::W<wxSize>(60, 45), sizer);
     }(window::W<wxSizer*>(wxHORIZONTAL));
     buttons->Add(window::W<wxSizer*>(_("4")));
 
     [frame](wxSizer* sizer) {
-	window::W<window::Label*>(engine::String(_("7")),
+	window::W<window::Button*>(engine::String(_("7")),
 				  engine::String(_("none")),
 				  engine::String(_("7")))->
-	    create(frame, window::W<wxSize>(30, 30), sizer,
-		   1, wxEXPAND);
-	window::W<window::Label*>(engine::String(_("8")),
-				  engine::String(_("none")),
-				  engine::String(_("8")))->
-	    create(frame, window::W<wxSize>(30, 30), sizer,
-		   1, wxEXPAND);
-	window::W<window::Label*>(engine::String(_("9")),
+	    create(frame, window::W<wxSize>(60, 45), sizer);
+	window::W<window::Button*>(engine::String(_("8")),
+				   engine::String(_("none")),
+				   engine::String(_("8")))->
+	    create(frame, window::W<wxSize>(60, 45), sizer);
+	window::W<window::Button*>(engine::String(_("9")),
 				  engine::String(_("none")),
 				  engine::String(_("9")))->
-	    create(frame, window::W<wxSize>(30, 30), sizer,
-		   1, wxEXPAND);
+	    create(frame, window::W<wxSize>(60, 45), sizer);
     }(window::W<wxSizer*>(wxHORIZONTAL));
     buttons->Add(window::W<wxSizer*>(_("7")));
 
     [frame](wxSizer* sizer) {
-	window::W<window::Label*>(engine::String(_("0")),
+	window::W<window::Button*>(engine::String(_("0")),
 				  engine::String(_("none")),
 				  engine::String(_("0")))->
-	    create(frame, window::W<wxSize>(30, 30), sizer,
-		   1, wxEXPAND);
-	window::W<window::Label*>(engine::String(_("enter")),
+	    create(frame, window::W<wxSize>(60, 45), sizer);
+	window::W<window::Button*>(engine::String(_("enter")),
 				  engine::String(_("none")),
 				  engine::String(_("enter")))->
-	    create(frame, window::W<wxSize>(30, 30), sizer,
+	    create(frame, window::W<wxSize>(120, 45), sizer,
 		   1, wxEXPAND);
     }(window::W<wxSizer*>(wxHORIZONTAL));
     buttons->Add(window::W<wxSizer*>(_("0")));
 
     [frame](wxSizer* sizer) {
-	window::W<window::Label*>(engine::String(_("DELL_BTN")),
+	window::W<window::Button*>(engine::String(_("DELL_BTN")),
 				  engine::String(_("none")),
 				  engine::String(_("DEL")))->
-	    create(frame, window::W<wxSize>(30, 30), sizer,
-		   1, wxEXPAND);
-	window::W<window::Label*>(engine::String(_("FIND_BTN")),
-				  engine::String(_("none")),
-				  engine::String(_("поиск")))->
-	    create(frame, window::W<wxSize>(30, 30), sizer,
-		   1, wxEXPAND);
+	    create(frame, window::W<wxSize>(80, 45), sizer);
+	window::W<window::Button*>(engine::String(_("FIND_BTN")),
+				   engine::String(_("none")),
+				   engine::String(_("поиск")))->
+	    create(frame, window::W<wxSize>(100, 45), sizer);
     }(window::W<wxSizer*>(wxHORIZONTAL));
     buttons->Add(window::W<wxSizer*>(_("DELL_BTN")));
 
     [frame](wxSizer* sizer) {
-	window::W<window::Label*>(engine::String(_("BACK_BTN")),
+	window::W<window::Button*>(engine::String(_("BACK_BTN")),
 				  engine::String(_("none")),
 				  engine::String(_("Назад")))->
-	    create(frame, window::W<wxSize>(30, 30), sizer,
-		   1, wxEXPAND);
+	    create(frame, window::W<wxSize>(180, 45), sizer);
     }(buttons);
 
     [frame](wxSizer* sizer) {
-	window::W<window::Label*>(engine::String(_("ADD_BTN")),
+	window::W<window::Button*>(engine::String(_("ADD_BTN")),
 				  engine::String(_("none")),
 				  engine::String(_("Добавить клиента")))->
-	    create(frame, window::W<wxSize>(90, 60), sizer, 
-		   1, wxEXPAND);
-	window::W<window::Label*>(engine::String(_("REMOVE_BTN")),
+	    create(frame, window::W<wxSize>(180, 67), sizer);
+	window::W<window::Button*>(engine::String(_("REMOVE_BTN")),
 				  engine::String(_("none")),
 				  engine::String(_("Удалить клиента")))->
-	    create(frame, window::W<wxSize>(90, 60), sizer, 
-		   1, wxEXPAND);
-
-	window::W<window::Label*>(engine::String(_("PAY_BTN")),
+	    create(frame, window::W<wxSize>(180, 67), sizer);
+	window::W<window::Button*>(engine::String(_("PAY_BTN")),
 				  engine::String(_("none")),
 				  engine::String(_("Оплатить")))->
-	    create(frame, window::W<wxSize>(90, 60), sizer, 
-		   1, wxEXPAND);
-
-	window::W<window::Label*>(engine::String(_("EDIT_BTN")),
+	    create(frame, window::W<wxSize>(180, 67), sizer);
+	window::W<window::Button*>(engine::String(_("EDIT_BTN")),
 				  engine::String(_("none")),
 				  engine::String(_("Редактировать")))->
-	    create(frame, window::W<wxSize>(90, 60), sizer, 
-		   1, wxEXPAND);
+	    create(frame, window::W<wxSize>(180, 69), sizer);
     }(window::W<wxSizer*>(wxVERTICAL));
     
-    window::W<wxSizer*>(_("list"))->Add(buttons, 1, wxEXPAND);
+    window::W<wxSizer*>(_("list"))->Add(buttons);
     window::W<wxSizer*>(_("list"))->Add(window::W<wxSizer*>(_("EDIT_BTN")));
 
     [frame](wxSizer* sizer) {

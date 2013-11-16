@@ -37,17 +37,25 @@ namespace window {
 	engine::String text;
     };
 
-    class Button {
+    class Button : public Window {
+    public:
+	using Window::Window;
+	Button(const engine::String& id_value, const engine::String& category_value,
+	       const engine::String& text_value);
+	Button* create(wxWindow* parent, const wxSize& size, wxSizer* sizer,
+		       int proportion = 0, int flag = 0, int border = 0) override;
+    protected:
+	engine::String text;
     };
 
     template <>
     Label* W(engine::String id, engine::String category, engine::String text) {
 	return new Label(id, category, text);
     }
-
+    
     template <>
-    Button* W(int id, int foo) {
-	return new Button();
+    Button* W(engine::String id, engine::String category, engine::String text) {
+    	return new Button(id, category, text);
     }
 
     template <>
