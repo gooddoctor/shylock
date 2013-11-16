@@ -30,6 +30,7 @@ window::Label::Label(const engine::String& id_value,
 window::Label* window::Label::create(wxWindow* parent, const window::Size& size, window::Sizer* sizer,
 				     int proportion, int flag, 
 				     int border) {
+    wxASSERT_MSG(parent != nullptr, _("label create on null parent"));    
     win = new wxStaticText(parent, wxID_ANY, text, wxDefaultPosition, size);
     Window::create(parent, size, sizer, proportion, flag, border);
     return this;
@@ -44,6 +45,7 @@ window::Button::Button(const engine::String& id_value,
 window::Button* window::Button::create(wxWindow* parent, const window::Size& size, 
 				       window::Sizer* sizer, int proportion, int flag, 
 				       int border) {
+    wxASSERT_MSG(parent != nullptr, _("button create on null parent"));    
     win = new wxShylockButton(parent, wxID_ANY, text, 
 			      wxDefaultPosition, size);
     Window::create(parent, size, sizer, proportion, flag, border);
@@ -60,21 +62,22 @@ window::Button* window::Button::bind<window::CLICK>(const std::function<void()>&
 
 
 window::ListBox::ListBox(const engine::String& id_value, const engine::String& category_value,
-			 int amount_value, engine::String* entries_value) : 
+			 std::vector<engine::String>& entries_value) : 
     Window(id_value, category_value),
-    amount(amount_value),
-    entries(entries_value) {
-    wxASSERT_MSG(amount >= 0, _("ListBox contains negative number of entries"));    
-    wxASSERT_MSG(entries_value != nullptr, _("ListBox contains negative number of entries"));
-}
+    entries(entries_value) { }
 
 window::ListBox* window::ListBox::create(wxWindow* parent, const window::Size& size, 
 					 window::Sizer* sizer, int proportion, int flag, 
 					 int border) {
-    std::cout << entries.get() << std::endl;
+    wxASSERT_MSG(parent != nullptr, _("listbox create on null parent"));    
+
+    engine::String* values = new engine::String[entries.size()];
+    std::copy(entries.begin(), entries.end(), values);
+
     win = new wxShylockListbox(parent, wxID_ANY, 
-			       wxDefaultPosition, size, amount, entries.get());
+			       wxDefaultPosition, size, entries.size(), values);
     Window::create(parent, size, sizer, proportion, flag, border);
+
     return this;
 }
 
@@ -122,7 +125,7 @@ bool MyApp::OnInit()
     [frame](window::Sizer* sizer) {
 	window::W<window::ListBox*>(engine::String(_("list")),
 				    engine::String(_("none")),
-				    2, new engine::String[2] {_("hello"), _("how")})->
+				    std::vector<engine::String> {_("hello"), _("how")})->
 	    create(frame, window::W<window::Size>(500, 0), sizer,
 		   1, window::EXPAND);
     }(window::W<window::Sizer*>(window::HORIZONTAL));

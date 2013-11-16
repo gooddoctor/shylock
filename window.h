@@ -6,7 +6,7 @@
 #include <list>
 #include <initializer_list>
 #include <functional>
-#include <memory>
+#include <vector>
 #include <algorithm>
 
 namespace window {
@@ -63,12 +63,11 @@ namespace window {
     class ListBox : public Window {
     public:
 	ListBox(const engine::String& id_value, const engine::String& category_value,
-		int amount_value, engine::String* entries_value);
+		std::vector<engine::String>& entries_value);
 	ListBox* create(wxWindow* parent, const Size& size, Sizer* sizer,
 			int proportion = 0, int flag = 0, int border = 0) override;
     private:
-	std::unique_ptr<engine::String[]> entries;
-	int amount;
+	std::vector<engine::String> entries;
     };
 
     template <>
@@ -82,9 +81,9 @@ namespace window {
     }
 
     template <>
-    ListBox* W(engine::String id, engine::String category, int amount,
-	       engine::String* entries) {
-	return new ListBox(id, category, amount, entries);
+    ListBox* W(engine::String id, engine::String category,
+	       std::vector<engine::String> entries) {
+	return new ListBox(id, category, entries);
     }
 
     template <>
@@ -111,11 +110,6 @@ namespace window {
     template <>
     Sizer* W(int orient) {
 	return new wxBoxSizer(orient);
-    }
-
-    template <typename T>
-    T W(const wchar_t* name) {
-	return nullptr;
     }
 }
 
