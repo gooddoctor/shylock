@@ -23,6 +23,18 @@ wxShylockButton::wxShylockButton(wxWindow* parent, wxWindowID id,
     pen(pen_value),
     enabled(true) {SetBackgroundStyle(wxBG_STYLE_CUSTOM);}
 
+wxShylockButton* wxShylockButton::add_click_callback(const std::function<void()>& callback) {
+    notification_callbacks.push_back(callback);
+    return this;
+}
+
+void wxShylockButton::fire_notification_callbacks() {
+    using iter = std::list<std::function<void()> >::iterator;
+    for (iter it = notification_callbacks.begin(); it != notification_callbacks.end(); it++) {
+	(*it)();
+    }
+}
+
 void wxShylockButton::on_paint(wxPaintEvent& event) {
     /* draw text in the middle */
     wxPaintDC dc(this);
@@ -75,6 +87,7 @@ void wxShylockButton::on_erase_background(wxEraseEvent& event) {
 void wxShylockButton::on_mouse_down(wxMouseEvent& event) {
   if (enabled) {
     clicked = true;
+    fire_notification_callbacks();
     Refresh();
   }
 }

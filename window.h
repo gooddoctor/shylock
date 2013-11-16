@@ -5,23 +5,32 @@
 
 #include <list>
 #include <initializer_list>
+#include <functional>
 
 namespace window {
 
     template <typename T, typename... Args>
     T W(Args... args);
+    
+    enum {CLICK = 0};
+
+    using Sizer = wxSizer;
+    using Size = wxSize;
+    const int HORIZONTAL = wxHORIZONTAL;
+    const int VERTICAL = wxVERTICAL;
+    const int EXPAND = wxEXPAND;
 
     class Window {
-	friend wxSizer* W<wxSizer*>(const engine::String& name);
+	friend Sizer* W<Sizer*>(const engine::String& name);
     public:
 	Window(const engine::String& id_value, const engine::String& category_value);
-	virtual Window* create(wxWindow* parent, const wxSize& size, wxSizer* sizer_value, 
+	virtual Window* create(wxWindow* parent, const Size& size, Sizer* sizer_value, 
 			       int proportion = 0, int flag = 0, int border = 0);
     protected:
 	engine::String id;
 	engine::String category;
 	wxWindow* win;
-	wxSizer* sizer;
+	Sizer* sizer;
 	static std::list<Window*> all_of_them;
     };
   
@@ -31,7 +40,7 @@ namespace window {
 
 	Label(const engine::String& id_value, const engine::String& category_value,
 	      const engine::String& text_value);
-	Label* create(wxWindow* parent, const wxSize& size, wxSizer* sizer,
+	Label* create(wxWindow* parent, const Size& size, Sizer* sizer,
 		      int proportion = 0, int flag = 0, int border = 0) override;
     protected:
 	engine::String text;
@@ -42,8 +51,12 @@ namespace window {
 	using Window::Window;
 	Button(const engine::String& id_value, const engine::String& category_value,
 	       const engine::String& text_value);
-	Button* create(wxWindow* parent, const wxSize& size, wxSizer* sizer,
+	Button* create(wxWindow* parent, const Size& size, Sizer* sizer,
 		       int proportion = 0, int flag = 0, int border = 0) override;
+
+	template <int S>
+	window::Button* bind(const std::function<void()>& callback);
+
     protected:
 	engine::String text;
     };
@@ -59,7 +72,7 @@ namespace window {
     }
 
     template <>
-    wxSizer* W(const engine::String& name) {
+    Sizer* W(const engine::String& name) {
 	using iter = std::list<Window*>::iterator;
 	for (iter it = Window::all_of_them.begin(); it != Window::all_of_them.end(); it++) {
 	    if ((*it)->id == name) {
@@ -71,17 +84,17 @@ namespace window {
     }
 
     template <>
-    wxSizer* W(const wchar_t* name) {
-	return W<wxSizer*, const engine::String&>(engine::String(name));
+    Sizer* W(const wchar_t* name) {
+	return W<Sizer*, const engine::String&>(engine::String(name));
     }
   
     template <>
-    wxSize W<wxSize>(int width, int height) {
-	return wxSize(width, height);
+    Size W<Size>(int width, int height) {
+	return Size(width, height);
     }
 
     template <>
-    wxSizer* W(wxOrientation orient) {
+    Sizer* W(int orient) {
 	return new wxBoxSizer(orient);
     }
 }
