@@ -11,24 +11,20 @@
 class wxShylockButton : public wxPanel {
 private:
     wxString text;
-    wxFont font;
-    wxPen pen;
+    wxFont font = *wxNORMAL_FONT;
+    wxPen pen = wxPen(*wxBLACK, 3);
 
-    wxBrush brush;
-    wxBrush clicked_brush;
+    wxBrush brush = *wxLIGHT_GREY_BRUSH;
+    wxBrush clicked_brush = *wxGREY_BRUSH;
 
     bool clicked;
-    bool enabled;
+    bool enabled = true;
 
     std::list<std::function<void()> > notification_callbacks;
 public:
     wxShylockButton(wxWindow *parent, wxWindowID id, const wxString& text,
 		    const wxPoint& pos = wxDefaultPosition,
-		    const wxSize& size = wxDefaultSize, 
-		    const wxFont& font = *wxNORMAL_FONT,
-		    const wxBrush& clicked_brush = *wxGREY_BRUSH, 
-		    const wxBrush& brush = *wxLIGHT_GREY_BRUSH, 
-		    const wxPen& pen = wxPen(*wxBLACK, 3));
+		    const wxSize& size = wxDefaultSize);
     wxShylockButton* add_click_callback(const std::function<void()>& callback);	
 private:
     void fire_notification_callbacks();
@@ -40,5 +36,10 @@ handlers:
     void fire_click_event();
 wx_parts:
     DECLARE_EVENT_TABLE()
+};
+
+class wxShylockListbox : public wxListBox {
+public:
+    using wxListBox::wxListBox;
 };
 #endif

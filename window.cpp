@@ -23,7 +23,7 @@ window::Window* window::Window::create(wxWindow*, const window::Size&,
 window::Label::Label(const engine::String& id_value,
 		     const engine::String& category_value,
 		     const engine::String& text_value) : 
-    Label(id_value, category_value) {
+    Window(id_value, category_value) {
     text = text_value;
 }
 
@@ -37,12 +37,12 @@ window::Label* window::Label::create(wxWindow* parent, const window::Size& size,
 
 window::Button::Button(const engine::String& id_value,
 		       const engine::String& category_value,
-		       const engine::String& text_value) : Button(id_value, category_value) {
+		       const engine::String& text_value) : Window(id_value, category_value) {
     text = text_value;
 }
 
-window::Button* window::Button::create(wxWindow* parent, const window::Size& size, window::Sizer* sizer,
-				       int proportion, int flag, 
+window::Button* window::Button::create(wxWindow* parent, const window::Size& size, 
+				       window::Sizer* sizer, int proportion, int flag, 
 				       int border) {
     win = new wxShylockButton(parent, wxID_ANY, text, 
 			      wxDefaultPosition, size);
@@ -54,6 +54,27 @@ template <>
 window::Button* window::Button::bind<window::CLICK>(const std::function<void()>& callback) {
     wxASSERT_MSG(win, _("call bind<>() only after create()"));    
     static_cast<wxShylockButton*>(win)->add_click_callback(callback);
+    return this;
+}
+
+
+
+window::ListBox::ListBox(const engine::String& id_value, const engine::String& category_value,
+			 int amount_value, engine::String* entries_value) : 
+    Window(id_value, category_value),
+    amount(amount_value),
+    entries(entries_value) {
+    wxASSERT_MSG(amount >= 0, _("ListBox contains negative number of entries"));    
+    wxASSERT_MSG(entries_value != nullptr, _("ListBox contains negative number of entries"));
+}
+
+window::ListBox* window::ListBox::create(wxWindow* parent, const window::Size& size, 
+					 window::Sizer* sizer, int proportion, int flag, 
+					 int border) {
+    std::cout << entries.get() << std::endl;
+    win = new wxShylockListbox(parent, wxID_ANY, 
+			       wxDefaultPosition, size, amount, entries.get());
+    Window::create(parent, size, sizer, proportion, flag, border);
     return this;
 }
 
@@ -99,9 +120,9 @@ bool MyApp::OnInit()
 
     //list
     [frame](window::Sizer* sizer) {
-	window::W<window::Label*>(engine::String(_("list")),
-				  engine::String(_("none")),
-				  engine::String(_("list")))->
+	window::W<window::ListBox*>(engine::String(_("list")),
+				    engine::String(_("none")),
+				    2, new engine::String[2] {_("hello"), _("how")})->
 	    create(frame, window::W<window::Size>(500, 0), sizer,
 		   1, window::EXPAND);
     }(window::W<window::Sizer*>(window::HORIZONTAL));

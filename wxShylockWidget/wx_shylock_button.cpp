@@ -1,5 +1,7 @@
 #include "widget.h"
 
+#include <algorithm>
+
 BEGIN_EVENT_TABLE(wxShylockButton, wxPanel)
 EVT_PAINT(wxShylockButton::on_paint)
 EVT_ERASE_BACKGROUND(wxShylockButton::on_erase_background)
@@ -10,18 +12,10 @@ END_EVENT_TABLE()
 wxShylockButton::wxShylockButton(wxWindow* parent, wxWindowID id, 
 				 const wxString& text_value, 
 				 const wxPoint& pos,
-				 const wxSize& size, 
-				 const wxFont& font_value,
-				 const wxBrush& clicked_brush_value, 
-				 const wxBrush& brush_value, 
-				 const wxPen& pen_value) 
-: wxPanel(parent, id, pos, size, wxFULL_REPAINT_ON_RESIZE | wxBORDER_NONE),
-    text(text_value),
-    font(font_value),
-    clicked_brush(clicked_brush_value),
-    brush(brush_value),
-    pen(pen_value),
-    enabled(true) {SetBackgroundStyle(wxBG_STYLE_CUSTOM);}
+				 const wxSize& size)
+: wxPanel(parent, id, pos, size, wxFULL_REPAINT_ON_RESIZE | wxBORDER_NONE), text(text_value) {
+    SetBackgroundStyle(wxBG_STYLE_CUSTOM);
+}
 
 wxShylockButton* wxShylockButton::add_click_callback(const std::function<void()>& callback) {
     notification_callbacks.push_back(callback);
@@ -30,9 +24,10 @@ wxShylockButton* wxShylockButton::add_click_callback(const std::function<void()>
 
 void wxShylockButton::fire_notification_callbacks() {
     using iter = std::list<std::function<void()> >::iterator;
-    for (iter it = notification_callbacks.begin(); it != notification_callbacks.end(); it++) {
-	(*it)();
-    }
+    std::for_each(notification_callbacks.begin(), notification_callbacks.end(),
+		  [](std::function<void()> callback) {
+		      callback();
+		  });
 }
 
 void wxShylockButton::on_paint(wxPaintEvent& event) {
