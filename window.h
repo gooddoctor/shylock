@@ -27,7 +27,7 @@ namespace window {
     public:
 	Window(const engine::String& id_value, const engine::String& category_value);
 	virtual Window* create(wxWindow* parent, const Size& size, Sizer* sizer_value, 
-			       int proportion = 0, int flag = 0, int border = 0);
+			       int proportion = 0, int flag = 0, int border = 0) = 0;
     protected:
 	engine::String id;
 	engine::String category;
@@ -35,7 +35,14 @@ namespace window {
 	Sizer* sizer;
 	static std::list<Window*> all_of_them;
     };
-  
+
+    class None : public Window {
+    public:
+        using Window::Window;
+        None* create(wxWindow* parent, const Size& size, Sizer* sizer,
+                     int proportion = 0, int flag = 0, int border = 0) override;
+    };
+
     class Label : public Window {
     public:
 	Label(const engine::String& id_value, const engine::String& category_value,
@@ -69,6 +76,11 @@ namespace window {
     private:
 	std::vector<engine::String> entries;
     };
+
+    template <>
+    None* W(engine::String id, engine::String category) {
+	return new None(id, category);
+    }
 
     template <>
     Label* W(engine::String id, engine::String category, engine::String text) {
