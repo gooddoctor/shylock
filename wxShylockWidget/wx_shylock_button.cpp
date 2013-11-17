@@ -12,8 +12,8 @@ END_EVENT_TABLE()
 wxShylockButton::wxShylockButton(wxWindow* parent, wxWindowID id, 
 				 const wxString& text_value, 
 				 const wxPoint& pos,
-				 const wxSize& size)
-: wxPanel(parent, id, pos, size, wxFULL_REPAINT_ON_RESIZE | wxBORDER_NONE), text(text_value) {
+				 const wxSize& size) : 
+      wxPanel(parent, id, pos, size, wxFULL_REPAINT_ON_RESIZE | wxBORDER_NONE), text(text_value) {
     SetBackgroundStyle(wxBG_STYLE_CUSTOM);
 }
 

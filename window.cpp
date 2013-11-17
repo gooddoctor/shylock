@@ -6,7 +6,7 @@ std::list<window::Window*> window::Window::all_of_them;
 
 window::Window::Window(const engine::String& id_value, 
 		       const engine::String& category_value) : 
-    id(id_value), category(category_value), win(nullptr) {
+      id(id_value), category(category_value), win(nullptr) {
     all_of_them.push_back(this);
 }
 
@@ -23,7 +23,7 @@ window::Window* window::Window::create(wxWindow*, const window::Size&,
 window::Label::Label(const engine::String& id_value,
 		     const engine::String& category_value,
 		     const engine::String& text_value) : 
-    Window(id_value, category_value) {
+      Window(id_value, category_value) {
     text = text_value;
 }
 
@@ -38,7 +38,8 @@ window::Label* window::Label::create(wxWindow* parent, const window::Size& size,
 
 window::Button::Button(const engine::String& id_value,
 		       const engine::String& category_value,
-		       const engine::String& text_value) : Window(id_value, category_value) {
+		       const engine::String& text_value) : 
+      Window(id_value, category_value) {
     text = text_value;
 }
 
@@ -63,7 +64,7 @@ window::Button* window::Button::bind<window::CLICK>(const std::function<void()>&
 
 window::ListBox::ListBox(const engine::String& id_value, const engine::String& category_value,
 			 std::vector<engine::String>& entries_value) : 
-    Window(id_value, category_value),
+      Window(id_value, category_value),
     entries(entries_value) { }
 
 window::ListBox* window::ListBox::create(wxWindow* parent, const window::Size& size, 
@@ -119,14 +120,12 @@ bool MyApp::OnInit()
 {
     MyFrame *frame = new MyFrame(wxT("Minimal wxWidgets App"));
 
-    window::Sizer* main_sizer = window::W<window::Sizer*>(window::VERTICAL);
-
     //list
     [frame](window::Sizer* sizer) {
 	window::W<window::ListBox*>(engine::String(_("list")),
 				    engine::String(_("none")),
 				    std::vector<engine::String> {_("hello"), _("how")})->
-	    create(frame, window::W<window::Size>(500, 0), sizer,
+	    create(frame, window::W<window::Size>(550, 0), sizer,
 		   1, window::EXPAND);
     }(window::W<window::Sizer*>(window::HORIZONTAL));
 
@@ -240,14 +239,146 @@ bool MyApp::OnInit()
     window::W<window::Sizer*>(_("list"))->Add(window::W<window::Sizer*>(_("EDIT_BTN")));
 
     [frame](window::Sizer* sizer) {
-	window::W<window::Label*>(engine::String(_("KEYBOARD")),
-				  engine::String(_("none")),
-				  engine::String(_("клавиатура")))->
-	    create(frame, window::W<window::Size>(300, 100), sizer, 1, window::EXPAND);
+        window::W<window::Button*>(engine::String(_("q")),
+                                   engine::String(_("keyboard")),
+                                   engine::String(_("й")))->
+            create(frame, window::W<window::Size>(50, 30), sizer, 1);
+        window::W<window::Button*>(engine::String(_("w")),
+                                   engine::String(_("keyboard")),
+                                   engine::String(_("ц")))->
+            create(frame, window::W<window::Size>(50, 30), sizer, 1);
+        window::W<window::Button*>(engine::String(_("e")),
+                                   engine::String(_("keyboard")),
+                                   engine::String(_("у")))->
+            create(frame, window::W<window::Size>(50, 30), sizer, 1);
+        window::W<window::Button*>(engine::String(_("r")),
+                                   engine::String(_("keyboard")),
+                                   engine::String(_("к")))->
+            create(frame, window::W<window::Size>(50, 30), sizer, 1);
+        window::W<window::Button*>(engine::String(_("t")),
+                                   engine::String(_("keyboard")),
+                                   engine::String(_("е")))->
+            create(frame, window::W<window::Size>(50, 30), sizer, 1);
+        window::W<window::Button*>(engine::String(_("y")),
+                                   engine::String(_("keyboard")),
+                                   engine::String(_("н")))->
+            create(frame, window::W<window::Size>(50, 30), sizer, 1);
+        window::W<window::Button*>(engine::String(_("u")),
+                                   engine::String(_("keyboard")),
+                                   engine::String(_("г")))->
+            create(frame, window::W<window::Size>(50, 30), sizer, 1);
+        window::W<window::Button*>(engine::String(_("i")),
+                                   engine::String(_("keyboard")),
+                                   engine::String(_("ш")))->
+            create(frame, window::W<window::Size>(50, 30), sizer, 1);
+        window::W<window::Button*>(engine::String(_("o")),
+                                   engine::String(_("keyboard")),
+                                   engine::String(_("щ")))->
+            create(frame, window::W<window::Size>(50, 30), sizer, 1);
+        window::W<window::Button*>(engine::String(_("p")),
+                                   engine::String(_("keyboard")),
+                                   engine::String(_("з")))->
+            create(frame, window::W<window::Size>(50, 30), sizer, 1);
+        window::W<window::Button*>(engine::String(_("[")),
+                                   engine::String(_("keyboard")),
+                                   engine::String(_("х")))->
+            create(frame, window::W<window::Size>(50, 30), sizer, 1);
     }(window::W<window::Sizer*>(window::HORIZONTAL));
 
+    [frame](window::Sizer* sizer) {
+        window::W<window::Button*>(engine::String(_("a")),
+                                   engine::String(_("keyboard")),
+                                   engine::String(_("ф")))->
+            create(frame, window::W<window::Size>(50, 30), sizer, 1);
+        window::W<window::Button*>(engine::String(_("s")),
+                                   engine::String(_("keyboard")),
+                                   engine::String(_("ы")))->
+            create(frame, window::W<window::Size>(50, 30), sizer, 1);
+        window::W<window::Button*>(engine::String(_("d")),
+                                   engine::String(_("keyboard")),
+                                   engine::String(_("в")))->
+            create(frame, window::W<window::Size>(50, 30), sizer, 1);
+        window::W<window::Button*>(engine::String(_("f")),
+                                   engine::String(_("keyboard")),
+                                   engine::String(_("а")))->
+            create(frame, window::W<window::Size>(50, 30), sizer, 1);
+        window::W<window::Button*>(engine::String(_("g")),
+                                   engine::String(_("keyboard")),
+                                   engine::String(_("п")))->
+            create(frame, window::W<window::Size>(50, 30), sizer, 1);
+        window::W<window::Button*>(engine::String(_("h")),
+                                   engine::String(_("keyboard")),
+                                   engine::String(_("р")))->
+            create(frame, window::W<window::Size>(50, 30), sizer, 1);
+        window::W<window::Button*>(engine::String(_("j")),
+                                   engine::String(_("keyboard")),
+                                   engine::String(_("о")))->
+            create(frame, window::W<window::Size>(50, 30), sizer, 1);
+        window::W<window::Button*>(engine::String(_("k")),
+                                   engine::String(_("keyboard")),
+                                   engine::String(_("л")))->
+            create(frame, window::W<window::Size>(50, 30), sizer, 1);
+        window::W<window::Button*>(engine::String(_("l")),
+                                   engine::String(_("keyboard")),
+                                   engine::String(_("д")))->
+            create(frame, window::W<window::Size>(50, 30), sizer, 1);
+        window::W<window::Button*>(engine::String(_(";")),
+                                   engine::String(_("keyboard")),
+                                   engine::String(_("ж")))->
+            create(frame, window::W<window::Size>(50, 30), sizer, 1);
+        window::W<window::Button*>(engine::String(_("'")),
+                                   engine::String(_("keyboard")),
+                                   engine::String(_("э")))->
+            create(frame, window::W<window::Size>(50, 30), sizer, 1);
+    }(window::W<window::Sizer*>(window::HORIZONTAL));
+
+    [frame](window::Sizer* sizer) {
+        window::W<window::Button*>(engine::String(_("z")),
+                                   engine::String(_("keyboard")),
+                                   engine::String(_("я")))->
+            create(frame, window::W<window::Size>(50, 30), sizer, 1);
+        window::W<window::Button*>(engine::String(_("x")),
+                                   engine::String(_("keyboard")),
+                                   engine::String(_("ч")))->
+            create(frame, window::W<window::Size>(50, 30), sizer, 1);
+        window::W<window::Button*>(engine::String(_("c")),
+                                   engine::String(_("keyboard")),
+                                   engine::String(_("с")))->
+            create(frame, window::W<window::Size>(50, 30), sizer, 1);
+        window::W<window::Button*>(engine::String(_("v")),
+                                   engine::String(_("keyboard")),
+                                   engine::String(_("м")))->
+            create(frame, window::W<window::Size>(50, 30), sizer, 1);
+        window::W<window::Button*>(engine::String(_("b")),
+                                   engine::String(_("keyboard")),
+                                   engine::String(_("и")))->
+            create(frame, window::W<window::Size>(50, 30), sizer, 1);
+        window::W<window::Button*>(engine::String(_("n")),
+                                   engine::String(_("keyboard")),
+                                   engine::String(_("т")))->
+            create(frame, window::W<window::Size>(50, 30), sizer, 1);
+        window::W<window::Button*>(engine::String(_("m")),
+                                   engine::String(_("keyboard")),
+                                   engine::String(_("ь")))->
+            create(frame, window::W<window::Size>(50, 30), sizer, 1);
+        window::W<window::Button*>(engine::String(_(",")),
+                                   engine::String(_("keyboard")),
+                                   engine::String(_("б")))->
+            create(frame, window::W<window::Size>(50, 30), sizer, 1);
+        window::W<window::Button*>(engine::String(_(".")),
+                                   engine::String(_("keyboard")),
+                                   engine::String(_("ю")))->
+            create(frame, window::W<window::Size>(150, 30), sizer, 0);
+    }(window::W<window::Sizer*>(window::HORIZONTAL));
+
+    window::Sizer* keyboard = window::W<window::Sizer*>(window::VERTICAL);
+    keyboard->Add(window::W<window::Sizer*>(_("q")), 0, window::EXPAND);
+    keyboard->Add(window::W<window::Sizer*>(_("a")), 0, window::EXPAND);
+    keyboard->Add(window::W<window::Sizer*>(_("z")), 0, window::EXPAND);
+
+    window::Sizer* main_sizer = window::W<window::Sizer*>(window::VERTICAL);
     main_sizer->Add(window::W<window::Sizer*>(_("list")), 0, window::EXPAND);
-    main_sizer->Add(window::W<window::Sizer*>(_("KEYBOARD")), 1, window::EXPAND);
+    main_sizer->Add(keyboard, 1, window::EXPAND);
 
     frame->SetSizerAndFit(main_sizer);
     frame->Show(true);
