@@ -42,4 +42,12 @@ class wxShylockListbox : public wxListBox {
 public:
     using wxListBox::wxListBox;
 };
+
+class wxShylockText : public wxTextCtrl {
+public:
+    wxShylockText(wxWindow *parent, wxWindowID id, const wxString& text,
+                  const wxPoint& pos = wxDefaultPosition,
+                  const wxSize& size = wxDefaultSize);
+};
+    
 #endif

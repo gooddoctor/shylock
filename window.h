@@ -18,9 +18,11 @@ namespace window {
 
     using Sizer = wxSizer;
     using Size = wxSize;
+
     const int HORIZONTAL = wxHORIZONTAL;
     const int VERTICAL = wxVERTICAL;
     const int EXPAND = wxEXPAND;
+    const int ALIGN_CENTER = wxALIGN_CENTER_VERTICAL;
 
     class Window {
 	friend Sizer* W<Sizer*>(const engine::String& name);
@@ -77,6 +79,16 @@ namespace window {
 	std::vector<engine::String> entries;
     };
 
+    class Text : public Window {
+    public:
+        Text(const engine::String& id_value, const engine::String& category_value,
+             const engine::String& text_value);
+        Text* create(wxWindow* parent, const Size& size, Sizer* sizer,
+                     int proportion = 0, int flag = 0, int border = 0) override;
+    private:
+        engine::String text;
+    };
+
     template <>
     None* W(engine::String id, engine::String category) {
 	return new None(id, category);
@@ -99,6 +111,11 @@ namespace window {
     }
 
     template <>
+    Text* W(engine::String id, engine::String category, engine::String text) {
+        return new Text(id, category, text);
+    }
+
+    template <>
     Sizer* W(const engine::String& name) {
 	using iter = std::list<Window*>::iterator;
 	iter win_pos = std::find_if(Window::all_of_them.begin(), Window::all_of_them.end(),
@@ -117,6 +134,11 @@ namespace window {
     template <>
     Size W<Size>(int width, int height) {
 	return Size(width, height);
+    }
+
+    template <>
+    Size W<Size>() {
+	return Size(-1, -1);
     }
 
     template <>

@@ -32,9 +32,8 @@ window::None* window::None::create(wxWindow* parent, const window::Size& size,
 window::Label::Label(const engine::String& id_value,
 		     const engine::String& category_value,
 		     const engine::String& text_value) : 
-      Window(id_value, category_value) {
-    text = text_value;
-}
+      Window(id_value, category_value), text(text_value) { }
+
 
 window::Label* window::Label::create(wxWindow* parent, const window::Size& size, window::Sizer* sizer,
 				     int proportion, int flag, 
@@ -48,9 +47,7 @@ window::Label* window::Label::create(wxWindow* parent, const window::Size& size,
 window::Button::Button(const engine::String& id_value,
 		       const engine::String& category_value,
 		       const engine::String& text_value) : 
-      Window(id_value, category_value) {
-    text = text_value;
-}
+      Window(id_value, category_value), text(text_value) { }
 
 window::Button* window::Button::create(wxWindow* parent, const window::Size& size, 
 				       window::Sizer* sizer, int proportion, int flag, 
@@ -73,8 +70,7 @@ window::Button* window::Button::bind<window::CLICK>(const std::function<void()>&
 
 window::ListBox::ListBox(const engine::String& id_value, const engine::String& category_value,
 			 std::vector<engine::String>& entries_value) : 
-      Window(id_value, category_value),
-    entries(entries_value) { }
+      Window(id_value, category_value), entries(entries_value) { }
 
 window::ListBox* window::ListBox::create(wxWindow* parent, const window::Size& size, 
 					 window::Sizer* sizer, int proportion, int flag, 
@@ -90,6 +86,23 @@ window::ListBox* window::ListBox::create(wxWindow* parent, const window::Size& s
 
     return this;
 }
+
+window::Text::Text(const engine::String& id_value,
+                   const engine::String& category_value,
+                   const engine::String& text_value) :
+      Window(id_value, category_value), text(text_value) { }
+
+window::Text* window::Text::create(wxWindow* parent, const window::Size& size, 
+                                   window::Sizer* sizer, int proportion, int flag, 
+                                   int border) {
+    wxASSERT_MSG(parent != nullptr, _("text create on null parent"));
+    win = new wxShylockText(parent, wxID_ANY, text, 
+                            wxDefaultPosition, size);
+    Window::create(parent, size, sizer, proportion, flag, border);
+    return this;
+}
+
+
 
 // Name:        minimal.cpp
 // Purpose:     Minimal wxWidgets sample
@@ -131,12 +144,26 @@ bool MyApp::OnInit()
 
     //list
     [frame](window::Sizer* sizer) {
+        window::W<window::Label*>(engine::String(_("FIND_LABEL")),
+                                  engine::String(_("NONE")),
+                                  engine::String(_("Фильтр")))->
+            create(frame, window::W<window::Size>(60, -1), sizer, 0, window::ALIGN_CENTER);
+        window::W<window::Text*>(engine::String(_("FIND_TEXT")),
+                                 engine::String(_("NONE")),
+                                 engine::String(_("")))->
+            create(frame, window::W<window::Size>(225, 30), sizer, 1);
+    }(window::W<window::Sizer*>(window::HORIZONTAL));
+
+    [frame](window::Sizer* sizer) {
+        sizer->Add(window::W<window::Sizer*>(_("FIND_TEXT")), 0, window::EXPAND);
+        sizer->Hide(window::W<window::Sizer*>(_("FIND_TEXT")));
+
 	window::W<window::ListBox*>(engine::String(_("LIST")),
 				    engine::String(_("NONE")),
 				    std::vector<engine::String> {_("hello"), _("how")})->
 	    create(frame, window::W<window::Size>(550, 0), sizer,
 		   1, window::EXPAND);
-    }(window::W<window::Sizer*>(window::HORIZONTAL));
+    }(window::W<window::Sizer*>(window::VERTICAL));
 
     [frame](window::Sizer* sizer) {
 	window::W<window::Button*>(engine::String(_("1")),
@@ -209,7 +236,19 @@ bool MyApp::OnInit()
 	window::W<window::Button*>(engine::String(_("FIND_BTN")),
 				   engine::String(_("NONE")),
 				   engine::String(_("поиск")))->
-	    create(frame, window::W<window::Size>(100, 45), sizer);
+	    create(frame, window::W<window::Size>(100, 45), sizer)->
+            bind<window::CLICK>([frame]{
+                    static bool toggle = true;
+                    if (toggle) {
+                        window::W<window::Sizer*>(_("LIST"))->
+                            Show(window::W<window::Sizer*>(_("FIND_LABEL")));
+                    } else {
+                        window::W<window::Sizer*>(_("LIST"))->
+                            Hide(window::W<window::Sizer*>(_("FIND_LABEL")));
+                    }
+                    window::W<window::Sizer*>(_("LIST"))->Layout();
+                    toggle = !toggle;
+                });
     }(window::W<window::Sizer*>(window::HORIZONTAL));
 
     [frame](window::Sizer* sizer) {
@@ -243,8 +282,14 @@ bool MyApp::OnInit()
 	    create(frame, window::W<window::Size>(180, 69), sizer);
     }(window::W<window::Sizer*>(window::VERTICAL));
     
-    window::W<window::Sizer*>(_("LIST"))->Add(window::W<window::Sizer*>(_("BACK_BTN")));
-    window::W<window::Sizer*>(_("LIST"))->Add(window::W<window::Sizer*>(_("EDIT_BTN")));
+    [frame](window::Sizer* sizer) {
+        sizer->Add(window::W<window::Sizer*>(_("LIST")), 1, window::EXPAND);
+        sizer->Add(window::W<window::Sizer*>(_("BACK_BTN")));
+        sizer->Add(window::W<window::Sizer*>(_("EDIT_BTN")));
+        window::W<window::None*>(engine::String(_("CONTENT")),
+                                engine::String(_("NONE")))->
+            create(frame, window::W<window::Size>(0, 0), sizer);
+    }(window::W<window::Sizer*>(window::HORIZONTAL));
 
     [frame](window::Sizer* sizer) {
         window::W<window::Button*>(engine::String(_("Q")),
@@ -389,10 +434,15 @@ bool MyApp::OnInit()
     }(window::W<window::Sizer*>(window::VERTICAL));
 
     window::Sizer* main_sizer = window::W<window::Sizer*>(window::VERTICAL);
-    main_sizer->Add(window::W<window::Sizer*>(_("LIST")), 0, window::EXPAND);
+    main_sizer->Add(window::W<window::Sizer*>(_("CONTENT")), 0, window::EXPAND);
     main_sizer->Add(window::W<window::Sizer*>(_("KEYBOARD")), 1, window::EXPAND);
+    window::W<window::None*>(engine::String(_("MAIN")), 
+                             engine::String(_("NONE")))->
+        create(frame, window::W<window::Size>(0, 0), main_sizer);
+    
 
     frame->SetSizerAndFit(main_sizer);
+
     frame->Show(true);
 
     // Start the event loop
