@@ -30,6 +30,8 @@ namespace window {
 	Window(const engine::String& id_value, const engine::String& category_value);
 	virtual Window* create(wxWindow* parent_value, const Size& size_value, Sizer* sizer_value, 
 			       int proportion = 0, int flag = 0, int border = 0) = 0;
+        virtual Window* show();
+        virtual Window* hide();
         virtual wxWindow* wx();
     protected:
 	engine::String id;
@@ -45,6 +47,7 @@ namespace window {
 	      const engine::String& text_value);
         Frame* create(wxWindow* parent_value, const Size& size_value, Sizer* sizer_value,
                       int proportion = 0, int flag = 0, int border = 0);
+        Frame* fit();
     protected:
         engine::String text;
     };
