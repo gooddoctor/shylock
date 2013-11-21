@@ -10,7 +10,7 @@ window::Window::Window(const engine::String& id_value,
     all_of_them.push_back(this);
 }
 
-window::Window* window::Window::create(wxWindow*, const window::Size&,
+window::Window* window::Window::create(wxWindow* parent_value, const window::Size& size_value,
 				       window::Sizer* sizer_value, 
 				       int proportion, int flag, 
 				       int border) {
@@ -20,12 +20,33 @@ window::Window* window::Window::create(wxWindow*, const window::Size&,
     return this;
 }
 
-window::None* window::None::create(wxWindow* parent, const window::Size& size, 
-                                   window::Sizer* sizer,
+wxWindow* window::Window::wx() {
+    wxASSERT_MSG(win, _("probably wrong. win is zero"));
+    return win;
+}
+
+window::Frame::Frame(const engine::String& id_value, const engine::String& category_value,
+                     const engine::String& text_value) : 
+      Window(id_value, category_value), text(text_value) { }
+
+window::Frame* window::Frame::create(wxWindow* parent_value, const window::Size& size_value, 
+                                     window::Sizer* sizer_value,
+                                     int proportion, int flag, int border) {
+    wxASSERT_MSG(parent_value == nullptr, _("frame is top level window"));
+
+    win = new wxShylockFrame(text);
+    win->SetSizerAndFit(sizer_value);
+    sizer = sizer_value;
+
+    return this;
+}
+
+window::None* window::None::create(wxWindow* parent_value, const window::Size& size_value, 
+                                   window::Sizer* sizer_value,
                                    int proportion, int flag, int border) {
-    wxASSERT_MSG(parent != nullptr, _("None create on null parent"));    
-    win = new wxWindow(parent, wxID_ANY, wxDefaultPosition, size);
-    Window::create(parent, size, sizer, proportion, flag, border);
+    wxASSERT_MSG(parent_value != nullptr, _("None create on null parent"));    
+    win = new wxWindow(parent_value, wxID_ANY, wxDefaultPosition, size_value);
+    Window::create(parent_value, size_value, sizer_value, proportion, flag, border);
     return this;
 }
 
@@ -35,12 +56,14 @@ window::Label::Label(const engine::String& id_value,
       Window(id_value, category_value), text(text_value) { }
 
 
-window::Label* window::Label::create(wxWindow* parent, const window::Size& size, window::Sizer* sizer,
+window::Label* window::Label::create(wxWindow* parent_value, 
+                                     const window::Size& size_value, 
+                                     window::Sizer* sizer_value,
 				     int proportion, int flag, 
 				     int border) {
-    wxASSERT_MSG(parent != nullptr, _("label create on null parent"));    
-    win = new wxStaticText(parent, wxID_ANY, text, wxDefaultPosition, size);
-    Window::create(parent, size, sizer, proportion, flag, border);
+    wxASSERT_MSG(parent_value != nullptr, _("label create on null parent"));    
+    win = new wxStaticText(parent_value, wxID_ANY, text, wxDefaultPosition, size_value);
+    Window::create(parent_value, size_value, sizer_value, proportion, flag, border);
     return this;
 }
 
@@ -49,13 +72,13 @@ window::Button::Button(const engine::String& id_value,
 		       const engine::String& text_value) : 
       Window(id_value, category_value), text(text_value) { }
 
-window::Button* window::Button::create(wxWindow* parent, const window::Size& size, 
-				       window::Sizer* sizer, int proportion, int flag, 
+window::Button* window::Button::create(wxWindow* parent_value, const window::Size& size_value, 
+				       window::Sizer* sizer_value, int proportion, int flag, 
 				       int border) {
-    wxASSERT_MSG(parent != nullptr, _("button create on null parent"));    
-    win = new wxShylockButton(parent, wxID_ANY, text, 
-			      wxDefaultPosition, size);
-    Window::create(parent, size, sizer, proportion, flag, border);
+    wxASSERT_MSG(parent_value != nullptr, _("button create on null parent"));    
+    win = new wxShylockButton(parent_value, wxID_ANY, text, 
+			      wxDefaultPosition, size_value);
+    Window::create(parent_value, size_value, sizer_value, proportion, flag, border);
     return this;
 }
 
@@ -72,17 +95,17 @@ window::ListBox::ListBox(const engine::String& id_value, const engine::String& c
 			 std::vector<engine::String>& entries_value) : 
       Window(id_value, category_value), entries(entries_value) { }
 
-window::ListBox* window::ListBox::create(wxWindow* parent, const window::Size& size, 
-					 window::Sizer* sizer, int proportion, int flag, 
+window::ListBox* window::ListBox::create(wxWindow* parent_value, const window::Size& size_value, 
+					 window::Sizer* sizer_value, int proportion, int flag, 
 					 int border) {
-    wxASSERT_MSG(parent != nullptr, _("listbox create on null parent"));    
+    wxASSERT_MSG(parent_value != nullptr, _("listbox create on null parent"));    
 
     engine::String* values = new engine::String[entries.size()];
     std::copy(entries.begin(), entries.end(), values);
 
-    win = new wxShylockListbox(parent, wxID_ANY, 
-			       wxDefaultPosition, size, entries.size(), values);
-    Window::create(parent, size, sizer, proportion, flag, border);
+    win = new wxShylockListbox(parent_value, wxID_ANY, 
+			       wxDefaultPosition, size_value, entries.size(), values);
+    Window::create(parent_value, size_value, sizer_value, proportion, flag, border);
 
     return this;
 }
@@ -92,13 +115,13 @@ window::Text::Text(const engine::String& id_value,
                    const engine::String& text_value) :
       Window(id_value, category_value), text(text_value) { }
 
-window::Text* window::Text::create(wxWindow* parent, const window::Size& size, 
-                                   window::Sizer* sizer, int proportion, int flag, 
+window::Text* window::Text::create(wxWindow* parent_value, const window::Size& size_value, 
+                                   window::Sizer* sizer_value, int proportion, int flag, 
                                    int border) {
-    wxASSERT_MSG(parent != nullptr, _("text create on null parent"));
-    win = new wxShylockText(parent, wxID_ANY, text, 
-                            wxDefaultPosition, size);
-    Window::create(parent, size, sizer, proportion, flag, border);
+    wxASSERT_MSG(parent_value != nullptr, _("text create on null parent"));
+    win = new wxShylockText(parent_value, wxID_ANY, text, 
+                            wxDefaultPosition, size_value);
+    Window::create(parent_value, size_value, sizer_value, proportion, flag, border);
     return this;
 }
 
@@ -115,22 +138,6 @@ public:
     virtual bool OnInit();
 };
 
-// Declare our main frame class
-class MyFrame : public wxFrame
-{
-public:
-    // Constructor
-    MyFrame(const wxString& title);
-
-    // Event handlers
-    void OnQuit(wxCommandEvent& event);
-    void OnAbout(wxCommandEvent& event);
-
-private:
-    // This class handles events
-    DECLARE_EVENT_TABLE()
-};
-
 // Implements MyApp& GetApp()
 DECLARE_APP(MyApp)
 
@@ -140,25 +147,25 @@ IMPLEMENT_APP(MyApp)
 // Initialize the application
 bool MyApp::OnInit()
 {
-    MyFrame *frame = new MyFrame(wxT("Minimal wxWidgets App"));
+    wxShylockFrame* frame = new wxShylockFrame(wxT("Minimal wxWidgets App"));
 
     //list
     [frame](window::Sizer* sizer) {
-        window::W<window::Label*>(engine::String(_("FIND_LABEL")),
+        window::W<window::Label*>(engine::String(_("ENT.FIND_LABEL")),
                                   engine::String(_("NONE")),
                                   engine::String(_("Фильтр")))->
             create(frame, window::W<window::Size>(60, -1), sizer, 0, window::ALIGN_CENTER);
-        window::W<window::Text*>(engine::String(_("FIND_TEXT")),
+        window::W<window::Text*>(engine::String(_("ENT.FIND_TEXT")),
                                  engine::String(_("NONE")),
                                  engine::String(_("")))->
             create(frame, window::W<window::Size>(225, 30), sizer, 1);
     }(window::W<window::Sizer*>(window::HORIZONTAL));
 
     [frame](window::Sizer* sizer) {
-        sizer->Add(window::W<window::Sizer*>(_("FIND_TEXT")), 0, window::EXPAND);
-        sizer->Hide(window::W<window::Sizer*>(_("FIND_TEXT")));
+        sizer->Add(window::W<window::Sizer*>(_("ENT.FIND_TEXT")), 0, window::EXPAND);
+        sizer->Hide(window::W<window::Sizer*>(_("ENT.FIND_TEXT")));
 
-	window::W<window::ListBox*>(engine::String(_("LIST")),
+	window::W<window::ListBox*>(engine::String(_("ENT.LIST")),
 				    engine::String(_("NONE")),
 				    std::vector<engine::String> {_("hello"), _("how")})->
 	    create(frame, window::W<window::Size>(550, 0), sizer,
@@ -240,13 +247,13 @@ bool MyApp::OnInit()
             bind<window::CLICK>([frame]{
                     static bool toggle = true;
                     if (toggle) {
-                        window::W<window::Sizer*>(_("LIST"))->
-                            Show(window::W<window::Sizer*>(_("FIND_LABEL")));
+                        window::W<window::Sizer*>(_("ENT.LIST"))->
+                            Show(window::W<window::Sizer*>(_("ENT.FIND_LABEL")));
                     } else {
-                        window::W<window::Sizer*>(_("LIST"))->
-                            Hide(window::W<window::Sizer*>(_("FIND_LABEL")));
+                        window::W<window::Sizer*>(_("ENT.LIST"))->
+                            Hide(window::W<window::Sizer*>(_("ENT.FIND_LABEL")));
                     }
-                    window::W<window::Sizer*>(_("LIST"))->Layout();
+                    window::W<window::Sizer*>(_("ENT.LIST"))->Layout();
                     toggle = !toggle;
                 });
     }(window::W<window::Sizer*>(window::HORIZONTAL));
@@ -267,7 +274,19 @@ bool MyApp::OnInit()
 	window::W<window::Button*>(engine::String(_("ADD_BTN")),
 				  engine::String(_("NONE")),
 				  engine::String(_("Добавить клиента")))->
-	    create(frame, window::W<window::Size>(180, 67), sizer);
+	    create(frame, window::W<window::Size>(180, 67), sizer)->
+            bind<window::CLICK>([]() {
+                    static bool toggle = false;
+                    if (toggle) {
+                        window::W<window::Sizer*>(_("CONTENT"))->
+                            Show(window::W<window::Sizer*>(_("ENT.LIST")));
+                    } else {
+                        window::W<window::Sizer*>(_("CONTENT"))->
+                            Hide(window::W<window::Sizer*>(_("ENT.LIST")));
+                    }
+                    window::W<window::Sizer*>(_("CONTENT"))->Layout();
+                    toggle = !toggle;
+                });
 	window::W<window::Button*>(engine::String(_("REMOVE_BTN")),
 				  engine::String(_("NONE")),
 				  engine::String(_("Удалить клиента")))->
@@ -283,7 +302,7 @@ bool MyApp::OnInit()
     }(window::W<window::Sizer*>(window::VERTICAL));
     
     [frame](window::Sizer* sizer) {
-        sizer->Add(window::W<window::Sizer*>(_("LIST")), 1, window::EXPAND);
+        sizer->Add(window::W<window::Sizer*>(_("ENT.LIST")), 1, window::EXPAND);
         sizer->Add(window::W<window::Sizer*>(_("BACK_BTN")));
         sizer->Add(window::W<window::Sizer*>(_("EDIT_BTN")));
         window::W<window::None*>(engine::String(_("CONTENT")),
@@ -447,56 +466,5 @@ bool MyApp::OnInit()
 
     // Start the event loop
     return true;
-}
-
-// Event table for MyFrame
-BEGIN_EVENT_TABLE(MyFrame, wxFrame)
-EVT_MENU(wxID_ABOUT, MyFrame::OnAbout)
-EVT_MENU(wxID_EXIT,  MyFrame::OnQuit)
-END_EVENT_TABLE()
-
-void MyFrame::OnAbout(wxCommandEvent& event)
-{
-    wxString msg;
-    msg.Printf(wxT("Hello and welcome to %s"),
-               wxVERSION_STRING);
-
-
-    wxMessageBox(msg, wxT("About Minimal"),
-                 wxOK | wxICON_INFORMATION, this);
-}
-
-void MyFrame::OnQuit(wxCommandEvent& event)
-{
-    // Destroy the frame
-    Close();
-}
-
-
-MyFrame::MyFrame(const wxString& title)
-    : wxFrame(NULL, wxID_ANY, title)
-{
-    // Create a menu bar
-    wxMenu *fileMenu = new wxMenu;
-
-    // The "About" item should be in the help menu
-    wxMenu *helpMenu = new wxMenu;
-    helpMenu->Append(wxID_ABOUT, wxT("&About...\tF1"),
-                     wxT("Show about dialog"));
-
-    fileMenu->Append(wxID_EXIT, wxT("E&xit\tAlt-X"),
-                     wxT("Quit this program"));
-
-    // Now append the freshly created menu to the menu bar...
-    wxMenuBar *menuBar = new wxMenuBar();
-    menuBar->Append(fileMenu, wxT("&File"));
-    menuBar->Append(helpMenu, wxT("&Help"));
-
-    // ... and attach this menu bar to the frame
-    SetMenuBar(menuBar);
-
-    // Create a status bar just for fun
-    CreateStatusBar(2);
-    SetStatusText(wxT("Welcome to wxWidgets!"));
 }
 

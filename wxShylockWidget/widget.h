@@ -8,6 +8,16 @@
 #define wx_parts private
 #define handlers private
 
+class wxShylockFrame : public wxFrame {
+public:
+    wxShylockFrame(const wxString& title);
+handlers:
+    void on_quit(wxCommandEvent& event);
+    void on_about(wxCommandEvent& event);
+wx_parts:
+    DECLARE_EVENT_TABLE()
+};
+
 class wxShylockButton : public wxPanel {
 private:
     wxString text;

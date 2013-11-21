@@ -9,11 +9,13 @@ LIBS=$(shell wx-config --libs)
 LIBS+=-lX11
 
 PRG=shylock
-OBJ=window.o engine.o
+OBJ=window.o engine.o main.o
 
 $(PRG): $(OBJ) wxShylockWidget
 	$(MAKE) -w -C wxShylockWidget
 	$(CC) $(OBJ) wxShylockWidget/*.o $(LIBS) -o $@ 
+
+main.o: main.h engine.o
 
 window.o: window.h  engine.o
 

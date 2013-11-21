@@ -28,8 +28,9 @@ namespace window {
 	friend Sizer* W<Sizer*>(const engine::String& name);
     public:
 	Window(const engine::String& id_value, const engine::String& category_value);
-	virtual Window* create(wxWindow* parent, const Size& size, Sizer* sizer_value, 
+	virtual Window* create(wxWindow* parent_value, const Size& size_value, Sizer* sizer_value, 
 			       int proportion = 0, int flag = 0, int border = 0) = 0;
+        virtual wxWindow* wx();
     protected:
 	engine::String id;
 	engine::String category;
@@ -38,10 +39,20 @@ namespace window {
 	static std::list<Window*> all_of_them;
     };
 
+    class Frame : public Window {
+    public:
+        Frame(const engine::String& id_value, const engine::String& category_value,
+	      const engine::String& text_value);
+        Frame* create(wxWindow* parent_value, const Size& size_value, Sizer* sizer_value,
+                      int proportion = 0, int flag = 0, int border = 0);
+    protected:
+        engine::String text;
+    };
+
     class None : public Window {
     public:
         using Window::Window;
-        None* create(wxWindow* parent, const Size& size, Sizer* sizer,
+        None* create(wxWindow* parent_value, const Size& size_value, Sizer* sizer_value,
                      int proportion = 0, int flag = 0, int border = 0) override;
     };
 
@@ -49,7 +60,7 @@ namespace window {
     public:
 	Label(const engine::String& id_value, const engine::String& category_value,
 	      const engine::String& text_value);
-	Label* create(wxWindow* parent, const Size& size, Sizer* sizer,
+	Label* create(wxWindow* parent_value, const Size& size_value, Sizer* sizer_value,
 		      int proportion = 0, int flag = 0, int border = 0) override;
     protected:
 	engine::String text;
@@ -59,7 +70,7 @@ namespace window {
     public:
 	Button(const engine::String& id_value, const engine::String& category_value,
 	       const engine::String& text_value);
-	Button* create(wxWindow* parent, const Size& size, Sizer* sizer,
+	Button* create(wxWindow* parent_value, const Size& size_value, Sizer* sizer_value,
 		       int proportion = 0, int flag = 0, int border = 0) override;
 
 	template <int S>
@@ -73,7 +84,7 @@ namespace window {
     public:
 	ListBox(const engine::String& id_value, const engine::String& category_value,
 		std::vector<engine::String>& entries_value);
-	ListBox* create(wxWindow* parent, const Size& size, Sizer* sizer,
+	ListBox* create(wxWindow* parent_value, const Size& size_value, Sizer* sizer_value,
 			int proportion = 0, int flag = 0, int border = 0) override;
     private:
 	std::vector<engine::String> entries;
@@ -83,11 +94,16 @@ namespace window {
     public:
         Text(const engine::String& id_value, const engine::String& category_value,
              const engine::String& text_value);
-        Text* create(wxWindow* parent, const Size& size, Sizer* sizer,
+        Text* create(wxWindow* parent_value, const Size& size_value, Sizer* sizer_value,
                      int proportion = 0, int flag = 0, int border = 0) override;
     private:
         engine::String text;
     };
+
+    template <>
+    Frame* W(engine::String id, engine::String category, engine::String text) {
+        return new Frame(id, category, text);
+    }
 
     template <>
     None* W(engine::String id, engine::String category) {
