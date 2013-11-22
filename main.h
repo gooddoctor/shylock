@@ -1,5 +1,11 @@
-#include <engine.h>
+#ifndef __MAIN_H
+#define __MAIN_H
+
+#include "window.h"
 
 namespace shylock {
-    void initialize_window();
+    bool initialize_window();
 }
+
+#endif
+

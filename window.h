@@ -24,6 +24,8 @@ namespace window {
     const int EXPAND = wxEXPAND;
     const int ALIGN_CENTER = wxALIGN_CENTER_VERTICAL;
 
+    class RUN {};
+
     class Window {
 	friend Sizer* W<Sizer*>(const engine::String& name);
     public:
@@ -104,66 +106,42 @@ namespace window {
     };
 
     template <>
-    Frame* W(engine::String id, engine::String category, engine::String text) {
-        return new Frame(id, category, text);
-    }
+    window::RUN W(std::function<bool(void)> callback, int argc, char** argv);
 
     template <>
-    None* W(engine::String id, engine::String category) {
-	return new None(id, category);
-    }
+    Frame* W(engine::String id, engine::String category, engine::String text);
 
     template <>
-    Label* W(engine::String id, engine::String category, engine::String text) {
-	return new Label(id, category, text);
-    }
+    None* W(engine::String id, engine::String category);
+
+    template <>
+    Label* W(engine::String id, engine::String category, engine::String text);
+
     
     template <>
-    Button* W(engine::String id, engine::String category, engine::String text) {
-    	return new Button(id, category, text);
-    }
-
+    Button* W(engine::String id, engine::String category, engine::String text);
+    
     template <>
     ListBox* W(engine::String id, engine::String category,
-	       std::vector<engine::String> entries) {
-	return new ListBox(id, category, entries);
-    }
+	       std::vector<engine::String> entries);
 
     template <>
-    Text* W(engine::String id, engine::String category, engine::String text) {
-        return new Text(id, category, text);
-    }
+    Text* W(engine::String id, engine::String category, engine::String text);
 
     template <>
-    Sizer* W(const engine::String& name) {
-	using iter = std::list<Window*>::iterator;
-	iter win_pos = std::find_if(Window::all_of_them.begin(), Window::all_of_them.end(),
-				    [&name](Window* entry) -> bool {
-					return entry->id == name;
-				    });
-	wxASSERT_MSG(win_pos != Window::all_of_them.end(), name + _(" not found"));
-	return (*win_pos)->sizer;
-    }
+    Sizer* W(const engine::String& name);
 
     template <>
-    Sizer* W(const wchar_t* name) {
-	return W<Sizer*, const engine::String&>(engine::String(name));
-    }
+    Sizer* W(const wchar_t* name);
   
     template <>
-    Size W<Size>(int width, int height) {
-	return Size(width, height);
-    }
+    Size W<Size>(int width, int height);
 
     template <>
-    Size W<Size>() {
-	return Size(-1, -1);
-    }
+    Size W<Size>();
 
     template <>
-    Sizer* W(int orient) {
-	return new wxBoxSizer(orient);
-    }
+    Sizer* W(int orient);
 }
 
 

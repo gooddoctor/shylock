@@ -8,6 +8,14 @@
 #define wx_parts private
 #define handlers private
 
+class wxShylockApp : public wxApp {
+private:
+    static std::function<bool(void)> init;
+public:
+    void static run(const std::function<bool(void)>& callback, int argc, char** argv);
+    bool OnInit() override;
+};
+
 class wxShylockFrame : public wxFrame {
 public:
     wxShylockFrame(const wxString& title);
