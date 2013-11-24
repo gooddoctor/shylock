@@ -140,6 +140,16 @@ window::Text* window::Text::create(wxWindow* parent_value, const window::Size& s
     return this;
 }
 
+window::Time* window::Time::create(wxWindow* parent_value, const window::Size& size_value, 
+                                   window::Sizer* sizer_value, int proportion, int flag, 
+                                   int border) {
+    wxASSERT_MSG(parent_value != nullptr, _("time create on null parent"));
+    win = new wxShylockTime(parent_value, wxID_ANY, 
+                            wxDefaultPosition, size_value);
+    Window::create(parent_value, size_value, sizer_value, proportion, flag, border);
+    return this;
+}
+
 template <>
 window::RUN window::W(std::function<bool(void)> callback, int argc, char** argv) {
     wxShylockApp::run(callback, argc, argv);
@@ -175,6 +185,11 @@ window::ListBox* window::W(engine::String id, engine::String category,
 template <>
 window::Text* window::W(engine::String id, engine::String category, engine::String text) {
         return new window::Text(id, category, text);
+}
+
+template <>
+window::Time* window::W(engine::String id, engine::String category) {
+    return new window::Time(id, category);
 }
 
 template <>

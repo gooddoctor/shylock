@@ -7,6 +7,7 @@ CXXFLAGS+=-std=c++11
 
 LIBS=$(shell wx-config --libs)
 LIBS+=-lX11
+LIBS+=-lboost_date_time
 
 PRG=shylock
 OBJ=window.o engine.o main.o

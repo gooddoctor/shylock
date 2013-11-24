@@ -67,5 +67,18 @@ public:
                   const wxPoint& pos = wxDefaultPosition,
                   const wxSize& size = wxDefaultSize);
 };
+
+class wxShylockTime : public wxPanel {
+public:
+    wxShylockTime(wxWindow* parent, wxWindowID id, 
+                  const wxPoint& pos = wxDefaultPosition, 
+                  const wxSize& size = wxDefaultSize);
+    void set(const wxString& date);
+    wxString get();
+private:
+    wxChoice* year;
+    wxChoice* month;
+    wxChoice* day;
+};
     
 #endif

@@ -395,8 +395,19 @@ void window_thing::add(window::Frame* frame) {
     }(window::W<window::Sizer*>(window::HORIZONTAL));
 
     [frame](window::Sizer* sizer) {
+        window::W<window::Label*>(engine::String(_("ADD.TIME_LABEL")),
+                                  engine::String(_("NONE")),
+                                  engine::String(_("Дата выплаты")))->
+            create(frame->wx(), window::W<window::Size>(90, -1), sizer, 0, window::ALIGN_CENTER);
+        window::W<window::Time*>(engine::String(_("ADD.TIME_INPUT")),
+                                 engine::String(_("NONE")))->
+            create(frame->wx(), window::W<window::Size>(), sizer, 1);
+    }(window::W<window::Sizer*>(window::HORIZONTAL));
+
+    [frame](window::Sizer* sizer) {
         sizer->Add(window::W<window::Sizer*>(_("ADD.NOMINAL_LABEL")), 0, window::EXPAND);
         sizer->Add(window::W<window::Sizer*>(_("ADD.COST_LABEL")), 0, window::EXPAND);
+        sizer->Add(window::W<window::Sizer*>(_("ADD.TIME_LABEL")), 0, window::EXPAND);
         window::W<window::Button*>(engine::String(_("ADD.ADD_BTN")),
                                    engine::String(_("NONE")),
                                    engine::String(_("Добавить")))->

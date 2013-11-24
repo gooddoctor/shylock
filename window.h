@@ -105,6 +105,13 @@ namespace window {
         engine::String text;
     };
 
+    class Time : public Window {
+    public:
+        using Window::Window;
+        Time* create(wxWindow* parent_value, const Size& size_value, Sizer* sizer_value,
+                     int proportion = 0, int flag = 0, int border = 0) override;
+    };
+
     template <>
     window::RUN W(std::function<bool(void)> callback, int argc, char** argv);
 
@@ -127,6 +134,9 @@ namespace window {
 
     template <>
     Text* W(engine::String id, engine::String category, engine::String text);
+
+    template <>
+    Time* W(engine::String id, engine::String category);
 
     template <>
     Sizer* W(const engine::String& name);
