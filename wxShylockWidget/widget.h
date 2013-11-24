@@ -38,17 +38,21 @@ private:
     bool clicked;
     bool enabled = true;
 
-    std::list<std::function<void()> > notification_callbacks;
+    std::list<std::function<void()> > click_notification_callbacks;
+    std::list<std::function<void(wxUpdateUIEvent&)> > idle_notification_callbacks;
 public:
     wxShylockButton(wxWindow *parent, wxWindowID id, const wxString& text,
 		    const wxPoint& pos = wxDefaultPosition,
 		    const wxSize& size = wxDefaultSize);
     wxShylockButton* add_click_callback(const std::function<void()>& callback);	
+    wxShylockButton* add_idle_callback(const std::function<void(wxUpdateUIEvent&)>& callback);	
 private:
-    void fire_notification_callbacks();
+    void fire_click_notification_callbacks();
+    void fire_idle_notification_callbacks(wxUpdateUIEvent& event);
 handlers:
     void on_paint(wxPaintEvent& event);
     void on_erase_background(wxEraseEvent& event);
+    void on_idle(wxUpdateUIEvent& event);
     void on_mouse_up(wxMouseEvent& event);
     void on_mouse_down(wxMouseEvent& event);
     void fire_click_event();
@@ -69,6 +73,11 @@ public:
 };
 
 class wxShylockTime : public wxPanel {
+    enum {
+        ID_YEAR = 10000,
+        ID_MONTH = 10001,
+        ID_DAY = 10002
+    };
 public:
     wxShylockTime(wxWindow* parent, wxWindowID id, 
                   const wxPoint& pos = wxDefaultPosition, 
@@ -79,6 +88,10 @@ private:
     wxChoice* year;
     wxChoice* month;
     wxChoice* day;
+handlers:
+    void on_day_update(wxCommandEvent& event);
+wx_parts:
+    DECLARE_EVENT_TABLE()
 };
     
 #endif

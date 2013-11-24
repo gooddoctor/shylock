@@ -14,10 +14,11 @@ namespace window {
     template <typename T, typename... Args>
     T W(Args... args);
     
-    enum {CLICK = 0};
+    enum {CLICK = 0, IDLE};
 
     using Sizer = wxSizer;
     using Size = wxSize;
+    using UpdateUIEvent = wxUpdateUIEvent;
 
     const int HORIZONTAL = wxHORIZONTAL;
     const int VERTICAL = wxVERTICAL;
@@ -78,8 +79,8 @@ namespace window {
 	Button* create(wxWindow* parent_value, const Size& size_value, Sizer* sizer_value,
 		       int proportion = 0, int flag = 0, int border = 0) override;
 
-	template <int S>
-	window::Button* bind(const std::function<void()>& callback);
+	template <int S, typename... Args>
+	window::Button* bind(const std::function<void(Args...)>& callback);
 
     protected:
 	engine::String text;

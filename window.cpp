@@ -106,6 +106,17 @@ window::Button* window::Button::bind<window::CLICK>(const std::function<void()>&
     return this;
 }
 
+template <>
+window::Button* 
+window::Button::bind<window::IDLE>(const std::function<void(window::UpdateUIEvent&)>& callback) {
+    wxASSERT_MSG(win, _("call bind<>() only after create()"));
+    static_cast<wxShylockButton*>(win)->add_idle_callback(callback);
+    return this;
+}
+    
+
+
+
 window::ListBox::ListBox(const engine::String& id_value, const engine::String& category_value,
 			 std::vector<engine::String>& entries_value) : 
       Window(id_value, category_value), entries(entries_value) { }

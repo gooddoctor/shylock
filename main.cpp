@@ -17,16 +17,23 @@ bool window_thing::init() {
 				   engine::String(_("NONE")),
 				   engine::String(_("1")))->
 	    create(frame->wx(), window::W<window::Size>(60, 45), sizer)->
-	    bind<window::CLICK>([](){
-		    std::cout << "1 is selected" << std::endl;
-		});
+	    bind<window::CLICK>(std::function<void()>(
+                                    [](){
+                                        std::cout << "1 is selected" << std::endl;
+                                    }))->
+            bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
+                                   [](window::UpdateUIEvent& event) {
+                                       std::cout << "upate" << std::endl;
+                                   }));
+        
 	window::W<window::Button*>(engine::String(_("2")),
                                    engine::String(_("NONE")),
                                    engine::String(_("2")))->
 	    create(frame->wx(), window::W<window::Size>(60, 45), sizer)->
-	    bind<window::CLICK>([]() {
-		    std::cout << "2 is selected" << std::endl;
-		});
+	    bind<window::CLICK>(std::function<void(void)>(
+                                    []() {
+                                        std::cout << "2 is selected" << std::endl;
+                                    }));
 	window::W<window::Button*>(engine::String(_("3")),
                                    engine::String(_("NONE")),
                                    engine::String(_("3")))->
@@ -84,18 +91,18 @@ bool window_thing::init() {
 				   engine::String(_("NONE")),
 				   engine::String(_("поиск")))->
 	    create(frame->wx(), window::W<window::Size>(100, 45), sizer)->
-            bind<window::CLICK>([](){
-                    static bool toggle = true;
-                    if (toggle) {
-                        window::W<window::Sizer*>(_("ENT.LIST"))->
-                            Show(window::W<window::Sizer*>(_("ENT.FIND_LABEL")));
-                    } else {
-                        window::W<window::Sizer*>(_("ENT.LIST"))->
-                            Hide(window::W<window::Sizer*>(_("ENT.FIND_LABEL")));
-                    }
-                    window::W<window::Sizer*>(_("ENT.LIST"))->Layout();
-                    toggle = !toggle;
-                });
+            bind<window::CLICK>(std::function<void()>([](){
+                        static bool toggle = true;
+                        if (toggle) {
+                            window::W<window::Sizer*>(_("ENT.LIST"))->
+                                Show(window::W<window::Sizer*>(_("ENT.FIND_LABEL")));
+                        } else {
+                            window::W<window::Sizer*>(_("ENT.LIST"))->
+                                Hide(window::W<window::Sizer*>(_("ENT.FIND_LABEL")));
+                        }
+                        window::W<window::Sizer*>(_("ENT.LIST"))->Layout();
+                        toggle = !toggle;
+                    }));
     }(window::W<window::Sizer*>(window::HORIZONTAL));
 
     [frame](window::Sizer* sizer) {
@@ -115,22 +122,23 @@ bool window_thing::init() {
                                    engine::String(_("NONE")),
                                    engine::String(_("Добавить клиента")))->
 	    create(frame->wx(), window::W<window::Size>(180, 67), sizer)->
-            bind<window::CLICK>([]() {
-                    static bool toggle = true;
-                    if (toggle) {
-                        window::W<window::Sizer*>(_("CONTENT"))->
-                            Show(window::W<window::Sizer*>(_("ADD.ADD_BTN")));
-                        window::W<window::Sizer*>(_("CONTENT"))->
-                            Hide(window::W<window::Sizer*>(_("ENT.LIST")));
-                    } else {
-                        window::W<window::Sizer*>(_("CONTENT"))->
-                            Hide(window::W<window::Sizer*>(_("ADD.ADD_BTN")));
-                        window::W<window::Sizer*>(_("CONTENT"))->
-                            Show(window::W<window::Sizer*>(_("ENT.LIST")));
-                    }
-                    window::W<window::Sizer*>(_("CONTENT"))->Layout();
-                    toggle = !toggle;
-                });
+            bind<window::CLICK>(std::function<void()>(
+                                    []() {
+                                        static bool toggle = true;
+                                        if (toggle) {
+                                            window::W<window::Sizer*>(_("CONTENT"))->
+                                                Show(window::W<window::Sizer*>(_("ADD.ADD_BTN")));
+                                            window::W<window::Sizer*>(_("CONTENT"))->
+                                                Hide(window::W<window::Sizer*>(_("ENT.LIST")));
+                                        } else {
+                                            window::W<window::Sizer*>(_("CONTENT"))->
+                                                Hide(window::W<window::Sizer*>(_("ADD.ADD_BTN")));
+                                            window::W<window::Sizer*>(_("CONTENT"))->
+                                                Show(window::W<window::Sizer*>(_("ENT.LIST")));
+                                        }
+                                        window::W<window::Sizer*>(_("CONTENT"))->Layout();
+                                        toggle = !toggle;
+                                    }));
 	window::W<window::Button*>(engine::String(_("REMOVE_BTN")),
                                    engine::String(_("NONE")),
                                    engine::String(_("Удалить клиента")))->
@@ -139,42 +147,44 @@ bool window_thing::init() {
                                    engine::String(_("NONE")),
                                    engine::String(_("Оплатить")))->
 	    create(frame->wx(), window::W<window::Size>(180, 67), sizer)->
-            bind<window::CLICK>([]() {
-                    static bool toggle = true;
-                    if (toggle) {
-                        window::W<window::Sizer*>(_("CONTENT"))->
-                            Show(window::W<window::Sizer*>(_("PAY.PAY_BTN")));
-                        window::W<window::Sizer*>(_("CONTENT"))->
-                            Hide(window::W<window::Sizer*>(_("ENT.LIST")));
-                    } else {
-                        window::W<window::Sizer*>(_("CONTENT"))->
-                            Hide(window::W<window::Sizer*>(_("PAY.PAY_BTN")));
-                        window::W<window::Sizer*>(_("CONTENT"))->
-                            Show(window::W<window::Sizer*>(_("ENT.LIST")));
-                    }
-                    window::W<window::Sizer*>(_("CONTENT"))->Layout();
-                    toggle = !toggle;
-                });
+            bind<window::CLICK>(std::function<void()>(
+                                    []() {
+                                        static bool toggle = true;
+                                        if (toggle) {
+                                            window::W<window::Sizer*>(_("CONTENT"))->
+                                                Show(window::W<window::Sizer*>(_("PAY.PAY_BTN")));
+                                            window::W<window::Sizer*>(_("CONTENT"))->
+                                                Hide(window::W<window::Sizer*>(_("ENT.LIST")));
+                                        } else {
+                                            window::W<window::Sizer*>(_("CONTENT"))->
+                                                Hide(window::W<window::Sizer*>(_("PAY.PAY_BTN")));
+                                            window::W<window::Sizer*>(_("CONTENT"))->
+                                                Show(window::W<window::Sizer*>(_("ENT.LIST")));
+                                        }
+                                        window::W<window::Sizer*>(_("CONTENT"))->Layout();
+                                        toggle = !toggle;
+                                    }));
 	window::W<window::Button*>(engine::String(_("EDIT_BTN")),
                                    engine::String(_("NONE")),
                                    engine::String(_("Редактировать")))->
 	    create(frame->wx(), window::W<window::Size>(180, 69), sizer)->
-            bind<window::CLICK>([]() {
-                    static bool toggle = true;
-                    if (toggle) {
-                        window::W<window::Sizer*>(_("CONTENT"))->
-                            Show(window::W<window::Sizer*>(_("EDT.EDIT_BTN")));
-                        window::W<window::Sizer*>(_("CONTENT"))->
-                            Hide(window::W<window::Sizer*>(_("ENT.LIST")));
-                    } else {
-                        window::W<window::Sizer*>(_("CONTENT"))->
-                            Hide(window::W<window::Sizer*>(_("EDT.EDIT_BTN")));
-                        window::W<window::Sizer*>(_("CONTENT"))->
-                            Show(window::W<window::Sizer*>(_("ENT.LIST")));
-                    }
-                    window::W<window::Sizer*>(_("CONTENT"))->Layout();
-                    toggle = !toggle;
-                });
+            bind<window::CLICK>(std::function<void()>(
+                                    []() {
+                                        static bool toggle = true;
+                                        if (toggle) {
+                                            window::W<window::Sizer*>(_("CONTENT"))->
+                                                Show(window::W<window::Sizer*>(_("EDT.EDIT_BTN")));
+                                            window::W<window::Sizer*>(_("CONTENT"))->
+                                                Hide(window::W<window::Sizer*>(_("ENT.LIST")));
+                                        } else {
+                                            window::W<window::Sizer*>(_("CONTENT"))->
+                                                Hide(window::W<window::Sizer*>(_("EDT.EDIT_BTN")));
+                                            window::W<window::Sizer*>(_("CONTENT"))->
+                                                Show(window::W<window::Sizer*>(_("ENT.LIST")));
+                                        }
+                                        window::W<window::Sizer*>(_("CONTENT"))->Layout();
+                                        toggle = !toggle;
+                                    }));
     }(window::W<window::Sizer*>(window::VERTICAL));
     
     [frame](window::Sizer* sizer) {
@@ -439,8 +449,19 @@ void window_thing::edt(window::Frame* frame) {
     }(window::W<window::Sizer*>(window::HORIZONTAL));
 
     [frame](window::Sizer* sizer) {
+        window::W<window::Label*>(engine::String(_("EDT.TIME_LABEL")),
+                                  engine::String(_("NONE")),
+                                  engine::String(_("Дата выплаты")))->
+            create(frame->wx(), window::W<window::Size>(90, -1), sizer, 0, window::ALIGN_CENTER);
+        window::W<window::Time*>(engine::String(_("EDT.TIME_INPUT")),
+                                 engine::String(_("NONE")))->
+            create(frame->wx(), window::W<window::Size>(), sizer, 1);
+    }(window::W<window::Sizer*>(window::HORIZONTAL));
+
+    [frame](window::Sizer* sizer) {
         sizer->Add(window::W<window::Sizer*>(_("EDT.NOMINAL_LABEL")), 0, window::EXPAND);
         sizer->Add(window::W<window::Sizer*>(_("EDT.COST_LABEL")), 0, window::EXPAND);
+        sizer->Add(window::W<window::Sizer*>(_("EDT.TIME_LABEL")), 0, window::EXPAND);
         window::W<window::Button*>(engine::String(_("EDT.EDIT_BTN")),
                                    engine::String(_("NONE")),
                                    engine::String(_("Редактировать")))->
@@ -471,13 +492,29 @@ void window_thing::pay(window::Frame* frame) {
             create(frame->wx(), window::W<window::Size>(), sizer, 1);
     }(window::W<window::Sizer*>(window::HORIZONTAL));
 
+   [frame](window::Sizer* sizer) {
+        window::W<window::Label*>(engine::String(_("PAY.TIME_LABEL")),
+                                  engine::String(_("NONE")),
+                                  engine::String(_("Дата оплаты")))->
+            create(frame->wx(), window::W<window::Size>(90, -1), sizer, 0, window::ALIGN_CENTER);
+        window::W<window::Time*>(engine::String(_("PAY.TIME_INPUT")),
+                                 engine::String(_("NONE")))->
+            create(frame->wx(), window::W<window::Size>(), sizer, 1);
+    }(window::W<window::Sizer*>(window::HORIZONTAL));
+
     [frame](window::Sizer* sizer) {
         sizer->Add(window::W<window::Sizer*>(_("PAY.NOMINAL_LABEL")), 0, window::EXPAND);
         sizer->Add(window::W<window::Sizer*>(_("PAY.COST_LABEL")), 0, window::EXPAND);
+        sizer->Add(window::W<window::Sizer*>(_("PAY.TIME_LABEL")), 0, window::EXPAND);
         window::W<window::Button*>(engine::String(_("PAY.PAY_BTN")),
                                    engine::String(_("NONE")),
                                    engine::String(_("Внести платеж")))->
             create(frame->wx(), window::W<window::Size>(180, 30), sizer);
+        window::W<window::ListBox*>(engine::String(_("PAY.LIST")),
+				    engine::String(_("NONE")),
+				    std::vector<engine::String> {_("hello"), _("how")})->
+	    create(frame->wx(), window::W<window::Size>(), sizer,
+		   1, window::EXPAND);
     }(window::W<window::Sizer*>(window::VERTICAL));    
 }
 

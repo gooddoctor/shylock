@@ -9,14 +9,19 @@ To to(From from) {
 }
 
 
+BEGIN_EVENT_TABLE(wxShylockTime, wxPanel)
+EVT_CHOICE(ID_YEAR, wxShylockTime::on_day_update)
+EVT_CHOICE(ID_MONTH, wxShylockTime::on_day_update)
+END_EVENT_TABLE()
+
 wxShylockTime::wxShylockTime(wxWindow* parent, wxWindowID id, 
                              const wxPoint& pos, const wxSize& size) :
       wxPanel(parent, id, pos, size) {
-    year = new wxChoice(this, wxID_ANY, wxDefaultPosition,
+    year = new wxChoice(this, ID_YEAR, wxDefaultPosition,
                         wxDefaultSize, 0, nullptr);
-    month = new wxChoice(this, wxID_ANY, wxDefaultPosition,
+    month = new wxChoice(this, ID_MONTH, wxDefaultPosition,
                          wxDefaultSize, 0, nullptr);
-    day = new wxChoice(this, wxID_ANY, wxDefaultPosition,
+    day = new wxChoice(this, ID_DAY, wxDefaultPosition,
                        wxDefaultSize, 0, nullptr);
 
     set(wxString(boost::gregorian::
@@ -68,10 +73,40 @@ void wxShylockTime::set(const wxString& date) {
         return values;
     }();
     day->Clear();
-    day->Append(wxArrayString(days.size(), days.data()));
+    day->Append(wxArrayString(current.end_of_month().day(), days.data()));
     day->SetSelection(current.day() - 1);
 }
 
 wxString wxShylockTime::get() {
-    return _("");
+    return year->GetStringSelection() + month->GetStringSelection() + day->GetStringSelection();
 }
+
+void wxShylockTime::on_day_update(wxCommandEvent& event) {
+    boost::gregorian::date current = [this]() {
+        using namespace boost::gregorian;
+        return from_undelimited_string(std::string(year->GetStringSelection().mb_str()) +
+                                       std::string(month->GetStringSelection().mb_str()) +
+                                       "1");
+    }();
+    std::array<wxString, 31> days = []() {
+        std::array<wxString, 31> values;
+        int day = 1;
+        std::generate(values.begin(), values.end(),
+                      [&day]() {
+                          return wxString(to<std::string>(day++).c_str(), wxConvUTF8);
+                      });
+        return values;
+    }();
+    int selection = [&]() -> int {
+        int previous_day = to<int>(std::string(day->GetStringSelection().mb_str()));
+        if (current.end_of_month().day() < previous_day) 
+            return current.end_of_month().day() - 1;
+        else
+            return previous_day - 1;
+    }();
+
+    day->Clear();
+    day->Append(wxArrayString(current.end_of_month().day(), days.data()));
+    day->SetSelection(selection);
+
+ }

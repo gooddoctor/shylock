@@ -5,6 +5,7 @@
 BEGIN_EVENT_TABLE(wxShylockButton, wxPanel)
 EVT_PAINT(wxShylockButton::on_paint)
 EVT_ERASE_BACKGROUND(wxShylockButton::on_erase_background)
+EVT_UPDATE_UI(wxID_ANY, wxShylockButton::on_idle)
 EVT_LEFT_DOWN(wxShylockButton::on_mouse_down)
 EVT_LEFT_UP(wxShylockButton::on_mouse_up)
 END_EVENT_TABLE()
@@ -18,16 +19,27 @@ wxShylockButton::wxShylockButton(wxWindow* parent, wxWindowID id,
 }
 
 wxShylockButton* wxShylockButton::add_click_callback(const std::function<void()>& callback) {
-    notification_callbacks.push_back(callback);
+    click_notification_callbacks.push_back(callback);
     return this;
 }
 
-void wxShylockButton::fire_notification_callbacks() {
-    using iter = std::list<std::function<void()> >::iterator;
-    std::for_each(notification_callbacks.begin(), notification_callbacks.end(),
+wxShylockButton* 
+wxShylockButton::add_idle_callback(const std::function<void(wxUpdateUIEvent&)>& callback) {
+    idle_notification_callbacks.push_back(callback);
+    return this;
+}
+
+void wxShylockButton::fire_click_notification_callbacks() {
+    std::for_each(click_notification_callbacks.begin(), click_notification_callbacks.end(),
 		  [](std::function<void()> callback) {
 		      callback();
 		  });
+}
+
+void wxShylockButton::fire_idle_notification_callbacks(wxUpdateUIEvent& event) {
+    using iter = std::list<std::function<void(wxUpdateUIEvent&)> >::iterator;
+    for (iter i = idle_notification_callbacks.begin(); i != idle_notification_callbacks.end(); i++) 
+        (*i)(event);
 }
 
 void wxShylockButton::on_paint(wxPaintEvent& event) {
@@ -72,17 +84,22 @@ void wxShylockButton::on_erase_background(wxEraseEvent& event) {
 	return GetSize().GetHeight();
     }();
 
-
     dc->DrawRoundedRectangle(pen.GetWidth(),
-			    pen.GetWidth(),
-			    width - 2 * pen.GetWidth(),
-			    height - 2 * pen.GetWidth(), 10);
+                             pen.GetWidth(),
+                             width - 2 * pen.GetWidth(),
+                             height - 2 * pen.GetWidth(), 10);
+}
+
+void wxShylockButton::on_idle(wxUpdateUIEvent& event) {
+    if (enabled) {
+         fire_idle_notification_callbacks(event);
+    }
 }
 
 void wxShylockButton::on_mouse_down(wxMouseEvent& event) {
   if (enabled) {
     clicked = true;
-    fire_notification_callbacks();
+    fire_click_notification_callbacks();
     Refresh();
   }
 }
