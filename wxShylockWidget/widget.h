@@ -36,7 +36,6 @@ private:
     wxBrush clicked_brush = *wxGREY_BRUSH;
 
     bool clicked;
-    bool enabled = true;
 
     std::list<std::function<void()> > click_notification_callbacks;
     std::list<std::function<void(wxUpdateUIEvent&)> > idle_notification_callbacks;

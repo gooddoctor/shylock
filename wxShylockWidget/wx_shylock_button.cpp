@@ -16,6 +16,7 @@ wxShylockButton::wxShylockButton(wxWindow* parent, wxWindowID id,
 				 const wxSize& size) : 
       wxPanel(parent, id, pos, size, wxFULL_REPAINT_ON_RESIZE | wxBORDER_NONE), text(text_value) {
     SetBackgroundStyle(wxBG_STYLE_CUSTOM);
+    Enable(true);
 }
 
 wxShylockButton* wxShylockButton::add_click_callback(const std::function<void()>& callback) {
@@ -71,10 +72,10 @@ void wxShylockButton::on_erase_background(wxEraseEvent& event) {
     dc->SetBackground(brush);
     dc->Clear();
 
-    if (!clicked)
+    if (!clicked && IsEnabled())
 	dc->SetBrush(brush);
-    if (clicked || !enabled)
-	dc->SetBrush(clicked_brush);
+    else
+        dc->SetBrush(clicked_brush);
     dc->SetPen(pen);
 
     int width = [this]() {
@@ -91,22 +92,22 @@ void wxShylockButton::on_erase_background(wxEraseEvent& event) {
 }
 
 void wxShylockButton::on_idle(wxUpdateUIEvent& event) {
-    if (enabled) {
+    if (IsEnabled()) {
          fire_idle_notification_callbacks(event);
     }
 }
 
 void wxShylockButton::on_mouse_down(wxMouseEvent& event) {
-  if (enabled) {
-    clicked = true;
-    fire_click_notification_callbacks();
-    Refresh();
-  }
+    if (IsEnabled()) {
+        clicked = true;
+        fire_click_notification_callbacks();
+        Refresh();
+    }
 }
 
 void wxShylockButton::on_mouse_up(wxMouseEvent& event) {
-  if (enabled) {
-    clicked = false;
-    Refresh();
-  }
+    if (IsEnabled()) {
+        clicked = false;
+        Refresh();
+    }
 }

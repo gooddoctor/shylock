@@ -31,6 +31,19 @@ window::Window* window::Window::hide() {
     return this;
 }
 
+
+window::Window* window::Window::enabled() {
+    wxASSERT_MSG(win, _("win ptr is zero"));
+    win->Enable(true);
+    return this;
+}
+
+window::Window* window::Window::disabled() {
+    wxASSERT_MSG(win, _("win ptr is zero"));
+    win->Enable(false);
+    return this;
+}
+
 wxWindow* window::Window::wx() {
     wxASSERT_MSG(win, _("probably wrong. win is zero"));
     return win;
@@ -204,7 +217,7 @@ window::Time* window::W(engine::String id, engine::String category) {
 }
 
 template <>
-window::Sizer* window::W(const engine::String& name) {
+window::Sizer* window::W(engine::String name) {
     using iter = std::list<window::Window*>::iterator;
     iter win_pos = std::find_if(window::Window::all_of_them.begin(), 
                                 window::Window::all_of_them.end(),
@@ -217,16 +230,16 @@ window::Sizer* window::W(const engine::String& name) {
 
 template <>
 window::Sizer* window::W(const wchar_t* name) {
-    return window::W<window::Sizer*, const engine::String&>(engine::String(name));
+    return window::W<window::Sizer*, engine::String>(engine::String(name));
 }
 
 template <>
-window::Size window::W<window::Size>(int width, int height) {
+window::Size window::W(int width, int height) {
     return window::Size(width, height);
 }
 
 template <>
-window::Size window::W<window::Size>() {
+window::Size window::W() {
 	return window::Size(-1, -1);
 }
 

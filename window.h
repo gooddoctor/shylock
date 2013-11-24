@@ -28,13 +28,16 @@ namespace window {
     class RUN {};
 
     class Window {
-	friend Sizer* W<Sizer*>(const engine::String& name);
+	friend Sizer* W<Sizer*>(engine::String name);
     public:
 	Window(const engine::String& id_value, const engine::String& category_value);
 	virtual Window* create(wxWindow* parent_value, const Size& size_value, Sizer* sizer_value, 
 			       int proportion = 0, int flag = 0, int border = 0) = 0;
         virtual Window* show();
         virtual Window* hide();
+       virtual Window* enabled();
+        virtual Window* disabled();
+
         virtual wxWindow* wx();
     protected:
 	engine::String id;
@@ -115,41 +118,61 @@ namespace window {
 
     template <>
     window::RUN W(std::function<bool(void)> callback, int argc, char** argv);
-
+    
     template <>
     Frame* W(engine::String id, engine::String category, engine::String text);
+
+    template <>
+    Frame* W(engine::String id);
 
     template <>
     None* W(engine::String id, engine::String category);
 
     template <>
+    None* W(engine::String id);
+
+    template <>
     Label* W(engine::String id, engine::String category, engine::String text);
 
+    template <>
+    Label* W(engine::String id);
     
     template <>
     Button* W(engine::String id, engine::String category, engine::String text);
+    
+    template <>
+    Button* W(engine::String id);
     
     template <>
     ListBox* W(engine::String id, engine::String category,
 	       std::vector<engine::String> entries);
 
     template <>
+    ListBox* W(engine::String id);
+
+    template <>
     Text* W(engine::String id, engine::String category, engine::String text);
+
+    template <>
+    Text* W(engine::String id);
 
     template <>
     Time* W(engine::String id, engine::String category);
 
     template <>
-    Sizer* W(const engine::String& name);
+    Time* W(engine::String id);
+
+    template <>
+    Sizer* W(engine::String& name);
 
     template <>
     Sizer* W(const wchar_t* name);
   
     template <>
-    Size W<Size>(int width, int height);
+    Size W(int width, int height);
 
     template <>
-    Size W<Size>();
+    Size W();
 
     template <>
     Sizer* W(int orient);

@@ -25,7 +25,6 @@ bool window_thing::init() {
                                    [](window::UpdateUIEvent& event) {
                                        std::cout << "upate" << std::endl;
                                    }));
-        
 	window::W<window::Button*>(engine::String(_("2")),
                                    engine::String(_("NONE")),
                                    engine::String(_("2")))->
