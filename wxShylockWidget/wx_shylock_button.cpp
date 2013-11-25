@@ -31,10 +31,12 @@ wxShylockButton::add_idle_callback(const std::function<void(wxUpdateUIEvent&)>& 
 }
 
 void wxShylockButton::fire_click_notification_callbacks() {
-    std::for_each(click_notification_callbacks.begin(), click_notification_callbacks.end(),
-		  [](std::function<void()> callback) {
-		      callback();
-		  });
+    if (IsEnabled()) {
+        std::for_each(click_notification_callbacks.begin(), click_notification_callbacks.end(),
+                      [](std::function<void()> callback) {
+                          callback();
+                      });
+    }
 }
 
 void wxShylockButton::fire_idle_notification_callbacks(wxUpdateUIEvent& event) {
@@ -92,22 +94,16 @@ void wxShylockButton::on_erase_background(wxEraseEvent& event) {
 }
 
 void wxShylockButton::on_idle(wxUpdateUIEvent& event) {
-    if (IsEnabled()) {
-         fire_idle_notification_callbacks(event);
-    }
+    fire_idle_notification_callbacks(event);
 }
 
 void wxShylockButton::on_mouse_down(wxMouseEvent& event) {
-    if (IsEnabled()) {
-        clicked = true;
-        fire_click_notification_callbacks();
-        Refresh();
-    }
+    clicked = true;
+    Refresh();
 }
 
 void wxShylockButton::on_mouse_up(wxMouseEvent& event) {
-    if (IsEnabled()) {
-        clicked = false;
-        Refresh();
-    }
+    clicked = false;
+    Refresh();
+    fire_click_notification_callbacks();
 }

@@ -3,6 +3,19 @@
 
 std::list<window::Window*> window::Window::all_of_them;
 
+template <typename T>
+T window::find(const engine::String& id) {
+    using iter = std::list<window::Window*>::iterator;
+    iter win_pos = std::find_if(window::Window::all_of_them.begin(), 
+                                window::Window::all_of_them.end(),
+                                [&id](window::Window* entry) -> bool {
+                                    return entry->id == id;
+                                });
+    wxASSERT_MSG(win_pos != window::Window::all_of_them.end(), id + _(" not found"));
+    wxASSERT_MSG(dynamic_cast<T>(*win_pos), id + _(" has wrong type"));
+    return static_cast<T>(*win_pos);
+}
+
 window::Window::Window(const engine::String& id_value, 
 		       const engine::String& category_value) : 
       id(id_value), category(category_value), win(nullptr) {
@@ -186,8 +199,18 @@ window::Frame* window::W(engine::String id, engine::String category, engine::Str
 }
 
 template <>
+window::Frame* window::W(engine::String id) {
+    return window::find<Frame*>(id);
+}
+
+template <>
 window::None* window::W(engine::String id, engine::String category) {
     return new window::None(id, category);
+}
+
+template <>
+window::None* window::W(engine::String id) {
+    return window::find<None*>(id);
 }
 
 template <>
@@ -196,8 +219,18 @@ window::Label* window::W(engine::String id, engine::String category, engine::Str
 }
 
 template <>
+window::Label* window::W(engine::String id) {
+    return window::find<Label*>(id);
+}
+
+template <>
 window::Button* window::W(engine::String id, engine::String category, engine::String text) {
     return new window::Button(id, category, text);
+}
+
+template <>
+window::Button* window::W(engine::String id) {
+    return window::find<Button*>(id);
 }
 
 template <>
@@ -207,13 +240,28 @@ window::ListBox* window::W(engine::String id, engine::String category,
 }
 
 template <>
+window::ListBox* window::W(engine::String id) {
+    return window::find<ListBox*>(id);
+}
+
+template <>
 window::Text* window::W(engine::String id, engine::String category, engine::String text) {
         return new window::Text(id, category, text);
 }
 
 template <>
+window::Text* window::W(engine::String id) {
+    return window::find<Text*>(id);
+}
+
+template <>
 window::Time* window::W(engine::String id, engine::String category) {
     return new window::Time(id, category);
+}
+
+template <>
+window::Time* window::W(engine::String id) {
+    return window::find<Time*>(id);
 }
 
 template <>

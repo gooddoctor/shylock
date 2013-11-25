@@ -29,6 +29,8 @@ namespace window {
 
     class Window {
 	friend Sizer* W<Sizer*>(engine::String name);
+        template <typename T>
+        friend T find(const engine::String& id);
     public:
 	Window(const engine::String& id_value, const engine::String& category_value);
 	virtual Window* create(wxWindow* parent_value, const Size& size_value, Sizer* sizer_value, 
