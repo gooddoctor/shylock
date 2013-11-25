@@ -54,7 +54,6 @@ handlers:
     void on_idle(wxUpdateUIEvent& event);
     void on_mouse_up(wxMouseEvent& event);
     void on_mouse_down(wxMouseEvent& event);
-    void fire_click_event();
 wx_parts:
     DECLARE_EVENT_TABLE()
 };
@@ -65,10 +64,17 @@ public:
 };
 
 class wxShylockText : public wxTextCtrl {
+private:
+    std::list<std::function<void()> > focus_notification_callbacks;
 public:
-    wxShylockText(wxWindow *parent, wxWindowID id, const wxString& text,
-                  const wxPoint& pos = wxDefaultPosition,
-                  const wxSize& size = wxDefaultSize);
+    using wxTextCtrl::wxTextCtrl;
+    wxShylockText* add_focus_callback(const std::function<void()>& callback);
+private:
+    void fire_focus_notification_callbacks();
+handlers:
+    void on_focus(wxFocusEvent& event);
+wx_parts:
+    DECLARE_EVENT_TABLE()
 };
 
 class wxShylockTime : public wxPanel {

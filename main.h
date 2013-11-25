@@ -4,6 +4,10 @@
 #include "window.h"
 
 namespace window_thing {
+    enum State {MAIN, ADD, EDIT, PAY} state;
+
+    window::Text* focus;
+
     bool init();
     void ent(window::Frame* frame);
     void add(window::Frame* frame);

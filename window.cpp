@@ -177,6 +177,19 @@ window::Text* window::Text::create(wxWindow* parent_value, const window::Size& s
     return this;
 }
 
+window::Text* window::Text::key_press(const engine::String& key) {
+    wxASSERT_MSG(win, _("call key_press<>() only after create()"));    
+    static_cast<wxTextCtrl*>(win)->AppendText(key);
+    return this;
+}
+
+template <>
+window::Text* window::Text::bind<window::FOCUS>(const std::function<void()>& callback) {
+    wxASSERT_MSG(win, _("call bind<>() only after create()"));    
+    static_cast<wxShylockText*>(win)->add_focus_callback(callback);
+    return this;
+}
+
 window::Time* window::Time::create(wxWindow* parent_value, const window::Size& size_value, 
                                    window::Sizer* sizer_value, int proportion, int flag, 
                                    int border) {

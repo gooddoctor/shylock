@@ -14,7 +14,7 @@ namespace window {
     template <typename T, typename... Args>
     T W(Args... args);
     
-    enum {CLICK = 0, IDLE};
+    enum {CLICK = 0, IDLE, FOCUS};
 
     using Sizer = wxSizer;
     using Size = wxSize;
@@ -92,23 +92,26 @@ namespace window {
     };
 
     class ListBox : public Window {
+    private:
+	std::vector<engine::String> entries;
     public:
 	ListBox(const engine::String& id_value, const engine::String& category_value,
 		std::vector<engine::String>& entries_value);
 	ListBox* create(wxWindow* parent_value, const Size& size_value, Sizer* sizer_value,
 			int proportion = 0, int flag = 0, int border = 0) override;
-    private:
-	std::vector<engine::String> entries;
     };
 
     class Text : public Window {
+    private:
+        engine::String text;
     public:
         Text(const engine::String& id_value, const engine::String& category_value,
              const engine::String& text_value);
         Text* create(wxWindow* parent_value, const Size& size_value, Sizer* sizer_value,
                      int proportion = 0, int flag = 0, int border = 0) override;
-    private:
-        engine::String text;
+        Text* key_press(const engine::String& key);
+        template <int S, typename... Args>
+	window::Text* bind(const std::function<void(Args...)>& callback);
     };
 
     class Time : public Window {
