@@ -2,6 +2,7 @@
 #define __MAIN_H
 
 #include "window.h"
+#include "data.h"
 
 namespace window_thing {
     enum State {MAIN, ADD, EDIT, PAY} state;

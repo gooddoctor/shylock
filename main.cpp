@@ -1,11 +1,15 @@
 #include "main.h"
 
+#include "dep/prefix.h"
+
 using window::W;
+using data::D;
+using namespace engine;
 
 bool window_thing::init() {
-    window::Frame* frame = W<window::Frame*>(engine::String(_("TOP")),
-                                             engine::String(_("NONE")),
-                                             engine::String(_("Shylock")))->
+    window::Frame* frame = W<window::Frame*>(String(_("TOP")),
+                                             String(_("NONE")),
+                                             String(_("Shylock")))->
         create(nullptr, W<window::Size>(-1, -1), 
                W<window::Sizer*>(window::VERTICAL));
     
@@ -15,79 +19,79 @@ bool window_thing::init() {
     pay(frame);
 
     [frame](window::Sizer* sizer) {
-	W<window::Button*>(engine::String(_("1")),
-                           engine::String(_("NONE")),
-                           engine::String(_("1")))->
+	W<window::Button*>(String(_("1")),
+                           String(_("NONE")),
+                           String(_("1")))->
 	    create(frame->wx(), W<window::Size>(60, 45), sizer)->
 	    bind<window::CLICK>(std::function<void()>([](){
                         if (window_thing::focus != nullptr) {
-                            window_thing::focus->key_press(engine::String(_("1")));
+                            window_thing::focus->key_press(String(_("1")));
                         }
                     }));
-	W<window::Button*>(engine::String(_("2")),
-                           engine::String(_("NONE")),
-                           engine::String(_("2")))->
+	W<window::Button*>(String(_("2")),
+                           String(_("NONE")),
+                           String(_("2")))->
 	    create(frame->wx(), W<window::Size>(60, 45), sizer)->
 	    bind<window::CLICK>(std::function<void(void)>(
                                     []() {
                                         std::cout << "2 is selected" << std::endl;
                                     }));
-	W<window::Button*>(engine::String(_("3")),
-                           engine::String(_("NONE")),
-                           engine::String(_("3")))->
+	W<window::Button*>(String(_("3")),
+                           String(_("NONE")),
+                           String(_("3")))->
 	    create(frame->wx(), W<window::Size>(60, 45), sizer);
     }(W<window::Sizer*>(window::HORIZONTAL));
 
     [frame](window::Sizer* sizer) {
-	W<window::Button*>(engine::String(_("4")),
-                           engine::String(_("NONE")),
-                           engine::String(_("4")))->
+	W<window::Button*>(String(_("4")),
+                           String(_("NONE")),
+                           String(_("4")))->
 	    create(frame->wx(), W<window::Size>(60, 45), sizer);
-	W<window::Button*>(engine::String(_("5")),
-                           engine::String(_("NONE")),
-                           engine::String(_("5")))->
+	W<window::Button*>(String(_("5")),
+                           String(_("NONE")),
+                           String(_("5")))->
 	    create(frame->wx(), W<window::Size>(60, 45), sizer);
-	W<window::Button*>(engine::String(_("6")),
-                           engine::String(_("NONE")),
-                           engine::String(_("6")))->
-	    create(frame->wx(), W<window::Size>(60, 45), sizer);
-    }(W<window::Sizer*>(window::HORIZONTAL));
-
-    [frame](window::Sizer* sizer) {
-	W<window::Button*>(engine::String(_("7")),
-                           engine::String(_("NONE")),
-                           engine::String(_("7")))->
-	    create(frame->wx(), W<window::Size>(60, 45), sizer);
-	W<window::Button*>(engine::String(_("8")),
-                           engine::String(_("NONE")),
-                           engine::String(_("8")))->
-	    create(frame->wx(), W<window::Size>(60, 45), sizer);
-	W<window::Button*>(engine::String(_("9")),
-                           engine::String(_("NONE")),
-                           engine::String(_("9")))->
+	W<window::Button*>(String(_("6")),
+                           String(_("NONE")),
+                           String(_("6")))->
 	    create(frame->wx(), W<window::Size>(60, 45), sizer);
     }(W<window::Sizer*>(window::HORIZONTAL));
 
     [frame](window::Sizer* sizer) {
-	W<window::Button*>(engine::String(_("0")),
-                           engine::String(_("NONE")),
-                           engine::String(_("0")))->
+	W<window::Button*>(String(_("7")),
+                           String(_("NONE")),
+                           String(_("7")))->
 	    create(frame->wx(), W<window::Size>(60, 45), sizer);
-	W<window::Button*>(engine::String(_("ENTER_BTN")),
-                           engine::String(_("NONE")),
-                           engine::String(_("enter")))->
+	W<window::Button*>(String(_("8")),
+                           String(_("NONE")),
+                           String(_("8")))->
+	    create(frame->wx(), W<window::Size>(60, 45), sizer);
+	W<window::Button*>(String(_("9")),
+                           String(_("NONE")),
+                           String(_("9")))->
+	    create(frame->wx(), W<window::Size>(60, 45), sizer);
+    }(W<window::Sizer*>(window::HORIZONTAL));
+
+    [frame](window::Sizer* sizer) {
+	W<window::Button*>(String(_("0")),
+                           String(_("NONE")),
+                           String(_("0")))->
+	    create(frame->wx(), W<window::Size>(60, 45), sizer);
+	W<window::Button*>(String(_("ENTER_BTN")),
+                           String(_("NONE")),
+                           String(_("enter")))->
 	    create(frame->wx(), W<window::Size>(120, 45), sizer,
 		   1, window::EXPAND);
     }(W<window::Sizer*>(window::HORIZONTAL));
 
     [frame](window::Sizer* sizer) {
-	W<window::Button*>(engine::String(_("DELL_BTN")),
-                           engine::String(_("NONE")),
-                           engine::String(_("DEL")))->
+	W<window::Button*>(String(_("DELL_BTN")),
+                           String(_("NONE")),
+                           String(_("DEL")))->
 	    create(frame->wx(), W<window::Size>(80, 45), sizer);
-	W<window::Button*>(engine::String(_("FIND_BTN")),
-                           engine::String(_("NONE")),
-                           engine::String(_("поиск")))->
+	W<window::Button*>(String(_("FIND_BTN")),
+                           String(_("NONE")),
+                           String(_("поиск")))->
 	    create(frame->wx(), W<window::Size>(100, 45), sizer)->
             bind<window::CLICK>(std::function<void()>([](){
                         static bool toggle = true;
@@ -109,9 +113,9 @@ bool window_thing::init() {
         sizer->Add(W<window::Sizer*>(_("7")));
         sizer->Add(W<window::Sizer*>(_("0")));
         sizer->Add(W<window::Sizer*>(_("DELL_BTN")));
-	W<window::Button*>(engine::String(_("BACK_BTN")),
-                           engine::String(_("NONE")),
-                           engine::String(_("Назад")))->
+	W<window::Button*>(String(_("BACK_BTN")),
+                           String(_("NONE")),
+                           String(_("Назад")))->
 	    create(frame->wx(), W<window::Size>(180, 45), sizer)->
             bind<window::CLICK>(std::function<void()>([](){
                         window_thing::state = window_thing::MAIN; 
@@ -135,9 +139,9 @@ bool window_thing::init() {
     }(W<window::Sizer*>(window::VERTICAL));
 
     [frame](window::Sizer* sizer) {
-	W<window::Button*>(engine::String(_("ADD_BTN")),
-                           engine::String(_("NONE")),
-                           engine::String(_("Добавить клиента")))->
+	W<window::Button*>(String(_("ADD_BTN")),
+                           String(_("NONE")),
+                           String(_("Добавить клиента")))->
 	    create(frame->wx(), W<window::Size>(180, 67), sizer)->
             bind<window::CLICK>(std::function<void()>([]() {
                         window_thing::state = window_thing::ADD;
@@ -155,9 +159,9 @@ bool window_thing::init() {
                                            event.Enable(false);
                                        }
                                    }));
-	W<window::Button*>(engine::String(_("REMOVE_BTN")),
-                           engine::String(_("NONE")),
-                           engine::String(_("Удалить клиента")))->
+	W<window::Button*>(String(_("REMOVE_BTN")),
+                           String(_("NONE")),
+                           String(_("Удалить клиента")))->
 	    create(frame->wx(), W<window::Size>(180, 67), sizer)->
             bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
                                    [](window::UpdateUIEvent& event) {
@@ -166,9 +170,9 @@ bool window_thing::init() {
                                        else
                                            event.Enable(false);
                                    }));
-	W<window::Button*>(engine::String(_("PAY_BTN")),
-                           engine::String(_("NONE")),
-                           engine::String(_("Оплатить")))->
+	W<window::Button*>(String(_("PAY_BTN")),
+                           String(_("NONE")),
+                           String(_("Оплатить")))->
 	    create(frame->wx(), W<window::Size>(180, 67), sizer)->
             bind<window::CLICK>(std::function<void()>([]() {
                         window_thing::state = window_thing::PAY;
@@ -185,9 +189,9 @@ bool window_thing::init() {
                                        else
                                            event.Enable(false);
                                    }));
-	W<window::Button*>(engine::String(_("EDIT_BTN")),
-                           engine::String(_("NONE")),
-                           engine::String(_("Редактировать")))->
+	W<window::Button*>(String(_("EDIT_BTN")),
+                           String(_("NONE")),
+                           String(_("Редактировать")))->
 	    create(frame->wx(), W<window::Size>(180, 69), sizer)->
             bind<window::CLICK>(std::function<void()>([]() {
                         window_thing::state = window_thing::EDIT;
@@ -219,141 +223,141 @@ bool window_thing::init() {
         sizer->Hide(W<window::Sizer*>(_("EDT.EDIT_BTN")));
         sizer->Hide(W<window::Sizer*>(_("PAY.PAY_BTN")));
 
-        W<window::None*>(engine::String(_("CONTENT")),
-                         engine::String(_("NONE")))->
+        W<window::None*>(String(_("CONTENT")),
+                         String(_("NONE")))->
             create(frame->wx(), W<window::Size>(0, 0), sizer);
     }(W<window::Sizer*>(window::HORIZONTAL));
 
     [frame](window::Sizer* sizer) {
-        W<window::Button*>(engine::String(_("Q")),
-                           engine::String(_("KEY")),
-                           engine::String(_("й")))->
+        W<window::Button*>(String(_("Q")),
+                           String(_("KEY")),
+                           String(_("й")))->
             create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
-        W<window::Button*>(engine::String(_("W")),
-                           engine::String(_("KEY")),
-                           engine::String(_("ц")))->
+        W<window::Button*>(String(_("W")),
+                           String(_("KEY")),
+                           String(_("ц")))->
             create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
-        W<window::Button*>(engine::String(_("E")),
-                           engine::String(_("KEY")),
-                           engine::String(_("у")))->
+        W<window::Button*>(String(_("E")),
+                           String(_("KEY")),
+                           String(_("у")))->
             create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
-        W<window::Button*>(engine::String(_("R")),
-                           engine::String(_("KEY")),
-                           engine::String(_("к")))->
+        W<window::Button*>(String(_("R")),
+                           String(_("KEY")),
+                           String(_("к")))->
             create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
-        W<window::Button*>(engine::String(_("T")),
-                           engine::String(_("KEY")),
-                           engine::String(_("е")))->
+        W<window::Button*>(String(_("T")),
+                           String(_("KEY")),
+                           String(_("е")))->
             create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
-        W<window::Button*>(engine::String(_("Y")),
-                           engine::String(_("KEY")),
-                           engine::String(_("н")))->
+        W<window::Button*>(String(_("Y")),
+                           String(_("KEY")),
+                           String(_("н")))->
             create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
-        W<window::Button*>(engine::String(_("U")),
-                           engine::String(_("KEY")),
-                           engine::String(_("г")))->
+        W<window::Button*>(String(_("U")),
+                           String(_("KEY")),
+                           String(_("г")))->
             create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
-        W<window::Button*>(engine::String(_("I")),
-                           engine::String(_("KEY")),
-                           engine::String(_("ш")))->
+        W<window::Button*>(String(_("I")),
+                           String(_("KEY")),
+                           String(_("ш")))->
             create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
-        W<window::Button*>(engine::String(_("O")),
-                           engine::String(_("KEY")),
-                           engine::String(_("щ")))->
+        W<window::Button*>(String(_("O")),
+                           String(_("KEY")),
+                           String(_("щ")))->
             create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
-        W<window::Button*>(engine::String(_("P")),
-                           engine::String(_("KEY")),
-                           engine::String(_("з")))->
+        W<window::Button*>(String(_("P")),
+                           String(_("KEY")),
+                           String(_("з")))->
             create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
-        W<window::Button*>(engine::String(_("[")),
-                           engine::String(_("KEY")),
-                           engine::String(_("х")))->
-            create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
-    }(W<window::Sizer*>(window::HORIZONTAL));
-
-    [frame](window::Sizer* sizer) {
-        W<window::Button*>(engine::String(_("A")),
-                           engine::String(_("KEY")),
-                           engine::String(_("ф")))->
-            create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
-        W<window::Button*>(engine::String(_("S")),
-                           engine::String(_("KEY")),
-                           engine::String(_("ы")))->
-            create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
-        W<window::Button*>(engine::String(_("D")),
-                           engine::String(_("KEY")),
-                           engine::String(_("в")))->
-            create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
-        W<window::Button*>(engine::String(_("F")),
-                           engine::String(_("KEY")),
-                           engine::String(_("а")))->
-            create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
-        W<window::Button*>(engine::String(_("G")),
-                           engine::String(_("KEY")),
-                           engine::String(_("п")))->
-            create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
-        W<window::Button*>(engine::String(_("H")),
-                           engine::String(_("KEY")),
-                           engine::String(_("р")))->
-            create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
-        W<window::Button*>(engine::String(_("J")),
-                           engine::String(_("KEY")),
-                           engine::String(_("о")))->
-            create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
-        W<window::Button*>(engine::String(_("K")),
-                           engine::String(_("KEY")),
-                           engine::String(_("л")))->
-            create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
-        W<window::Button*>(engine::String(_("L")),
-                           engine::String(_("KEY")),
-                           engine::String(_("д")))->
-            create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
-        W<window::Button*>(engine::String(_(";")),
-                           engine::String(_("KEY")),
-                           engine::String(_("ж")))->
-            create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
-        W<window::Button*>(engine::String(_("'")),
-                           engine::String(_("KEY")),
-                           engine::String(_("э")))->
+        W<window::Button*>(String(_("[")),
+                           String(_("KEY")),
+                           String(_("х")))->
             create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
     }(W<window::Sizer*>(window::HORIZONTAL));
 
     [frame](window::Sizer* sizer) {
-        W<window::Button*>(engine::String(_("Z")),
-                           engine::String(_("KEY")),
-                           engine::String(_("я")))->
+        W<window::Button*>(String(_("A")),
+                           String(_("KEY")),
+                           String(_("ф")))->
             create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
-        W<window::Button*>(engine::String(_("X")),
-                           engine::String(_("KEY")),
-                           engine::String(_("ч")))->
+        W<window::Button*>(String(_("S")),
+                           String(_("KEY")),
+                           String(_("ы")))->
             create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
-        W<window::Button*>(engine::String(_("C")),
-                           engine::String(_("KEY")),
-                           engine::String(_("с")))->
+        W<window::Button*>(String(_("D")),
+                           String(_("KEY")),
+                           String(_("в")))->
             create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
-        W<window::Button*>(engine::String(_("V")),
-                           engine::String(_("KEY")),
-                           engine::String(_("м")))->
+        W<window::Button*>(String(_("F")),
+                           String(_("KEY")),
+                           String(_("а")))->
             create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
-        W<window::Button*>(engine::String(_("B")),
-                           engine::String(_("KEY")),
-                           engine::String(_("и")))->
+        W<window::Button*>(String(_("G")),
+                           String(_("KEY")),
+                           String(_("п")))->
             create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
-        W<window::Button*>(engine::String(_("N")),
-                           engine::String(_("KEY")),
-                           engine::String(_("т")))->
+        W<window::Button*>(String(_("H")),
+                           String(_("KEY")),
+                           String(_("р")))->
             create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
-        W<window::Button*>(engine::String(_("M")),
-                           engine::String(_("KEY")),
-                           engine::String(_("ь")))->
+        W<window::Button*>(String(_("J")),
+                           String(_("KEY")),
+                           String(_("о")))->
             create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
-        W<window::Button*>(engine::String(_(",")),
-                           engine::String(_("KEY")),
-                           engine::String(_("б")))->
+        W<window::Button*>(String(_("K")),
+                           String(_("KEY")),
+                           String(_("л")))->
             create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
-        W<window::Button*>(engine::String(_(".")),
-                           engine::String(_("KEY")),
-                           engine::String(_("ю")))->
+        W<window::Button*>(String(_("L")),
+                           String(_("KEY")),
+                           String(_("д")))->
+            create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
+        W<window::Button*>(String(_(";")),
+                           String(_("KEY")),
+                           String(_("ж")))->
+            create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
+        W<window::Button*>(String(_("'")),
+                           String(_("KEY")),
+                           String(_("э")))->
+            create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
+    }(W<window::Sizer*>(window::HORIZONTAL));
+
+    [frame](window::Sizer* sizer) {
+        W<window::Button*>(String(_("Z")),
+                           String(_("KEY")),
+                           String(_("я")))->
+            create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
+        W<window::Button*>(String(_("X")),
+                           String(_("KEY")),
+                           String(_("ч")))->
+            create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
+        W<window::Button*>(String(_("C")),
+                           String(_("KEY")),
+                           String(_("с")))->
+            create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
+        W<window::Button*>(String(_("V")),
+                           String(_("KEY")),
+                           String(_("м")))->
+            create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
+        W<window::Button*>(String(_("B")),
+                           String(_("KEY")),
+                           String(_("и")))->
+            create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
+        W<window::Button*>(String(_("N")),
+                           String(_("KEY")),
+                           String(_("т")))->
+            create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
+        W<window::Button*>(String(_("M")),
+                           String(_("KEY")),
+                           String(_("ь")))->
+            create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
+        W<window::Button*>(String(_(",")),
+                           String(_("KEY")),
+                           String(_("б")))->
+            create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
+        W<window::Button*>(String(_(".")),
+                           String(_("KEY")),
+                           String(_("ю")))->
             create(frame->wx(), W<window::Size>(150, 30), sizer, 0);
     }(W<window::Sizer*>(window::HORIZONTAL));
 
@@ -361,8 +365,8 @@ bool window_thing::init() {
         sizer->Add(W<window::Sizer*>(_("Q")), 0, window::EXPAND);
         sizer->Add(W<window::Sizer*>(_("A")), 0, window::EXPAND);
         sizer->Add(W<window::Sizer*>(_("Z")), 0, window::EXPAND);
-        W<window::None*>(engine::String(_("KEYBOARD")),
-                         engine::String(_("NONE")))->
+        W<window::None*>(String(_("KEYBOARD")),
+                         String(_("NONE")))->
             create(frame->wx(), W<window::Size>(0, 0), sizer);
     }(W<window::Sizer*>(window::VERTICAL));
 
@@ -379,16 +383,16 @@ bool window_thing::init() {
 
 void window_thing::ent(window::Frame* frame) {
     [frame](window::Sizer* sizer) {
-        W<window::Label*>(engine::String(_("ENT.FIND_LABEL")),
-                          engine::String(_("NONE")),
-                          engine::String(_("Фильтр")))->
+        W<window::Label*>(String(_("ENT.FIND_LABEL")),
+                          String(_("NONE")),
+                          String(_("Фильтр")))->
             create(frame->wx(), W<window::Size>(60, -1), sizer, 0, window::ALIGN_CENTER);
-        W<window::Text*>(engine::String(_("ENT.FIND_TEXT")),
-                         engine::String(_("NONE")),
-                         engine::String(_("")))->
+        W<window::Text*>(String(_("ENT.FIND_TEXT")),
+                         String(_("NONE")),
+                         String(_("")))->
             create(frame->wx(), W<window::Size>(225, 30), sizer, 1)->
             bind<window::FOCUS>(std::function<void()>([](){
-                        window_thing::focus = W<window::Text*>(engine::String(_("ENT.FIND_TEXT")));
+                        window_thing::focus = W<window::Text*>(String(_("ENT.FIND_TEXT")));
                     }));
     }(W<window::Sizer*>(window::HORIZONTAL));
 
@@ -396,9 +400,9 @@ void window_thing::ent(window::Frame* frame) {
         sizer->Add(W<window::Sizer*>(_("ENT.FIND_TEXT")), 0, window::EXPAND);
         sizer->Hide(W<window::Sizer*>(_("ENT.FIND_TEXT")));
 
-	W<window::ListBox*>(engine::String(_("ENT.LIST")),
-                            engine::String(_("NONE")),
-                            std::vector<engine::String> {_("hello"), _("how")})->
+	W<window::ListBox*>(String(_("ENT.LIST")),
+                            String(_("NONE")),
+                            std::vector<String> {_("hello"), _("how")})->
 	    create(frame->wx(), W<window::Size>(550, 0), sizer,
 		   1, window::EXPAND);
     }(W<window::Sizer*>(window::VERTICAL));
@@ -406,42 +410,42 @@ void window_thing::ent(window::Frame* frame) {
 
 void window_thing::add(window::Frame* frame) {
     [frame](window::Sizer* sizer) {
-        W<window::Label*>(engine::String(_("ADD.NOMINAL_LABEL")),
-                          engine::String(_("NONE")),
-                          engine::String(_("Имя")))->
+        W<window::Label*>(String(_("ADD.NOMINAL_LABEL")),
+                          String(_("NONE")),
+                          String(_("Имя")))->
             create(frame->wx(), W<window::Size>(90, -1), sizer, 0, window::ALIGN_CENTER);
-        W<window::Text*>(engine::String(_("ADD.NOMINAL_TEXT")),
-                         engine::String(_("NONE")),
-                         engine::String(_("")))->
+        W<window::Text*>(String(_("ADD.NOMINAL_TEXT")),
+                         String(_("NONE")),
+                         String(_("")))->
             create(frame->wx(), W<window::Size>(), sizer, 1)->
             bind<window::FOCUS>(std::function<void()>([](){
                         window_thing::focus = 
-                            W<window::Text*>(engine::String(_("ADD.NOMINAL_TEXT")));
+                            W<window::Text*>(String(_("ADD.NOMINAL_TEXT")));
                     }));
     }(W<window::Sizer*>(window::HORIZONTAL));
 
     [frame](window::Sizer* sizer) {
-        W<window::Label*>(engine::String(_("ADD.COST_LABEL")),
-                          engine::String(_("NONE")),
-                          engine::String(_("Количество")))->
+        W<window::Label*>(String(_("ADD.COST_LABEL")),
+                          String(_("NONE")),
+                          String(_("Количество")))->
             create(frame->wx(), W<window::Size>(90, -1), sizer, 0, window::ALIGN_CENTER);
-        W<window::Text*>(engine::String(_("ADD.COST_TEXT")),
-                         engine::String(_("NONE")),
-                         engine::String(_("")))->
+        W<window::Text*>(String(_("ADD.COST_TEXT")),
+                         String(_("NONE")),
+                         String(_("")))->
             create(frame->wx(), W<window::Size>(), sizer, 1)->
             bind<window::FOCUS>(std::function<void()>([](){
                         window_thing::focus = 
-                            W<window::Text*>(engine::String(_("ADD.COST_TEXT")));
+                            W<window::Text*>(String(_("ADD.COST_TEXT")));
                     }));
     }(W<window::Sizer*>(window::HORIZONTAL));
 
     [frame](window::Sizer* sizer) {
-        W<window::Label*>(engine::String(_("ADD.TIME_LABEL")),
-                          engine::String(_("NONE")),
-                          engine::String(_("Дата выплаты")))->
+        W<window::Label*>(String(_("ADD.TIME_LABEL")),
+                          String(_("NONE")),
+                          String(_("Дата выплаты")))->
             create(frame->wx(), W<window::Size>(90, -1), sizer, 0, window::ALIGN_CENTER);
-        W<window::Time*>(engine::String(_("ADD.TIME_INPUT")),
-                         engine::String(_("NONE")))->
+        W<window::Time*>(String(_("ADD.TIME_INPUT")),
+                         String(_("NONE")))->
             create(frame->wx(), W<window::Size>(), sizer, 1);
     }(W<window::Sizer*>(window::HORIZONTAL));
 
@@ -449,51 +453,51 @@ void window_thing::add(window::Frame* frame) {
         sizer->Add(W<window::Sizer*>(_("ADD.NOMINAL_LABEL")), 0, window::EXPAND);
         sizer->Add(W<window::Sizer*>(_("ADD.COST_LABEL")), 0, window::EXPAND);
         sizer->Add(W<window::Sizer*>(_("ADD.TIME_LABEL")), 0, window::EXPAND);
-        W<window::Button*>(engine::String(_("ADD.ADD_BTN")),
-                           engine::String(_("NONE")),
-                           engine::String(_("Добавить")))->
+        W<window::Button*>(String(_("ADD.ADD_BTN")),
+                           String(_("NONE")),
+                           String(_("Добавить")))->
             create(frame->wx(), W<window::Size>(180, 30), sizer);
     }(W<window::Sizer*>(window::VERTICAL));    
 }
  
 void window_thing::edt(window::Frame* frame) {
     [frame](window::Sizer* sizer) {
-        W<window::Label*>(engine::String(_("EDT.NOMINAL_LABEL")),
-                          engine::String(_("NONE")),
-                          engine::String(_("Имя")))->
+        W<window::Label*>(String(_("EDT.NOMINAL_LABEL")),
+                          String(_("NONE")),
+                          String(_("Имя")))->
             create(frame->wx(), W<window::Size>(90, -1), sizer, 0, window::ALIGN_CENTER);
-        W<window::Text*>(engine::String(_("EDT.NOMINAL_TEXT")),
-                         engine::String(_("NONE")),
-                         engine::String(_("")))->
+        W<window::Text*>(String(_("EDT.NOMINAL_TEXT")),
+                         String(_("NONE")),
+                         String(_("")))->
             create(frame->wx(), W<window::Size>(), sizer, 1)->
             bind<window::FOCUS>(std::function<void()>([](){
                         window_thing::focus = 
-                            W<window::Text*>(engine::String(_("EDT.NOMINAL_TEXT")));
+                            W<window::Text*>(String(_("EDT.NOMINAL_TEXT")));
                     }));
     }(W<window::Sizer*>(window::HORIZONTAL));
 
     [frame](window::Sizer* sizer) {
-        W<window::Label*>(engine::String(_("EDT.COST_LABEL")),
-                          engine::String(_("NONE")),
-                          engine::String(_("Количество")))->
+        W<window::Label*>(String(_("EDT.COST_LABEL")),
+                          String(_("NONE")),
+                          String(_("Количество")))->
             create(frame->wx(), W<window::Size>(90, -1), sizer, 0, window::ALIGN_CENTER);
-        W<window::Text*>(engine::String(_("EDT.COST_TEXT")),
-                         engine::String(_("NONE")),
-                         engine::String(_("")))->
+        W<window::Text*>(String(_("EDT.COST_TEXT")),
+                         String(_("NONE")),
+                         String(_("")))->
             create(frame->wx(), W<window::Size>(), sizer, 1)->
             bind<window::FOCUS>(std::function<void()>([](){
                         window_thing::focus = 
-                            W<window::Text*>(engine::String(_("EDT.COST_TEXT")));
+                            W<window::Text*>(String(_("EDT.COST_TEXT")));
                     }));
     }(W<window::Sizer*>(window::HORIZONTAL));
 
     [frame](window::Sizer* sizer) {
-        W<window::Label*>(engine::String(_("EDT.TIME_LABEL")),
-                          engine::String(_("NONE")),
-                          engine::String(_("Дата выплаты")))->
+        W<window::Label*>(String(_("EDT.TIME_LABEL")),
+                          String(_("NONE")),
+                          String(_("Дата выплаты")))->
             create(frame->wx(), W<window::Size>(90, -1), sizer, 0, window::ALIGN_CENTER);
-        W<window::Time*>(engine::String(_("EDT.TIME_INPUT")),
-                         engine::String(_("NONE")))->
+        W<window::Time*>(String(_("EDT.TIME_INPUT")),
+                         String(_("NONE")))->
             create(frame->wx(), W<window::Size>(), sizer, 1);
     }(W<window::Sizer*>(window::HORIZONTAL));
 
@@ -501,51 +505,51 @@ void window_thing::edt(window::Frame* frame) {
         sizer->Add(W<window::Sizer*>(_("EDT.NOMINAL_LABEL")), 0, window::EXPAND);
         sizer->Add(W<window::Sizer*>(_("EDT.COST_LABEL")), 0, window::EXPAND);
         sizer->Add(W<window::Sizer*>(_("EDT.TIME_LABEL")), 0, window::EXPAND);
-        W<window::Button*>(engine::String(_("EDT.EDIT_BTN")),
-                           engine::String(_("NONE")),
-                           engine::String(_("Редактировать")))->
+        W<window::Button*>(String(_("EDT.EDIT_BTN")),
+                           String(_("NONE")),
+                           String(_("Редактировать")))->
             create(frame->wx(), W<window::Size>(180, 30), sizer);
     }(W<window::Sizer*>(window::VERTICAL));    
 }
  
 void window_thing::pay(window::Frame* frame) {
     [frame](window::Sizer* sizer) {
-        W<window::Label*>(engine::String(_("PAY.NOMINAL_LABEL")),
-                          engine::String(_("NONE")),
-                          engine::String(_("Имя")))->
+        W<window::Label*>(String(_("PAY.NOMINAL_LABEL")),
+                          String(_("NONE")),
+                          String(_("Имя")))->
             create(frame->wx(), W<window::Size>(90, -1), sizer, 0, window::ALIGN_CENTER);
-        W<window::Text*>(engine::String(_("PAY.NOMINAL_TEXT")),
-                         engine::String(_("NONE")),
-                         engine::String(_("")))->
+        W<window::Text*>(String(_("PAY.NOMINAL_TEXT")),
+                         String(_("NONE")),
+                         String(_("")))->
             create(frame->wx(), W<window::Size>(), sizer, 1)->
             bind<window::FOCUS>(std::function<void()>([](){
                         window_thing::focus = 
-                            W<window::Text*>(engine::String(_("PAY.NOMINAL_TEXT")));
+                            W<window::Text*>(String(_("PAY.NOMINAL_TEXT")));
                     }));
     }(W<window::Sizer*>(window::HORIZONTAL));
 
     [frame](window::Sizer* sizer) {
-        W<window::Label*>(engine::String(_("PAY.COST_LABEL")),
-                          engine::String(_("NONE")),
-                          engine::String(_("Количество")))->
+        W<window::Label*>(String(_("PAY.COST_LABEL")),
+                          String(_("NONE")),
+                          String(_("Количество")))->
             create(frame->wx(), W<window::Size>(90, -1), sizer, 0, window::ALIGN_CENTER);
-        W<window::Text*>(engine::String(_("PAY.COST_TEXT")),
-                         engine::String(_("NONE")),
-                         engine::String(_("")))->
+        W<window::Text*>(String(_("PAY.COST_TEXT")),
+                         String(_("NONE")),
+                         String(_("")))->
             create(frame->wx(), W<window::Size>(), sizer, 1)->
             bind<window::FOCUS>(std::function<void()>([](){
                         window_thing::focus = 
-                            W<window::Text*>(engine::String(_("PAY.COST_TEXT")));
+                            W<window::Text*>(String(_("PAY.COST_TEXT")));
                     }));
     }(W<window::Sizer*>(window::HORIZONTAL));
 
     [frame](window::Sizer* sizer) {
-        W<window::Label*>(engine::String(_("PAY.TIME_LABEL")),
-                          engine::String(_("NONE")),
-                          engine::String(_("Дата оплаты")))->
+        W<window::Label*>(String(_("PAY.TIME_LABEL")),
+                          String(_("NONE")),
+                          String(_("Дата оплаты")))->
             create(frame->wx(), W<window::Size>(90, -1), sizer, 0, window::ALIGN_CENTER);
-        W<window::Time*>(engine::String(_("PAY.TIME_INPUT")),
-                         engine::String(_("NONE")))->
+        W<window::Time*>(String(_("PAY.TIME_INPUT")),
+                         String(_("NONE")))->
             create(frame->wx(), W<window::Size>(), sizer, 1);
     }(W<window::Sizer*>(window::HORIZONTAL));
 
@@ -553,13 +557,13 @@ void window_thing::pay(window::Frame* frame) {
         sizer->Add(W<window::Sizer*>(_("PAY.NOMINAL_LABEL")), 0, window::EXPAND);
         sizer->Add(W<window::Sizer*>(_("PAY.COST_LABEL")), 0, window::EXPAND);
         sizer->Add(W<window::Sizer*>(_("PAY.TIME_LABEL")), 0, window::EXPAND);
-        W<window::Button*>(engine::String(_("PAY.PAY_BTN")),
-                           engine::String(_("NONE")),
-                           engine::String(_("Внести платеж")))->
+        W<window::Button*>(String(_("PAY.PAY_BTN")),
+                           String(_("NONE")),
+                           String(_("Внести платеж")))->
             create(frame->wx(), W<window::Size>(180, 30), sizer);
-        W<window::ListBox*>(engine::String(_("PAY.LIST")),
-                            engine::String(_("NONE")),
-                            std::vector<engine::String> {_("hello"), _("how")})->
+        W<window::ListBox*>(String(_("PAY.LIST")),
+                            String(_("NONE")),
+                            std::vector<String> {_("hello"), _("how")})->
 	    create(frame->wx(), W<window::Size>(), sizer,
 		   1, window::EXPAND);
     }(W<window::Sizer*>(window::VERTICAL));    
@@ -567,6 +571,8 @@ void window_thing::pay(window::Frame* frame) {
 
 
 int main(int argc, char** argv) {
+    std::cout << (String::FromUTF8(PREFIX) + String(_("/db.xml"))).mb_str();
+    D<data::XML*>(String(_("db")), String::FromUTF8(PREFIX) + String(_("/db.xml")));
     window_thing::state = window_thing::MAIN;
     W<window::RUN>(std::function<bool(void)>(window_thing::init), argc, argv);
 }

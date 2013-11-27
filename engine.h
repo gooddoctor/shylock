@@ -7,15 +7,11 @@
 #include <map>
 
 namespace engine {
-    class String : public wxString {
-    public:
-	using wxString::wxString;
-    };
+    using String = wxString;
 
     class Info : public std::map<String, String> {
         using std::map<String, String>::map;
     };
 
-    std::ostream& operator<< (std::ostream& os, const String& obj);
 };
 #endif

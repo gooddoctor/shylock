@@ -4,17 +4,19 @@ CXX=clang++
 CXXFLAGS=$(shell wx-config --cppflags)
 CXXFLAGS+=-I/home/gooddocteur/Programs/include
 CXXFLAGS+=-std=c++11
+CXXFLAGS+=-DENABLE_BINRELOC
 
 LIBS=$(shell wx-config --libs)
 LIBS+=-lX11
 LIBS+=-lboost_date_time
 
 PRG=shylock
-OBJ=window.o engine.o main.o
+OBJ=window.o engine.o main.o data.o
 
-$(PRG): $(OBJ) wxShylockWidget
+$(PRG): $(OBJ) wxShylockWidget dep
 	$(MAKE) -w -C wxShylockWidget
-	$(CC) $(OBJ) wxShylockWidget/*.o $(LIBS) -o $@ 
+	$(MAKE) -w -C dep
+	$(CC) wxShylockWidget/*.o dep/*.o $(OBJ) $(LIBS) -o $@ 
 
 main.o: main.h engine.o
 
@@ -22,8 +24,12 @@ window.o: window.h  engine.o
 
 engine.o: engine.h
 
-.PHONE : clean find run
+data.o: data.h
 
+.PHONE : clean find run deps
+
+deps: 
+	$(MAKE) all -w -C dep
 find:
 	find -name '*.cpp' -or -name '*.c' -or -name '*.h' | xargs grep -n -H $(NAME) --color=auto
 run:
@@ -31,6 +37,7 @@ run:
 clean:
 	rm -rf $(OBJ) $(PRG)
 	$(MAKE) clean -w -C wxShylockWidget
+	$(MAKE) clean -w -C dep
 
 
 
