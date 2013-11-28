@@ -16,5 +16,9 @@ namespace window_thing {
     void pay(window::Frame* frame);
 }
 
+namespace data_thing {
+    bool init();
+}
+
 #endif
 

@@ -7,6 +7,8 @@ using data::D;
 using namespace engine;
 
 bool window_thing::init() {
+    state = MAIN;
+
     window::Frame* frame = W<window::Frame*>(String(_("TOP")),
                                              String(_("NONE")),
                                              String(_("Shylock")))->
@@ -24,8 +26,8 @@ bool window_thing::init() {
                            String(_("1")))->
 	    create(frame->wx(), W<window::Size>(60, 45), sizer)->
 	    bind<window::CLICK>(std::function<void()>([](){
-                        if (window_thing::focus != nullptr) {
-                            window_thing::focus->key_press(String(_("1")));
+                        if (focus != nullptr) {
+                            focus->key_press(String(_("1")));
                         }
                     }));
 	W<window::Button*>(String(_("2")),
@@ -118,7 +120,7 @@ bool window_thing::init() {
                            String(_("Назад")))->
 	    create(frame->wx(), W<window::Size>(180, 45), sizer)->
             bind<window::CLICK>(std::function<void()>([](){
-                        window_thing::state = window_thing::MAIN; 
+                        state = MAIN; 
                         W<window::Sizer*>(_("CONTENT"))->
                             Hide(W<window::Sizer*>(_("ADD.ADD_BTN")));
                         W<window::Sizer*>(_("CONTENT"))->
@@ -131,7 +133,7 @@ bool window_thing::init() {
                     }))->
             bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
                                    [](window::UpdateUIEvent& event) {
-                                       if (window_thing::state == window_thing::MAIN)
+                                       if (state == MAIN)
                                            event.Enable(false);
                                        else 
                                            event.Enable(true);
@@ -144,7 +146,7 @@ bool window_thing::init() {
                            String(_("Добавить клиента")))->
 	    create(frame->wx(), W<window::Size>(180, 67), sizer)->
             bind<window::CLICK>(std::function<void()>([]() {
-                        window_thing::state = window_thing::ADD;
+                        state = ADD;
                         W<window::Sizer*>(_("CONTENT"))->
                             Show(W<window::Sizer*>(_("ADD.ADD_BTN")));
                         W<window::Sizer*>(_("CONTENT"))->
@@ -153,7 +155,7 @@ bool window_thing::init() {
                     }))->
             bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
                                    [](window::UpdateUIEvent& event) {
-                                       if (window_thing::state == window_thing::MAIN) {
+                                       if (state == MAIN) {
                                            event.Enable(true);
                                        } else {
                                            event.Enable(false);
@@ -165,7 +167,7 @@ bool window_thing::init() {
 	    create(frame->wx(), W<window::Size>(180, 67), sizer)->
             bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
                                    [](window::UpdateUIEvent& event) {
-                                       if (window_thing::state == window_thing::MAIN)
+                                       if (state == MAIN)
                                            event.Enable(true);
                                        else
                                            event.Enable(false);
@@ -175,7 +177,7 @@ bool window_thing::init() {
                            String(_("Оплатить")))->
 	    create(frame->wx(), W<window::Size>(180, 67), sizer)->
             bind<window::CLICK>(std::function<void()>([]() {
-                        window_thing::state = window_thing::PAY;
+                        state = PAY;
                         W<window::Sizer*>(_("CONTENT"))->
                             Show(W<window::Sizer*>(_("PAY.PAY_BTN")));
                         W<window::Sizer*>(_("CONTENT"))->
@@ -184,7 +186,7 @@ bool window_thing::init() {
                     }))->
             bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
                                    [](window::UpdateUIEvent& event) {
-                                       if (window_thing::state == window_thing::MAIN)
+                                       if (state == MAIN)
                                            event.Enable(true);
                                        else
                                            event.Enable(false);
@@ -194,7 +196,7 @@ bool window_thing::init() {
                            String(_("Редактировать")))->
 	    create(frame->wx(), W<window::Size>(180, 69), sizer)->
             bind<window::CLICK>(std::function<void()>([]() {
-                        window_thing::state = window_thing::EDIT;
+                        state = EDIT;
                         W<window::Sizer*>(_("CONTENT"))->
                             Show(W<window::Sizer*>(_("EDT.EDIT_BTN")));
                         W<window::Sizer*>(_("CONTENT"))->
@@ -203,7 +205,7 @@ bool window_thing::init() {
                     }))->
             bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
                                    [](window::UpdateUIEvent& event) {
-                                       if (window_thing::state == window_thing::MAIN) {
+                                       if (state == MAIN) {
                                            event.Enable(true);
                                        } else {
                                            event.Enable(false);
@@ -392,7 +394,7 @@ void window_thing::ent(window::Frame* frame) {
                          String(_("")))->
             create(frame->wx(), W<window::Size>(225, 30), sizer, 1)->
             bind<window::FOCUS>(std::function<void()>([](){
-                        window_thing::focus = W<window::Text*>(String(_("ENT.FIND_TEXT")));
+                        focus = W<window::Text*>(String(_("ENT.FIND_TEXT")));
                     }));
     }(W<window::Sizer*>(window::HORIZONTAL));
 
@@ -419,8 +421,7 @@ void window_thing::add(window::Frame* frame) {
                          String(_("")))->
             create(frame->wx(), W<window::Size>(), sizer, 1)->
             bind<window::FOCUS>(std::function<void()>([](){
-                        window_thing::focus = 
-                            W<window::Text*>(String(_("ADD.NOMINAL_TEXT")));
+                        focus = W<window::Text*>(String(_("ADD.NOMINAL_TEXT")));
                     }));
     }(W<window::Sizer*>(window::HORIZONTAL));
 
@@ -434,8 +435,7 @@ void window_thing::add(window::Frame* frame) {
                          String(_("")))->
             create(frame->wx(), W<window::Size>(), sizer, 1)->
             bind<window::FOCUS>(std::function<void()>([](){
-                        window_thing::focus = 
-                            W<window::Text*>(String(_("ADD.COST_TEXT")));
+                        focus = W<window::Text*>(String(_("ADD.COST_TEXT")));
                     }));
     }(W<window::Sizer*>(window::HORIZONTAL));
 
@@ -471,8 +471,7 @@ void window_thing::edt(window::Frame* frame) {
                          String(_("")))->
             create(frame->wx(), W<window::Size>(), sizer, 1)->
             bind<window::FOCUS>(std::function<void()>([](){
-                        window_thing::focus = 
-                            W<window::Text*>(String(_("EDT.NOMINAL_TEXT")));
+                        focus = W<window::Text*>(String(_("EDT.NOMINAL_TEXT")));
                     }));
     }(W<window::Sizer*>(window::HORIZONTAL));
 
@@ -486,8 +485,7 @@ void window_thing::edt(window::Frame* frame) {
                          String(_("")))->
             create(frame->wx(), W<window::Size>(), sizer, 1)->
             bind<window::FOCUS>(std::function<void()>([](){
-                        window_thing::focus = 
-                            W<window::Text*>(String(_("EDT.COST_TEXT")));
+                        focus = W<window::Text*>(String(_("EDT.COST_TEXT")));
                     }));
     }(W<window::Sizer*>(window::HORIZONTAL));
 
@@ -523,8 +521,7 @@ void window_thing::pay(window::Frame* frame) {
                          String(_("")))->
             create(frame->wx(), W<window::Size>(), sizer, 1)->
             bind<window::FOCUS>(std::function<void()>([](){
-                        window_thing::focus = 
-                            W<window::Text*>(String(_("PAY.NOMINAL_TEXT")));
+                        focus = W<window::Text*>(String(_("PAY.NOMINAL_TEXT")));
                     }));
     }(W<window::Sizer*>(window::HORIZONTAL));
 
@@ -538,8 +535,7 @@ void window_thing::pay(window::Frame* frame) {
                          String(_("")))->
             create(frame->wx(), W<window::Size>(), sizer, 1)->
             bind<window::FOCUS>(std::function<void()>([](){
-                        window_thing::focus = 
-                            W<window::Text*>(String(_("PAY.COST_TEXT")));
+                        focus = W<window::Text*>(String(_("PAY.COST_TEXT")));
                     }));
     }(W<window::Sizer*>(window::HORIZONTAL));
 
@@ -569,11 +565,18 @@ void window_thing::pay(window::Frame* frame) {
     }(W<window::Sizer*>(window::VERTICAL));    
 }
 
+bool data_thing::init() {
+    D<data::XML*>(String(_("db")), String::FromUTF8(DATADIR) + String(_("/db.xml")));
+    D<data::XML*>(_("db"))->insert<data::TOP>(std::map<String, String>{
+            {_("nominal"), _("fred")},
+            {_("price"), _("122.2")}
+        });;
+    return true;
+}
+
 
 int main(int argc, char** argv) {
-    std::cout << (String::FromUTF8(PREFIX) + String(_("/db.xml"))).mb_str();
-    D<data::XML*>(String(_("db")), String::FromUTF8(PREFIX) + String(_("/db.xml")));
-    window_thing::state = window_thing::MAIN;
+    D<data::RUN>(std::function<bool(void)>(data_thing::init), argc, argv);
     W<window::RUN>(std::function<bool(void)>(window_thing::init), argc, argv);
 }
 

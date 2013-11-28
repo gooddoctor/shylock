@@ -85,7 +85,7 @@ namespace window {
 		       int proportion = 0, int flag = 0, int border = 0) override;
 
 	template <int S, typename... Args>
-	window::Button* bind(const std::function<void(Args...)>& callback);
+	Button* bind(const std::function<void(Args...)>& callback);
 
     protected:
 	engine::String text;
@@ -111,7 +111,7 @@ namespace window {
                      int proportion = 0, int flag = 0, int border = 0) override;
         Text* key_press(const engine::String& key);
         template <int S, typename... Args>
-	window::Text* bind(const std::function<void(Args...)>& callback);
+	Text* bind(const std::function<void(Args...)>& callback);
     };
 
     class Time : public Window {
@@ -122,7 +122,7 @@ namespace window {
     };
 
     template <>
-    window::RUN W(std::function<bool(void)> callback, int argc, char** argv);
+    RUN W(std::function<bool(void)> callback, int argc, char** argv);
     
     template <>
     Frame* W(engine::String id, engine::String category, engine::String text);
