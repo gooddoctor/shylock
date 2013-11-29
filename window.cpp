@@ -201,12 +201,6 @@ window::Time* window::Time::create(wxWindow* parent_value, const window::Size& s
 }
 
 template <>
-window::RUN window::W(std::function<bool(void)> callback, int argc, char** argv) {
-    wxShylockApp::run(callback, argc, argv);
-    return window::RUN();
-}
-
-template <>
 window::Frame* window::W(engine::String id, engine::String category, engine::String text) {
     return new window::Frame(id, category, text);
 }
@@ -307,6 +301,12 @@ window::Size window::W() {
 template <>
 window::Sizer* window::W(int orient) {
     return new wxBoxSizer(orient);
+}
+
+template <>
+window::RUN window::W(std::function<bool(void)> callback, int argc, char** argv) {
+    wxShylockApp::run(callback, argc, argv);
+    return window::RUN();
 }
 
 

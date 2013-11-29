@@ -16,7 +16,7 @@ namespace data {
     class RUN {};
 
     class XML {
-        friend XML* find(const engine::String& id);
+        friend XML* D<XML*>(engine::String id);
     private:
         TiXmlDocument* db;
         engine::String id;

@@ -570,7 +570,13 @@ bool data_thing::init() {
     D<data::XML*>(_("db"))->insert<data::TOP>(std::map<String, String>{
             {_("nominal"), _("fred")},
             {_("price"), _("122.2")}
-        });;
+        });
+    D<data::XML*>(_("db"))->
+        insert<data::CHILD>(std::map<String, String>{{_("nominal"), _("fred")}},
+                            std::map<String, String>{
+                                {_("amount"), _("255")},
+                                {_("when"), _("19292912")}
+                            });
     return true;
 }
 
