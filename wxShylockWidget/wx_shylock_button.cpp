@@ -19,6 +19,13 @@ wxShylockButton::wxShylockButton(wxWindow* parent, wxWindowID id,
     Enable(true);
 }
 
+wxShylockButton* wxShylockButton::click() {
+    wxMouseEvent event;
+    on_mouse_down(event);
+    on_mouse_up(event);
+    return this;
+}
+
 wxShylockButton* wxShylockButton::add_click_callback(const std::function<void()>& callback) {
     click_notification_callbacks.push_back(callback);
     return this;

@@ -14,6 +14,11 @@ namespace window_thing {
     void add(window::Frame* frame);
     void edt(window::Frame* frame);
     void pay(window::Frame* frame);
+
+    template <typename T>
+    bool valid(engine::String value);
+    template <>
+    bool valid<double>(engine::String value);
 }
 
 namespace data_thing {

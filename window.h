@@ -19,12 +19,15 @@ namespace window {
     using Sizer = wxSizer;
     using Size = wxSize;
     using UpdateUIEvent = wxUpdateUIEvent;
+    using MessageBox = int;
 
     const int HORIZONTAL = wxHORIZONTAL;
     const int VERTICAL = wxVERTICAL;
     const int EXPAND = wxEXPAND;
     const int ALIGN_CENTER = wxALIGN_CENTER_VERTICAL;
-
+    const int OK = wxOK;
+    const int ICON_ERROR = wxICON_ERROR;
+    
     class RUN {};
 
     class Window {
@@ -87,6 +90,8 @@ namespace window {
 	template <int S, typename... Args>
 	Button* bind(const std::function<void(Args...)>& callback);
 
+        Button* click();
+
     protected:
 	engine::String text;
     };
@@ -109,6 +114,7 @@ namespace window {
              const engine::String& text_value);
         Text* create(wxWindow* parent_value, const Size& size_value, Sizer* sizer_value,
                      int proportion = 0, int flag = 0, int border = 0) override;
+        engine::String txt();
         Text* key_press(const engine::String& key);
         template <int S, typename... Args>
 	Text* bind(const std::function<void(Args...)>& callback);
@@ -119,6 +125,7 @@ namespace window {
         using Window::Window;
         Time* create(wxWindow* parent_value, const Size& size_value, Sizer* sizer_value,
                      int proportion = 0, int flag = 0, int border = 0) override;
+        engine::String time();
     };
 
     template <>
@@ -181,6 +188,9 @@ namespace window {
 
     template <>
     Sizer* W(int orient);
+
+    template <>
+    MessageBox W(engine::String text, engine::String caption, int style);
 }
 
 

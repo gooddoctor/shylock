@@ -45,6 +45,8 @@ public:
     TiXmlElement& operator*() {
         return *root;
     }
+
+    
 };
 
 std::list<data::XML*> data::XML::all_of_them;

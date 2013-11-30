@@ -456,7 +456,35 @@ void window_thing::add(window::Frame* frame) {
         W<window::Button*>(String(_("ADD.ADD_BTN")),
                            String(_("NONE")),
                            String(_("Добавить")))->
-            create(frame->wx(), W<window::Size>(180, 30), sizer);
+            create(frame->wx(), W<window::Size>(180, 30), sizer)->
+            bind<window::CLICK>(std::function<void()>([]() {
+                        String nominal = W<window::Text*>(String(_("ADD.NOMINAL_TEXT")))->txt();
+                        String cost = W<window::Text*>(String(_("ADD.COST_TEXT")))->txt();
+                        String when = W<window::Time*>(String(_("ADD.TIME_INPUT")))->time();
+                        
+                        if (nominal.IsEmpty() || cost.IsEmpty() || when.IsEmpty()) {
+                            W<window::MessageBox>(String(_("Некоторые поля остались пусты")),
+                                                  String(_("Ошибка ввода")), 
+                                                  window::OK | window::ICON_ERROR);
+                            return;
+                        }
+
+                        if (!valid<double>(cost)) {
+                            W<window::MessageBox>(String(_("Неверное значение стоимости")),
+                                                  String(_("Ошибка ввода")), 
+                                                  window::OK | window::ICON_ERROR);
+                            return;
+                        }
+
+                        std::map<String, String> entry;
+                        entry.insert(std::pair<String, String>{_("nominal"), nominal});
+                        entry.insert(std::pair<String, String>{_("cost"), cost});
+                        entry.insert(std::pair<String, String>{_("when"), when});
+ 
+                        D<data::XML*>(_("db"))->insert<data::TOP>(entry);
+
+                        W<window::Button*>(String(_("BACK_BTN")))->click();
+                    }));
     }(W<window::Sizer*>(window::VERTICAL));    
 }
  
@@ -563,6 +591,12 @@ void window_thing::pay(window::Frame* frame) {
 	    create(frame->wx(), W<window::Size>(), sizer,
 		   1, window::EXPAND);
     }(W<window::Sizer*>(window::VERTICAL));    
+}
+
+template <>
+bool window_thing::valid<double>(engine::String value) {
+    double tmp;
+    return value.ToDouble(&tmp);
 }
 
 bool data_thing::init() {

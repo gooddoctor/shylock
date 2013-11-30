@@ -43,6 +43,7 @@ public:
     wxShylockButton(wxWindow *parent, wxWindowID id, const wxString& text,
 		    const wxPoint& pos = wxDefaultPosition,
 		    const wxSize& size = wxDefaultSize);
+    wxShylockButton* click();	
     wxShylockButton* add_click_callback(const std::function<void()>& callback);	
     wxShylockButton* add_idle_callback(const std::function<void(wxUpdateUIEvent&)>& callback);	
 private:

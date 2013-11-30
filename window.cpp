@@ -140,8 +140,11 @@ window::Button::bind<window::IDLE>(const std::function<void(window::UpdateUIEven
     return this;
 }
     
-
-
+window::Button* window::Button::click() {
+    wxASSERT_MSG(win, _("call click() only after create()"));
+    static_cast<wxShylockButton*>(win)->click();
+    return this;
+}
 
 window::ListBox::ListBox(const engine::String& id_value, const engine::String& category_value,
 			 std::vector<engine::String>& entries_value) : 
@@ -177,6 +180,12 @@ window::Text* window::Text::create(wxWindow* parent_value, const window::Size& s
     return this;
 }
 
+engine::String window::Text::txt() {
+    if (win == nullptr)
+        return text;
+    return static_cast<wxShylockText*>(win)->GetValue();
+}
+
 window::Text* window::Text::key_press(const engine::String& key) {
     wxASSERT_MSG(win, _("call key_press<>() only after create()"));    
     static_cast<wxTextCtrl*>(win)->AppendText(key);
@@ -198,6 +207,11 @@ window::Time* window::Time::create(wxWindow* parent_value, const window::Size& s
                             wxDefaultPosition, size_value);
     Window::create(parent_value, size_value, sizer_value, proportion, flag, border);
     return this;
+}
+
+engine::String window::Time::time() {
+    wxASSERT_MSG(win != nullptr, _("getting time on null parent"));
+    return static_cast<wxShylockTime*>(win)->get();
 }
 
 template <>
@@ -301,6 +315,11 @@ window::Size window::W() {
 template <>
 window::Sizer* window::W(int orient) {
     return new wxBoxSizer(orient);
+}
+
+template <>
+window::MessageBox window::W(engine::String text, engine::String caption, int style) {
+    return wxMessageBox(text, caption, style, nullptr);
 }
 
 template <>
