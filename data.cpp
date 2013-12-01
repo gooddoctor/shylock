@@ -45,22 +45,51 @@ public:
     TiXmlElement& operator*() {
         return *root;
     }
-
-    
 };
 
-std::list<data::XML*> data::XML::all_of_them;
+class TiXmlAttribIterator : public std::iterator<std::input_iterator_tag, TiXmlAttribute> {
+private:
+    TiXmlAttribute* root;
+public:
+    TiXmlAttribIterator(TiXmlElement& rt) :
+          root(rt.FirstAttribute()) { }
 
-// data::XML* data::find(const engine::String& id) {
-//     using iter = std::list<data::XML*>::iterator;
-//     iter win_pos = std::find_if(data::XML::all_of_them.begin(), 
-//                                 data::XML::all_of_them.end(),
-//                                 [&id](data::XML* entry) -> bool {
-//                                     return entry->id == id;
-//                                 });
-//     assert(win_pos != data::XML::all_of_them.end());
-//     return *win_pos;
-// }
+    TiXmlAttribIterator() :
+          root(0) { }
+
+    TiXmlAttribIterator(const TiXmlAttribIterator& iter) :
+          root(iter.root) { }
+
+    TiXmlAttribIterator& operator++() {
+        root = root->Next();
+        return *this;
+    }
+
+    TiXmlAttribIterator operator++(int) {
+        TiXmlAttribIterator temp(*this);
+        operator++();
+        return temp;
+    }
+
+    bool operator==(const TiXmlAttribIterator& rhs) {
+        return root == rhs.root;
+    }
+
+    bool operator!=(const TiXmlAttribIterator& rhs) {
+        return root != rhs.root;
+    }
+
+    TiXmlAttribute* operator->() {
+        return root;
+    }
+
+    TiXmlAttribute& operator*() {
+        return *root;
+    }
+};
+
+
+std::list<data::XML*> data::XML::all_of_them;
 
 data::XML::XML(TiXmlDocument* db_value, const engine::String& id_value) : 
       db(db_value), id(id_value) {
@@ -114,6 +143,44 @@ data::XML* data::XML::insert<data::CHILD>(std::map<engine::String, engine::Strin
     assert(db->SaveFile());
     
     return this;
+}
+
+template <>
+std::vector<std::map<engine::String, engine::String> > 
+data::XML::select<data::TOP>(std::map<engine::String, engine::String> filter) {
+    using engine::String;
+    assert(db);
+
+    //return true if elem contains name & value from filter
+    auto contains = [](TiXmlElement& elem, std::map<engine::String, engine::String>& filter) {
+        using iter = std::map<engine::String, engine::String>::iterator;
+        for (iter it = filter.begin(); it != filter.end(); it++) 
+            if (elem.Attribute(it->first.mb_str()) != nullptr && 
+                engine::String::FromUTF8(elem.Attribute(it->first.mb_str())) == it->second)
+                continue;
+            else 
+                return false;
+        return true;
+    };
+
+    //fill the entries
+    std::vector<std::map<String, String> > entries;
+    for (TiXmlIterator i(db->RootElement()->FirstChildElement()); i != TiXmlIterator(); i++) {
+        if (!contains(*i, filter)) 
+            continue;
+        std::map<String, String> entry;
+        for (TiXmlAttribIterator j(*i); j != TiXmlAttribIterator(); j++) {
+            entry.insert(std::pair<String, String>(String::FromUTF8(j->Name()), 
+                                                   String::FromUTF8(j->Value())));
+        }
+        entries.push_back(entry);
+    }
+    return entries;
+}
+
+template <>
+std::vector<std::map<engine::String, engine::String> > data::XML::select<data::TOP>() {
+    return select<data::TOP>(std::map<engine::String, engine::String>());
 }
 
 template <>

@@ -25,6 +25,10 @@ namespace data {
 
         template <int S, typename... Args>
         XML* insert(Args... args);
+
+        template <int S, typename... Args>
+        std::vector<std::map<engine::String, engine::String> > select(Args... args);
+
     protected:
         static std::list<XML*> all_of_them;
     };

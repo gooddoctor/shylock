@@ -601,21 +601,25 @@ bool window_thing::valid<double>(engine::String value) {
 
 bool data_thing::init() {
     D<data::XML*>(String(_("db")), String::FromUTF8(DATADIR) + String(_("/db.xml")));
-    D<data::XML*>(_("db"))->insert<data::TOP>(std::map<String, String>{
-            {_("nominal"), _("fred")},
-            {_("price"), _("122.2")}
-        });
-    D<data::XML*>(_("db"))->
-        insert<data::CHILD>(std::map<String, String>{{_("nominal"), _("fred")}},
-                            std::map<String, String>{
-                                {_("amount"), _("255")},
-                                {_("when"), _("19292912")}
-                            });
+
+    std::vector<std::map<String, String> > entries = 
+        D<data::XML*>(_("db"))->select<data::TOP>();
+    std::for_each(entries.begin(), entries.end(),
+                  [](std::map<String, String>& entry) {
+                      std::for_each(entry.begin(), entry.end(),
+                                    [](std::pair<const String, String>& attr) {
+                                        std::cout << attr.first.mb_str() << " " 
+                                                  << attr.second.mb_str() << " ";
+                                    });
+                      std::cout << std::endl;
+                  });
     return true;
 }
 
 
 int main(int argc, char** argv) {
+    setlocale(LC_ALL, "en_US");
+    std::cout << 122.22 << std::endl;
     D<data::RUN>(std::function<bool(void)>(data_thing::init), argc, argv);
     W<window::RUN>(std::function<bool(void)>(window_thing::init), argc, argv);
 }
