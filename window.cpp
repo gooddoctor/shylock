@@ -146,20 +146,16 @@ window::Button* window::Button::click() {
     return this;
 }
 
-window::ListBox::ListBox(const engine::String& id_value, const engine::String& category_value,
-			 std::vector<engine::String>& entries_value) : 
-      Window(id_value, category_value), entries(entries_value) { }
+window::ListBox::ListBox(const engine::String& id_value, const engine::String& category_value) : 
+      Window(id_value, category_value) { }
 
 window::ListBox* window::ListBox::create(wxWindow* parent_value, const window::Size& size_value, 
 					 window::Sizer* sizer_value, int proportion, int flag, 
 					 int border) {
     wxASSERT_MSG(parent_value != nullptr, _("listbox create on null parent"));    
-
-    engine::String* values = new engine::String[entries.size()];
-    std::copy(entries.begin(), entries.end(), values);
-
+    
     win = new wxShylockListbox(parent_value, wxID_ANY, 
-			       wxDefaultPosition, size_value, entries.size(), values);
+			       wxDefaultPosition, size_value, 0, nullptr);
     Window::create(parent_value, size_value, sizer_value, proportion, flag, border);
 
     return this;
@@ -255,9 +251,8 @@ window::Button* window::W(engine::String id) {
 }
 
 template <>
-window::ListBox* window::W(engine::String id, engine::String category,
-                           std::vector<engine::String> entries) {
-    return new window::ListBox(id, category, entries);
+window::ListBox* window::W(engine::String id, engine::String category) {
+    return new window::ListBox(id, category);
 }
 
 template <>

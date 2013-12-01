@@ -4,6 +4,8 @@
 #include <wx/wx.h>
 #include <functional>
 #include <list>
+#include <vector>
+#include <algorithm>
 
 #define wx_parts private
 #define handlers private
@@ -62,6 +64,40 @@ wx_parts:
 class wxShylockListbox : public wxListBox {
 public:
     using wxListBox::wxListBox;
+
+    template <typename T>
+    wxShylockListbox* set(const std::vector<wxString>& choices, const std::vector<T>& data) {
+        wxASSERT_MSG(choices.size() == data.size(), _("size of choices and data must be equal"));
+    
+        wxArrayString items = [&choices]() {
+            wxArrayString tmp;
+            std::for_each(choices.begin(), choices.end(),
+                          [&tmp](const wxString& entry) {
+                              tmp.Add(entry);
+                          });
+            return tmp;
+        }();
+
+        void** client_data = [&data]() {
+            void** tmp = new void*[data.size()];
+            std::for_each(data.begin(), data.end(),
+                          [&tmp](const T& entry) {
+                              *tmp = new T(entry); 
+                              tmp++;
+                          });
+            return tmp - data.size();
+        }();
+
+        Set(items, client_data);
+        return this;
+    }
+
+    template <typename T>
+    T get(unsigned int i) {
+        wxASSERT_MSG(i >= 0 && i < GetCount(), "oops. i out of interval");
+        wxASSERT_MSG(dynamic_cast<T*>(GetClientData(i)), "oops. user data is not what you expect");
+        return *dynamic_cast<T*>(GetClientData(i));
+    }
 };
 
 class wxShylockText : public wxTextCtrl {

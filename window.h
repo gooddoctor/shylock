@@ -2,6 +2,7 @@
 #define __WINDOW_H
 
 #include "engine.h"
+#include "wxShylockWidget/widget.h"
 
 #include <list>
 #include <initializer_list>
@@ -97,13 +98,21 @@ namespace window {
     };
 
     class ListBox : public Window {
-    private:
-	std::vector<engine::String> entries;
     public:
-	ListBox(const engine::String& id_value, const engine::String& category_value,
-		std::vector<engine::String>& entries_value);
+	ListBox(const engine::String& id_value, const engine::String& category_value);
 	ListBox* create(wxWindow* parent_value, const Size& size_value, Sizer* sizer_value,
 			int proportion = 0, int flag = 0, int border = 0) override;
+        template <typename T>
+        ListBox* set(const std::vector<engine::String>& entries, const std::vector<T>& data) {
+            wxASSERT_MSG(win, _("set only after building"));
+            static_cast<wxShylockListbox*>(win)->set<T>(entries, data);
+            return this;
+        }
+
+        template <typename T>
+        T get(unsigned int i) {
+            static_cast<wxShylockListbox*>(win)->get<T>(i);
+        }
     };
 
     class Text : public Window {
@@ -156,8 +165,7 @@ namespace window {
     Button* W(engine::String id);
     
     template <>
-    ListBox* W(engine::String id, engine::String category,
-	       std::vector<engine::String> entries);
+    ListBox* W(engine::String id, engine::String category);
 
     template <>
     ListBox* W(engine::String id);

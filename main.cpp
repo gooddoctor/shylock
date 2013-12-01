@@ -403,10 +403,11 @@ void window_thing::ent(window::Frame* frame) {
         sizer->Hide(W<window::Sizer*>(_("ENT.FIND_TEXT")));
 
 	W<window::ListBox*>(String(_("ENT.LIST")),
-                            String(_("NONE")),
-                            std::vector<String> {_("hello"), _("how")})->
+                            String(_("NONE")))->
 	    create(frame->wx(), W<window::Size>(550, 0), sizer,
-		   1, window::EXPAND);
+		   1, window::EXPAND)->
+            set(only(engine::String(_("nominal")), D<data::XML*>(_("db"))->select<data::TOP>()),
+                D<data::XML*>(_("db"))->select<data::TOP>());
     }(W<window::Sizer*>(window::VERTICAL));
 }
 
@@ -586,8 +587,7 @@ void window_thing::pay(window::Frame* frame) {
                            String(_("Внести платеж")))->
             create(frame->wx(), W<window::Size>(180, 30), sizer);
         W<window::ListBox*>(String(_("PAY.LIST")),
-                            String(_("NONE")),
-                            std::vector<String> {_("hello"), _("how")})->
+                            String(_("NONE")))->
 	    create(frame->wx(), W<window::Size>(), sizer,
 		   1, window::EXPAND);
     }(W<window::Sizer*>(window::VERTICAL));    
@@ -599,6 +599,16 @@ bool window_thing::valid<double>(engine::String value) {
     return value.ToDouble(&tmp);
 }
 
+std::vector<String> window_thing::only(const String& value, 
+                                       const std::vector<std::map<String, String> >& entries) {
+    std::vector<String> items;
+    using iter = std::vector<std::map<String, String> >::const_iterator;
+    for (iter it = entries.begin(); it != entries.end(); it++)
+        if (it->find(value) != it->end())
+            items.push_back(it->at(value));
+    return items;
+}
+   
 bool data_thing::init() {
     D<data::XML*>(String(_("db")), String::FromUTF8(DATADIR) + String(_("/db.xml")));
 
