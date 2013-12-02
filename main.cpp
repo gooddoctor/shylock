@@ -202,10 +202,23 @@ bool window_thing::init() {
                         W<window::Sizer*>(_("CONTENT"))->
                             Hide(W<window::Sizer*>(_("ENT.LIST")));
                         W<window::Sizer*>(_("CONTENT"))->Layout();
+
+                        std::map<String, String> data = []() {
+                            int i = W<window::ListBox*>(String(_("ENT.LIST")))->which();
+                            return W<window::ListBox*>(String(_("ENT.LIST")))->
+                            get<std::map<String, String> >(i);
+                        }();
+                        W<window::Text*>(String(_("EDT.NOMINAL_TEXT")))->
+                            key_press(data.at(_("nominal")), true);
+                        W<window::Text*>(String(_("EDT.COST_TEXT")))->
+                            key_press(data.at(_("cost")), true);
+                        W<window::Time*>(String(_("EDT.TIME_INPUT")))->
+                            time(data.at(_("when")));
                     }))->
             bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
                                    [](window::UpdateUIEvent& event) {
-                                       if (state == MAIN) {
+                                       int i = W<window::ListBox*>(String(_("ENT.LIST")))->which();
+                                       if (state == MAIN && i != -1) {
                                            event.Enable(true);
                                        } else {
                                            event.Enable(false);
@@ -611,25 +624,12 @@ std::vector<String> window_thing::only(const String& value,
    
 bool data_thing::init() {
     D<data::XML*>(String(_("db")), String::FromUTF8(DATADIR) + String(_("/db.xml")));
-
-    std::vector<std::map<String, String> > entries = 
-        D<data::XML*>(_("db"))->select<data::TOP>();
-    std::for_each(entries.begin(), entries.end(),
-                  [](std::map<String, String>& entry) {
-                      std::for_each(entry.begin(), entry.end(),
-                                    [](std::pair<const String, String>& attr) {
-                                        std::cout << attr.first.mb_str() << " " 
-                                                  << attr.second.mb_str() << " ";
-                                    });
-                      std::cout << std::endl;
-                  });
     return true;
 }
 
 
 int main(int argc, char** argv) {
     setlocale(LC_ALL, "en_US");
-    std::cout << 122.22 << std::endl;
     D<data::RUN>(std::function<bool(void)>(data_thing::init), argc, argv);
     W<window::RUN>(std::function<bool(void)>(window_thing::init), argc, argv);
 }

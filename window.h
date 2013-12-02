@@ -102,6 +102,7 @@ namespace window {
 	ListBox(const engine::String& id_value, const engine::String& category_value);
 	ListBox* create(wxWindow* parent_value, const Size& size_value, Sizer* sizer_value,
 			int proportion = 0, int flag = 0, int border = 0) override;
+
         template <typename T>
         ListBox* set(const std::vector<engine::String>& entries, const std::vector<T>& data) {
             wxASSERT_MSG(win, _("set only after building"));
@@ -111,8 +112,10 @@ namespace window {
 
         template <typename T>
         T get(unsigned int i) {
-            static_cast<wxShylockListbox*>(win)->get<T>(i);
+            return static_cast<wxShylockListbox*>(win)->get<T>(i);
         }
+
+        int which();
     };
 
     class Text : public Window {
@@ -124,7 +127,7 @@ namespace window {
         Text* create(wxWindow* parent_value, const Size& size_value, Sizer* sizer_value,
                      int proportion = 0, int flag = 0, int border = 0) override;
         engine::String txt();
-        Text* key_press(const engine::String& key);
+        Text* key_press(const engine::String& key, bool dry = false);
         template <int S, typename... Args>
 	Text* bind(const std::function<void(Args...)>& callback);
     };
@@ -135,6 +138,7 @@ namespace window {
         Time* create(wxWindow* parent_value, const Size& size_value, Sizer* sizer_value,
                      int proportion = 0, int flag = 0, int border = 0) override;
         engine::String time();
+        Time* time(const engine::String& value);
     };
 
     template <>

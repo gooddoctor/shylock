@@ -62,9 +62,11 @@ wx_parts:
 };
 
 class wxShylockListbox : public wxListBox {
+private:
+    void** client_data;
 public:
     using wxListBox::wxListBox;
-
+    
     template <typename T>
     wxShylockListbox* set(const std::vector<wxString>& choices, const std::vector<T>& data) {
         wxASSERT_MSG(choices.size() == data.size(), _("size of choices and data must be equal"));
@@ -78,25 +80,26 @@ public:
             return tmp;
         }();
 
-        void** client_data = [&data]() {
+        client_data = [&data]() {
             void** tmp = new void*[data.size()];
+            void** save = tmp; 
             std::for_each(data.begin(), data.end(),
                           [&tmp](const T& entry) {
-                              *tmp = new T(entry); 
+                              *tmp = static_cast<void*>(new T(entry)); 
                               tmp++;
                           });
-            return tmp - data.size();
+            return save;
         }();
 
-        Set(items, client_data);
+        Set(items);
         return this;
     }
 
     template <typename T>
     T get(unsigned int i) {
-        wxASSERT_MSG(i >= 0 && i < GetCount(), "oops. i out of interval");
-        wxASSERT_MSG(dynamic_cast<T*>(GetClientData(i)), "oops. user data is not what you expect");
-        return *dynamic_cast<T*>(GetClientData(i));
+        wxASSERT_MSG(i >= 0 && i < GetCount(), _("oops. i out of interval"));
+        wxASSERT_MSG(client_data, _("oops. client data is empty"));
+        return *(static_cast<T*>(client_data[i]));
     }
 };
 

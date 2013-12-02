@@ -161,6 +161,14 @@ window::ListBox* window::ListBox::create(wxWindow* parent_value, const window::S
     return this;
 }
 
+int window::ListBox::which() {
+    int i = static_cast<wxShylockListbox*>(win)->GetSelection();
+    if (i == wxNOT_FOUND) 
+        return -1; 
+    else 
+        return i;
+}
+
 window::Text::Text(const engine::String& id_value,
                    const engine::String& category_value,
                    const engine::String& text_value) :
@@ -182,8 +190,11 @@ engine::String window::Text::txt() {
     return static_cast<wxShylockText*>(win)->GetValue();
 }
 
-window::Text* window::Text::key_press(const engine::String& key) {
+window::Text* window::Text::key_press(const engine::String& key, bool dry) {
     wxASSERT_MSG(win, _("call key_press<>() only after create()"));    
+    if (dry) {
+        static_cast<wxTextCtrl*>(win)->Clear();
+    }
     static_cast<wxTextCtrl*>(win)->AppendText(key);
     return this;
 }
@@ -208,6 +219,15 @@ window::Time* window::Time::create(wxWindow* parent_value, const window::Size& s
 engine::String window::Time::time() {
     wxASSERT_MSG(win != nullptr, _("getting time on null parent"));
     return static_cast<wxShylockTime*>(win)->get();
+}
+
+window::Time* window::Time::time(const engine::String& value) {
+    try {
+        static_cast<wxShylockTime*>(win)->set(value);
+    } catch (std::exception& e) {
+        wxASSERT_MSG(false, engine::String::FromUTF8(e.what()));
+    }
+    return this;
 }
 
 template <>
