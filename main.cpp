@@ -6,6 +6,17 @@ using window::W;
 using data::D;
 using namespace engine;
 
+std::vector<engine::String> 
+only(const engine::String& value, 
+     const std::vector<std::map<engine::String, engine::String> >& entries) {
+    std::vector<String> items;
+    for (auto it = entries.begin(); it != entries.end(); it++)
+        if (it->find(value) != it->end())
+            items.push_back(it->at(value));
+    return items;
+}
+
+
 bool window_thing::init() {
     state = MAIN;
 
@@ -548,7 +559,46 @@ void window_thing::edt(window::Frame* frame) {
         W<window::Button*>(String(_("EDT.EDIT_BTN")),
                            String(_("NONE")),
                            String(_("Редактировать")))->
-            create(frame->wx(), W<window::Size>(180, 30), sizer);
+            create(frame->wx(), W<window::Size>(180, 30), sizer)->
+            bind<window::CLICK>(std::function<void()>([]() {
+                        // get value
+                        String nominal = W<window::Text*>(String(_("EDT.NOMINAL_TEXT")))->txt();
+                        String cost = W<window::Text*>(String(_("EDT.COST_TEXT")))->txt();
+                        String when = W<window::Time*>(String(_("EDT.TIME_INPUT")))->time();
+
+                        // test value
+                        if (nominal.IsEmpty() || cost.IsEmpty() || when.IsEmpty()) {
+                            W<window::MessageBox>(String(_("Некоторые поля остались пусты")),
+                                                  String(_("Ошибка ввода")), 
+                                                  window::OK | window::ICON_ERROR);
+                            return;
+                        }
+
+                        if (!valid<double>(cost)) {
+                            W<window::MessageBox>(String(_("Неверное значение стоимости")),
+                                                  String(_("Ошибка ввода")), 
+                                                  window::OK | window::ICON_ERROR);
+                            return;
+                        }
+
+                        //get old map
+                        int i = W<window::ListBox*>(String(_("ENT.LIST")))->which();
+                        auto from = W<window::ListBox*>(String(_("ENT.LIST")))->
+                            get<std::map<engine::String, engine::String> >(i);
+
+                        // create new  map  
+                        std::map<String, String> to;
+                        to.insert(std::pair<String, String>{_("nominal"), nominal});
+                        to.insert(std::pair<String, String>{_("cost"), cost});
+                        to.insert(std::pair<String, String>{_("when"), when});
+ 
+                        // change old on new
+                        D<data::XML*>(_("db"))->update<data::TOP>(from, to);
+
+                        // return to main window
+                        W<window::Button*>(String(_("BACK_BTN")))->click();
+
+                    }));
     }(W<window::Sizer*>(window::VERTICAL));    
 }
  
@@ -612,18 +662,22 @@ bool window_thing::valid<double>(engine::String value) {
     return value.ToDouble(&tmp);
 }
 
-std::vector<String> window_thing::only(const String& value, 
-                                       const std::vector<std::map<String, String> >& entries) {
-    std::vector<String> items;
-    using iter = std::vector<std::map<String, String> >::const_iterator;
-    for (iter it = entries.begin(); it != entries.end(); it++)
-        if (it->find(value) != it->end())
-            items.push_back(it->at(value));
-    return items;
-}
-   
 bool data_thing::init() {
-    D<data::XML*>(String(_("db")), String::FromUTF8(DATADIR) + String(_("/db.xml")));
+    D<data::XML*>(String(_("db")), String::FromUTF8(DATADIR) + String(_("/db.xml")))->
+        bind<data::INSERT>([](std::map<engine::String, engine::String>& top,
+                              std::map<engine::String, engine::String>& child) {
+                               W<window::ListBox*>(String(_("ENT.LIST")))->
+                                   set(only(engine::String(_("nominal")), 
+                                            D<data::XML*>(_("db"))->select<data::TOP>()),
+                                       D<data::XML*>(_("db"))->select<data::TOP>());
+                           })->
+        bind<data::UPDATE>([](std::map<engine::String, engine::String>& from,
+                              std::map<engine::String, engine::String>& to) {
+                               W<window::ListBox*>(String(_("ENT.LIST")))->
+                                   set(only(engine::String(_("nominal")), 
+                                            D<data::XML*>(_("db"))->select<data::TOP>()),
+                                       D<data::XML*>(_("db"))->select<data::TOP>());
+                           });
     return true;
 }
 

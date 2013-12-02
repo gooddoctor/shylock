@@ -106,6 +106,9 @@ data::XML* data::XML::insert<data::TOP>(std::map<engine::String, engine::String>
                  });
     db->FirstChild("shylock")->InsertEndChild(item);
     assert(db->SaveFile());
+
+    std::map<engine::String, engine::String> empty;
+    fire_insert_callback(entry, empty);
     return this;
 }
 
@@ -146,6 +149,39 @@ data::XML* data::XML::insert<data::CHILD>(std::map<engine::String, engine::Strin
 }
 
 template <>
+data::XML* data::XML::update<data::TOP>(std::map<engine::String, engine::String> from,
+                                        std::map<engine::String, engine::String> to) {
+    assert(db);
+
+    //help function. see next
+    auto contains = [](TiXmlElement& elem, std::map<engine::String, engine::String>& filter) {
+        for (auto it = filter.begin(); it != filter.end(); it++) 
+            if (elem.Attribute(it->first.mb_str()) != nullptr && 
+                engine::String::FromUTF8(elem.Attribute(it->first.mb_str())) == it->second)
+                continue;
+            else 
+                return false;
+        return true;
+    };
+    //find element
+    TiXmlIterator entry_pos = 
+        std::find_if(TiXmlIterator(db->RootElement()->FirstChildElement()), TiXmlIterator(),
+                     [&](TiXmlElement& node) {
+                         return contains(node, from);
+                     });
+    assert(entry_pos != TiXmlIterator());
+    //change element
+    for (auto it = to.begin(); it != to.end(); it++) {
+        entry_pos->SetAttribute(it->first.mb_str(), it->second.mb_str());
+    }
+    //save it
+    assert(db->SaveFile());
+    //notify all about it
+    fire_update_callback(from, to);
+    return this;
+}
+    
+template <>
 std::vector<std::map<engine::String, engine::String> > 
 data::XML::select<data::TOP>(std::map<engine::String, engine::String> filter) {
     using engine::String;
@@ -181,6 +217,41 @@ data::XML::select<data::TOP>(std::map<engine::String, engine::String> filter) {
 template <>
 std::vector<std::map<engine::String, engine::String> > data::XML::select<data::TOP>() {
     return select<data::TOP>(std::map<engine::String, engine::String>());
+}
+
+template <>
+data::XML* 
+data::XML::bind<data::INSERT>(std::function<void(std::map<engine::String, engine::String>&, 
+                                                 std::map<engine::String, engine::String>&)> 
+                              callback) {
+    assert(db);
+    insert_callbacks.push_back(callback);
+    return this;
+}
+
+
+template <>
+data::XML* 
+data::XML::bind<data::UPDATE>(std::function<void(std::map<engine::String, engine::String>&, 
+                                                 std::map<engine::String, engine::String>&)> 
+                              callback) {
+    assert(db);
+    update_callbacks.push_back(callback);
+    return this;
+}
+
+void data::XML::fire_insert_callback(std::map<engine::String, engine::String>& top,
+                                     std::map<engine::String, engine::String>& child) {
+    for (auto it = insert_callbacks.begin(); it != insert_callbacks.end(); it++) {
+        (*it)(top, child);
+    }
+}
+
+void data::XML::fire_update_callback(std::map<engine::String, engine::String>& from,
+                                     std::map<engine::String, engine::String>& to) {
+    for (auto it = update_callbacks.begin(); it != update_callbacks.end(); it++) {
+        (*it)(from, to);
+    }
 }
 
 template <>

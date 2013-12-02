@@ -19,10 +19,6 @@ namespace window_thing {
     bool valid(engine::String value);
     template <>
     bool valid<double>(engine::String value);
-
-    std::vector<engine::String> 
-    only(const engine::String& value, 
-         const std::vector<std::map<engine::String, engine::String> >& entries);
 }
 
 namespace data_thing {
