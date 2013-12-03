@@ -116,25 +116,24 @@ template <>
 data::XML* data::XML::insert<data::CHILD>(std::map<engine::String, engine::String> parent,
                                           std::map<engine::String, engine::String> child) {
     assert(db);
-    auto contains = [](TiXmlElement& node, const std::pair<engine::String, engine::String>& attr) {
-        return ((node.Attribute(attr.first.mb_str()) != nullptr) && 
-                (engine::String::FromUTF8(node.Attribute(attr.first.mb_str())) == attr.second));
+    //help function. see next
+    auto contains = [](TiXmlElement& elem, std::map<engine::String, engine::String>& filter) {
+        for (auto it = filter.begin(); it != filter.end(); it++) 
+            if (elem.Attribute(it->first.mb_str()) != nullptr && 
+                engine::String::FromUTF8(elem.Attribute(it->first.mb_str())) == it->second)
+                continue;
+            else 
+                return false;
+        return true;
     };
-
-    //find parent position
+    //find parent
     TiXmlIterator parent_pos = 
         std::find_if(TiXmlIterator(db->RootElement()->FirstChildElement()), TiXmlIterator(),
-                     [&parent, &contains](TiXmlElement& node) {
-                         using iter = std::map<engine::String, engine::String>::iterator;
-                         for (iter it = parent.begin(); it != parent.end(); it++) {
-                             if (!contains(node, *it))
-                                 return false;
-                         }
-                         return true;
+                     [&](TiXmlElement& node) {
+                         return contains(node, parent);
                      });
     assert(parent_pos != TiXmlIterator());
-
-    //create xml child
+    //create new element
     TiXmlElement item("payment");
     std::for_each(child.begin(), child.end(), 
                   [&item](const std::pair<engine::String, engine::String>& attr) {
@@ -143,6 +142,7 @@ data::XML* data::XML::insert<data::CHILD>(std::map<engine::String, engine::Strin
 
     //insert it
     parent_pos->InsertEndChild(item);
+    //save it
     assert(db->SaveFile());
     
     return this;
@@ -180,6 +180,32 @@ data::XML* data::XML::update<data::TOP>(std::map<engine::String, engine::String>
     fire_update_callback(from, to);
     return this;
 }
+
+template <>
+data::XML* data::XML::remove<data::TOP>(std::map<engine::String, engine::String> entry) {
+    //helper function. see next
+    auto contains = [](TiXmlElement& elem, std::map<engine::String, engine::String>& filter) {
+        for (auto it = filter.begin(); it != filter.end(); it++) 
+            if (elem.Attribute(it->first.mb_str()) != nullptr && 
+                engine::String::FromUTF8(elem.Attribute(it->first.mb_str())) == it->second)
+                continue;
+            else 
+                return false;
+        return true;
+    };
+    //find element
+    TiXmlIterator entry_pos = 
+        std::find_if(TiXmlIterator(db->RootElement()->FirstChildElement()), TiXmlIterator(),
+                     [&](TiXmlElement& node) {
+                         return contains(node, entry);
+                     });
+    assert(entry_pos != TiXmlIterator());
+    //remove element
+    assert(db->RootElement()->RemoveChild(&(*entry_pos)));
+    assert(db->SaveFile());
+    return this;
+}
+
     
 template <>
 std::vector<std::map<engine::String, engine::String> > 
@@ -217,6 +243,44 @@ data::XML::select<data::TOP>(std::map<engine::String, engine::String> filter) {
 template <>
 std::vector<std::map<engine::String, engine::String> > data::XML::select<data::TOP>() {
     return select<data::TOP>(std::map<engine::String, engine::String>());
+}
+
+template <>
+std::vector<std::map<engine::String, engine::String> > 
+data::XML::select<data::CHILD>(std::map<engine::String, engine::String> parent) {
+    using engine::String;
+    assert(db);
+
+    //helper function. see next.
+    auto contains = [](TiXmlElement& elem, std::map<engine::String, engine::String>& filter) {
+        using iter = std::map<engine::String, engine::String>::iterator;
+        for (iter it = filter.begin(); it != filter.end(); it++) 
+            if (elem.Attribute(it->first.mb_str()) != nullptr && 
+                engine::String::FromUTF8(elem.Attribute(it->first.mb_str())) == it->second)
+                continue;
+            else 
+                return false;
+        return true;
+    };
+    //find parent
+    TiXmlIterator parent_pos = 
+        std::find_if(TiXmlIterator(db->RootElement()->FirstChildElement()), TiXmlIterator(),
+                     [&](TiXmlElement& node) {
+                         return contains(node, parent);
+                     });
+    assert(parent_pos != TiXmlIterator());
+    //fill entries
+    std::vector<std::map<String, String> > entries;
+    for (auto it = TiXmlIterator(parent_pos->FirstChildElement()); it != TiXmlIterator(); it++) {
+        std::map<String, String> entry;
+        for (TiXmlAttribIterator j(*it); j != TiXmlAttribIterator(); j++)
+            entry.insert(std::pair<String, String>(String::FromUTF8(j->Name()), 
+                                                   String::FromUTF8(j->Value())));
+        if (entry.size() > 0)
+            entries.push_back(entry);
+    }
+    //return it
+    return entries;
 }
 
 template <>

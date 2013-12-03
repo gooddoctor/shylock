@@ -34,6 +34,9 @@ namespace data {
         XML* update(Args... args);
 
         template <int S, typename... Args>
+        XML* remove(Args... args);
+
+        template <int S, typename... Args>
         std::vector<std::map<engine::String, engine::String> > select(Args... args);
 
         template <int S>

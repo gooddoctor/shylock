@@ -16,6 +16,16 @@ only(const engine::String& value,
     return items;
 }
 
+std::vector<engine::String> 
+only(const engine::String& value1, const engine::String& value2,
+     const std::vector<std::map<engine::String, engine::String> >& entries) {
+    std::vector<String> items;
+    for (auto it = entries.begin(); it != entries.end(); it++)
+        if ((it->find(value1) != it->end()) && (it->find(value2) != it->end()))
+            items.push_back(it->at(value1) + _(":") + it->at(value2));
+    return items;
+}
+
 
 bool window_thing::init() {
     state = MAIN;
@@ -176,12 +186,26 @@ bool window_thing::init() {
                            String(_("NONE")),
                            String(_("Удалить клиента")))->
 	    create(frame->wx(), W<window::Size>(180, 67), sizer)->
+            bind<window::CLICK>(std::function<void()>([]() {
+                        //get promiser
+                        int i = W<window::ListBox*>(String(_("ENT.LIST")))->which();
+                        auto promiser = W<window::ListBox*>(String(_("ENT.LIST")))->
+                            get<std::map<engine::String, engine::String> >(i);
+                        //remove promiser
+                        D<data::XML*>(_("db"))->remove<data::TOP>(promiser);
+                        W<window::ListBox*>(String(_("ENT.LIST")))->
+                            set(only(engine::String(_("nominal")), 
+                                     D<data::XML*>(_("db"))->select<data::TOP>()),
+                                D<data::XML*>(_("db"))->select<data::TOP>());
+                    }))->
             bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
                                    [](window::UpdateUIEvent& event) {
-                                       if (state == MAIN)
+                                       int i = W<window::ListBox*>(String(_("ENT.LIST")))->which();
+                                       if (state == MAIN && i != -1) {
                                            event.Enable(true);
-                                       else
+                                       } else {
                                            event.Enable(false);
+                                       }
                                    }));
 	W<window::Button*>(String(_("PAY_BTN")),
                            String(_("NONE")),
@@ -194,13 +218,33 @@ bool window_thing::init() {
                         W<window::Sizer*>(_("CONTENT"))->
                             Hide(W<window::Sizer*>(_("ENT.LIST")));
                         W<window::Sizer*>(_("CONTENT"))->Layout();
+
+                        //setting nominal text
+                        std::map<String, String> data = []() {
+                            int i = W<window::ListBox*>(String(_("ENT.LIST")))->which();
+                            return W<window::ListBox*>(String(_("ENT.LIST")))->
+                            get<std::map<String, String> >(i);
+                        }();
+                        W<window::Text*>(String(_("PAY.NOMINAL_TEXT")))->
+                            key_press(data.at(_("nominal")), true);
+
+                        //get promiser
+                        int i = W<window::ListBox*>(String(_("ENT.LIST")))->which();
+                        auto promiser = W<window::ListBox*>(String(_("ENT.LIST")))->
+                            get<std::map<engine::String, engine::String> >(i);
+                        W<window::ListBox*>(String(_("PAY.LIST")))->
+                            set(only(engine::String(_("when")), engine::String(_("amt")),
+                                     D<data::XML*>(_("db"))->select<data::CHILD>(promiser)),
+                                D<data::XML*>(_("db"))->select<data::CHILD>(promiser));
                     }))->
             bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
                                    [](window::UpdateUIEvent& event) {
-                                       if (state == MAIN)
+                                       int i = W<window::ListBox*>(String(_("ENT.LIST")))->which();
+                                       if (state == MAIN && i != -1) {
                                            event.Enable(true);
-                                       else
+                                       } else {
                                            event.Enable(false);
+                                       }
                                    }));
 	W<window::Button*>(String(_("EDIT_BTN")),
                            String(_("NONE")),
@@ -648,7 +692,43 @@ void window_thing::pay(window::Frame* frame) {
         W<window::Button*>(String(_("PAY.PAY_BTN")),
                            String(_("NONE")),
                            String(_("Внести платеж")))->
-            create(frame->wx(), W<window::Size>(180, 30), sizer);
+            create(frame->wx(), W<window::Size>(180, 30), sizer)->
+            bind<window::CLICK>(std::function<void()>([]() {
+                        // get value
+                        String amt = W<window::Text*>(String(_("PAY.COST_TEXT")))->txt();
+                        String when = W<window::Time*>(String(_("PAY.TIME_INPUT")))->time();
+
+                        // test value
+                        if (amt.IsEmpty() || when.IsEmpty()) {
+                            W<window::MessageBox>(String(_("Некоторые поля остались пусты")),
+                                                  String(_("Ошибка ввода")), 
+                                                  window::OK | window::ICON_ERROR);
+                            return;
+                        }
+
+                        if (!valid<double>(amt)) {
+                            W<window::MessageBox>(String(_("Неверное значение оплаты")),
+                                                  String(_("Ошибка ввода")), 
+                                                  window::OK | window::ICON_ERROR);
+                            return;
+                        }
+
+                        //get promiser
+                        int i = W<window::ListBox*>(String(_("ENT.LIST")))->which();
+                        auto promiser = W<window::ListBox*>(String(_("ENT.LIST")))->
+                            get<std::map<engine::String, engine::String> >(i);
+                        // create new  payment  
+                        std::map<String, String> payment;
+                        payment.insert(std::pair<String, String>{_("amt"), amt});
+                        payment.insert(std::pair<String, String>{_("when"), when});
+ 
+                        // insert payment
+                        D<data::XML*>(_("db"))->insert<data::CHILD>(promiser, payment);
+
+                        // return to main window
+                        W<window::Button*>(String(_("BACK_BTN")))->click();
+
+                    }));
         W<window::ListBox*>(String(_("PAY.LIST")),
                             String(_("NONE")))->
 	    create(frame->wx(), W<window::Size>(), sizer,
