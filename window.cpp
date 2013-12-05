@@ -169,6 +169,12 @@ int window::ListBox::which() {
         return i;
 }
 
+window::ListBox* window::ListBox::filter(const engine::String& value) {
+    wxASSERT_MSG(win, _("call filter only after create()"));
+    static_cast<wxShylockListbox*>(win)->filter(value);
+    return this;
+}
+
 window::Text::Text(const engine::String& id_value,
                    const engine::String& category_value,
                    const engine::String& text_value) :
@@ -203,6 +209,14 @@ template <>
 window::Text* window::Text::bind<window::FOCUS>(const std::function<void()>& callback) {
     wxASSERT_MSG(win, _("call bind<>() only after create()"));    
     static_cast<wxShylockText*>(win)->add_focus_callback(callback);
+    return this;
+}
+
+template <>
+window::Text* 
+window::Text::bind<window::TEXT>(const std::function<void(engine::String)>& callback) {
+    wxASSERT_MSG(win, _("call bind<>() only after create()"));    
+    static_cast<wxShylockText*>(win)->add_text_callback(callback);
     return this;
 }
 

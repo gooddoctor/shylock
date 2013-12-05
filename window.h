@@ -15,7 +15,7 @@ namespace window {
     template <typename T, typename... Args>
     T W(Args... args);
     
-    enum {CLICK = 0, IDLE, FOCUS};
+    enum {CLICK = 0, IDLE, FOCUS, TEXT};
 
     using Sizer = wxSizer;
     using Size = wxSize;
@@ -116,6 +116,8 @@ namespace window {
         }
 
         int which();
+
+        ListBox* filter(const engine::String& value);
     };
 
     class Text : public Window {

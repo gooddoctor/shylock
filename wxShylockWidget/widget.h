@@ -63,56 +63,55 @@ wx_parts:
 
 class wxShylockListbox : public wxListBox {
 private:
-    void** client_data;
+    std::vector<std::pair<wxString, void*> > all_data;
+    std::vector<std::pair<wxString, void*> > filter_data;
 public:
     using wxListBox::wxListBox;
     
     template <typename T>
     wxShylockListbox* set(const std::vector<wxString>& choices, const std::vector<T>& data) {
-        wxASSERT_MSG(choices.size() == data.size(), _("size of choices and data must be equal"));
-    
-        wxArrayString items = [&choices]() {
+        wxASSERT_MSG(choices.size() == data.size(), 
+                     _("size of choices and data must be equal"));
+        //generate vector of pair
+        all_data.clear();
+        for (int i = 0; i < choices.size(); i++) 
+            all_data.push_back({choices[i], static_cast<void*>(new T(data[i]))});
+        //geneerate filter
+        filter_data = all_data;
+        //generate and set items
+        wxArrayString items = [this]() {
             wxArrayString tmp;
-            std::for_each(choices.begin(), choices.end(),
-                          [&tmp](const wxString& entry) {
-                              tmp.Add(entry);
-                          });
+            for (int i = 0; i < filter_data.size(); i++)
+                tmp.Add(filter_data[i].first);
             return tmp;
         }();
-
-        client_data = [&data]() {
-            void** tmp = new void*[data.size()];
-            void** save = tmp; 
-            std::for_each(data.begin(), data.end(),
-                          [&tmp](const T& entry) {
-                              *tmp = static_cast<void*>(new T(entry)); 
-                              tmp++;
-                          });
-            return save;
-        }();
-
         Set(items);
+
         return this;
     }
 
     template <typename T>
     T get(unsigned int i) {
-        wxASSERT_MSG(i >= 0 && i < GetCount(), _("oops. i out of interval"));
-        wxASSERT_MSG(client_data, _("oops. client data is empty"));
-        return *(static_cast<T*>(client_data[i]));
+        wxASSERT_MSG(i >= 0 && i < filter_data.size(), _("oops. i out of interval"));
+        return *(static_cast<T*>(filter_data[i].second));
     }
+
+    wxShylockListbox* filter(wxString value);
 };
 
 class wxShylockText : public wxTextCtrl {
 private:
     std::list<std::function<void()> > focus_notification_callbacks;
+    std::list<std::function<void(wxString)> > text_notification_callbacks;
 public:
     using wxTextCtrl::wxTextCtrl;
     wxShylockText* add_focus_callback(const std::function<void()>& callback);
+    wxShylockText* add_text_callback(const std::function<void(wxString)>& callback);	
 private:
     void fire_focus_notification_callbacks();
 handlers:
     void on_focus(wxFocusEvent& event);
+    void on_text(wxCommandEvent& event);
 wx_parts:
     DECLARE_EVENT_TABLE()
 };

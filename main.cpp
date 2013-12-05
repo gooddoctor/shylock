@@ -463,6 +463,9 @@ void window_thing::ent(window::Frame* frame) {
             create(frame->wx(), W<window::Size>(225, 30), sizer, 1)->
             bind<window::FOCUS>(std::function<void()>([](){
                         focus = W<window::Text*>(String(_("ENT.FIND_TEXT")));
+                    }))->
+            bind<window::TEXT>(std::function<void(String)>([](String value){
+                        W<window::ListBox*>(String(_("ENT.LIST")))->filter(value);
                     }));
     }(W<window::Sizer*>(window::HORIZONTAL));
 
