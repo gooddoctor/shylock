@@ -49,57 +49,98 @@ bool window_thing::init() {
 	    bind<window::CLICK>(std::function<void()>([](){
                         if (focus != nullptr) {
                             focus->key_press(String(_("1")));
-                        }
+                        } 
                     }));
 	W<window::Button*>(String(_("2")),
                            String(_("NONE")),
                            String(_("2")))->
 	    create(frame->wx(), W<window::Size>(60, 45), sizer)->
-	    bind<window::CLICK>(std::function<void(void)>(
-                                    []() {
-                                        std::cout << "2 is selected" << std::endl;
-                                    }));
+            bind<window::CLICK>(std::function<void()>([](){
+                        if (focus != nullptr) {
+                            focus->key_press(String(_("2")));
+                        } 
+                    }));
 	W<window::Button*>(String(_("3")),
                            String(_("NONE")),
                            String(_("3")))->
-	    create(frame->wx(), W<window::Size>(60, 45), sizer);
+	    create(frame->wx(), W<window::Size>(60, 45), sizer)->
+            bind<window::CLICK>(std::function<void()>([](){
+                        if (focus != nullptr) {
+                            focus->key_press(String(_("3")));
+                        } 
+                    }));
     }(W<window::Sizer*>(window::HORIZONTAL));
 
     [frame](window::Sizer* sizer) {
 	W<window::Button*>(String(_("4")),
                            String(_("NONE")),
                            String(_("4")))->
-	    create(frame->wx(), W<window::Size>(60, 45), sizer);
+	    create(frame->wx(), W<window::Size>(60, 45), sizer)->
+            bind<window::CLICK>(std::function<void()>([](){
+                        if (focus != nullptr) {
+                            focus->key_press(String(_("4")));
+                        } 
+                    }));
 	W<window::Button*>(String(_("5")),
                            String(_("NONE")),
                            String(_("5")))->
-	    create(frame->wx(), W<window::Size>(60, 45), sizer);
+	    create(frame->wx(), W<window::Size>(60, 45), sizer)->
+            bind<window::CLICK>(std::function<void()>([](){
+                        if (focus != nullptr) {
+                            focus->key_press(String(_("6")));
+                        } 
+                    }));
 	W<window::Button*>(String(_("6")),
                            String(_("NONE")),
                            String(_("6")))->
-	    create(frame->wx(), W<window::Size>(60, 45), sizer);
+	    create(frame->wx(), W<window::Size>(60, 45), sizer)->
+            bind<window::CLICK>(std::function<void()>([](){
+                        if (focus != nullptr) {
+                            focus->key_press(String(_("6")));
+                        } 
+                    }));
     }(W<window::Sizer*>(window::HORIZONTAL));
 
     [frame](window::Sizer* sizer) {
 	W<window::Button*>(String(_("7")),
                            String(_("NONE")),
                            String(_("7")))->
-	    create(frame->wx(), W<window::Size>(60, 45), sizer);
+	    create(frame->wx(), W<window::Size>(60, 45), sizer)->
+            bind<window::CLICK>(std::function<void()>([](){
+                        if (focus != nullptr) {
+                            focus->key_press(String(_("7")));
+                        } 
+                    }));
 	W<window::Button*>(String(_("8")),
                            String(_("NONE")),
                            String(_("8")))->
-	    create(frame->wx(), W<window::Size>(60, 45), sizer);
+	    create(frame->wx(), W<window::Size>(60, 45), sizer)->
+            bind<window::CLICK>(std::function<void()>([](){
+                        if (focus != nullptr) {
+                            focus->key_press(String(_("8")));
+                        } 
+                    }));
 	W<window::Button*>(String(_("9")),
                            String(_("NONE")),
                            String(_("9")))->
-	    create(frame->wx(), W<window::Size>(60, 45), sizer);
+	    create(frame->wx(), W<window::Size>(60, 45), sizer)->
+            bind<window::CLICK>(std::function<void()>([](){
+                        if (focus != nullptr) {
+                            focus->key_press(String(_("9")));
+                        } 
+                    }));
     }(W<window::Sizer*>(window::HORIZONTAL));
 
     [frame](window::Sizer* sizer) {
 	W<window::Button*>(String(_("0")),
                            String(_("NONE")),
                            String(_("0")))->
-	    create(frame->wx(), W<window::Size>(60, 45), sizer);
+	    create(frame->wx(), W<window::Size>(60, 45), sizer)->
+            bind<window::CLICK>(std::function<void()>([](){
+                        if (focus != nullptr) {
+                            focus->key_press(String(_("0")));
+                        } 
+                    }));
 	W<window::Button*>(String(_("ENTER_BTN")),
                            String(_("NONE")),
                            String(_("enter")))->
@@ -111,7 +152,12 @@ bool window_thing::init() {
 	W<window::Button*>(String(_("DELL_BTN")),
                            String(_("NONE")),
                            String(_("DEL")))->
-	    create(frame->wx(), W<window::Size>(80, 45), sizer);
+	    create(frame->wx(), W<window::Size>(80, 45), sizer)->
+            bind<window::CLICK>(std::function<void()>([](){
+                        if (focus != nullptr) {
+                            focus->key_press(window::K_BACK);
+                        } 
+                    }));
 	W<window::Button*>(String(_("FIND_BTN")),
                            String(_("NONE")),
                            String(_("поиск")))->
@@ -306,7 +352,12 @@ bool window_thing::init() {
             bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
                                    [](window::UpdateUIEvent& event) {
                                        completion(event, _("й"));
-                                   }));
+                                   }))->
+            bind<window::CLICK>(std::function<void()>([](){
+                        if (focus != nullptr) {
+                            focus->key_press(String(_("й")));
+                        } 
+                    }));
         W<window::Button*>(String(_("W")),
                            String(_("KEY")),
                            String(_("ц")))->
@@ -314,7 +365,12 @@ bool window_thing::init() {
             bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
                                    [](window::UpdateUIEvent& event) {
                                        completion(event, _("ц"));
-                                   }));
+                                   }))->
+            bind<window::CLICK>(std::function<void()>([](){
+                        if (focus != nullptr) {
+                            focus->key_press(String(_("ц")));
+                        } 
+                    }));
         W<window::Button*>(String(_("E")),
                            String(_("KEY")),
                            String(_("у")))->
@@ -322,7 +378,12 @@ bool window_thing::init() {
             bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
                                    [](window::UpdateUIEvent& event) {
                                        completion(event, _("у"));
-                                   }));
+                                   }))->
+            bind<window::CLICK>(std::function<void()>([](){
+                        if (focus != nullptr) {
+                            focus->key_press(String(_("у")));
+                        } 
+                    }));
         W<window::Button*>(String(_("R")),
                            String(_("KEY")),
                            String(_("к")))->
@@ -330,7 +391,12 @@ bool window_thing::init() {
             bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
                                    [](window::UpdateUIEvent& event) {
                                        completion(event, _("к"));
-                                   }));
+                                   }))->
+            bind<window::CLICK>(std::function<void()>([](){
+                        if (focus != nullptr) {
+                            focus->key_press(String(_("к")));
+                        } 
+                    }));
         W<window::Button*>(String(_("T")),
                            String(_("KEY")),
                            String(_("е")))->
@@ -338,7 +404,12 @@ bool window_thing::init() {
             bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
                                    [](window::UpdateUIEvent& event) {
                                        completion(event, _("е"));
-                                   }));
+                                   }))->
+            bind<window::CLICK>(std::function<void()>([](){
+                        if (focus != nullptr) {
+                            focus->key_press(String(_("е")));
+                        } 
+                    }));
         W<window::Button*>(String(_("Y")),
                            String(_("KEY")),
                            String(_("н")))->
@@ -346,7 +417,12 @@ bool window_thing::init() {
             bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
                                    [](window::UpdateUIEvent& event) {
                                        completion(event, _("н"));
-                                   }));
+                                   }))->
+            bind<window::CLICK>(std::function<void()>([](){
+                        if (focus != nullptr) {
+                            focus->key_press(String(_("н")));
+                        } 
+                    }));
         W<window::Button*>(String(_("U")),
                            String(_("KEY")),
                            String(_("г")))->
@@ -354,7 +430,12 @@ bool window_thing::init() {
             bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
                                    [](window::UpdateUIEvent& event) {
                                        completion(event, _("г"));
-                                   }));
+                                   }))->
+            bind<window::CLICK>(std::function<void()>([](){
+                        if (focus != nullptr) {
+                            focus->key_press(String(_("г")));
+                        } 
+                    }));
         W<window::Button*>(String(_("I")),
                            String(_("KEY")),
                            String(_("ш")))->
@@ -362,7 +443,12 @@ bool window_thing::init() {
             bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
                                    [](window::UpdateUIEvent& event) {
                                        completion(event, _("ш"));
-                                   }));
+                                   }))->
+            bind<window::CLICK>(std::function<void()>([](){
+                        if (focus != nullptr) {
+                            focus->key_press(String(_("ш")));
+                        } 
+                    }));
         W<window::Button*>(String(_("O")),
                            String(_("KEY")),
                            String(_("щ")))->
@@ -370,7 +456,12 @@ bool window_thing::init() {
             bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
                                    [](window::UpdateUIEvent& event) {
                                        completion(event, _("щ"));
-                                   }));
+                                   }))->
+            bind<window::CLICK>(std::function<void()>([](){
+                        if (focus != nullptr) {
+                            focus->key_press(String(_("щ")));
+                        } 
+                    }));
         W<window::Button*>(String(_("P")),
                            String(_("KEY")),
                            String(_("з")))->
@@ -378,7 +469,12 @@ bool window_thing::init() {
             bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
                                    [](window::UpdateUIEvent& event) {
                                        completion(event, _("з"));
-                                   }));
+                                   }))->
+            bind<window::CLICK>(std::function<void()>([](){
+                        if (focus != nullptr) {
+                            focus->key_press(String(_("з")));
+                        } 
+                    }));
         W<window::Button*>(String(_("[")),
                            String(_("KEY")),
                            String(_("х")))->
@@ -386,7 +482,12 @@ bool window_thing::init() {
             bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
                                    [](window::UpdateUIEvent& event) {
                                        completion(event, _("х"));
-                                   }));
+                                   }))->
+            bind<window::CLICK>(std::function<void()>([](){
+                        if (focus != nullptr) {
+                            focus->key_press(String(_("х")));
+                        } 
+                    }));
     }(W<window::Sizer*>(window::HORIZONTAL));
 
     [frame](window::Sizer* sizer) {
@@ -397,7 +498,12 @@ bool window_thing::init() {
             bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
                                    [](window::UpdateUIEvent& event) {
                                        completion(event, _("ф"));
-                                   }));
+                                   }))->
+            bind<window::CLICK>(std::function<void()>([](){
+                        if (focus != nullptr) {
+                            focus->key_press(String(_("ф")));
+                        } 
+                    }));
         W<window::Button*>(String(_("S")),
                            String(_("KEY")),
                            String(_("ы")))->
@@ -405,7 +511,12 @@ bool window_thing::init() {
             bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
                                    [](window::UpdateUIEvent& event) {
                                        completion(event, _("ы"));
-                                   }));
+                                   }))->
+            bind<window::CLICK>(std::function<void()>([](){
+                        if (focus != nullptr) {
+                            focus->key_press(String(_("ы")));
+                        } 
+                    }));
         W<window::Button*>(String(_("D")),
                            String(_("KEY")),
                            String(_("в")))->
@@ -413,7 +524,12 @@ bool window_thing::init() {
             bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
                                    [](window::UpdateUIEvent& event) {
                                        completion(event, _("в"));
-                                   }));
+                                   }))->
+            bind<window::CLICK>(std::function<void()>([](){
+                        if (focus != nullptr) {
+                            focus->key_press(String(_("в")));
+                        } 
+                    }));
         W<window::Button*>(String(_("F")),
                            String(_("KEY")),
                            String(_("а")))->
@@ -421,7 +537,12 @@ bool window_thing::init() {
             bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
                                    [](window::UpdateUIEvent& event) {
                                        completion(event, _("а"));
-                                   }));
+                                   }))->
+            bind<window::CLICK>(std::function<void()>([](){
+                        if (focus != nullptr) {
+                            focus->key_press(String(_("а")));
+                        } 
+                    }));
         W<window::Button*>(String(_("G")),
                            String(_("KEY")),
                            String(_("п")))->
@@ -429,7 +550,12 @@ bool window_thing::init() {
             bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
                                    [](window::UpdateUIEvent& event) {
                                        completion(event, _("п"));
-                                   }));
+                                   }))->
+            bind<window::CLICK>(std::function<void()>([](){
+                        if (focus != nullptr) {
+                            focus->key_press(String(_("п")));
+                        } 
+                    }));
         W<window::Button*>(String(_("H")),
                            String(_("KEY")),
                            String(_("р")))->
@@ -437,7 +563,12 @@ bool window_thing::init() {
             bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
                                    [](window::UpdateUIEvent& event) {
                                        completion(event, _("р"));
-                                   }));
+                                   }))->
+            bind<window::CLICK>(std::function<void()>([](){
+                        if (focus != nullptr) {
+                            focus->key_press(String(_("р")));
+                        } 
+                    }));
         W<window::Button*>(String(_("J")),
                            String(_("KEY")),
                            String(_("о")))->
@@ -445,7 +576,12 @@ bool window_thing::init() {
             bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
                                    [](window::UpdateUIEvent& event) {
                                        completion(event, _("о"));
-                                   }));
+                                   }))->
+            bind<window::CLICK>(std::function<void()>([](){
+                        if (focus != nullptr) {
+                            focus->key_press(String(_("о")));
+                        } 
+                    }));
         W<window::Button*>(String(_("K")),
                            String(_("KEY")),
                            String(_("л")))->
@@ -453,7 +589,12 @@ bool window_thing::init() {
             bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
                                    [](window::UpdateUIEvent& event) {
                                        completion(event, _("л"));
-                                   }));
+                                   }))->
+            bind<window::CLICK>(std::function<void()>([](){
+                        if (focus != nullptr) {
+                            focus->key_press(String(_("л")));
+                        } 
+                    }));
         W<window::Button*>(String(_("L")),
                            String(_("KEY")),
                            String(_("д")))->
@@ -461,7 +602,12 @@ bool window_thing::init() {
             bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
                                    [](window::UpdateUIEvent& event) {
                                        completion(event, _("д"));
-                                   }));
+                                   }))->
+            bind<window::CLICK>(std::function<void()>([](){
+                        if (focus != nullptr) {
+                            focus->key_press(String(_("д")));
+                        } 
+                    }));
         W<window::Button*>(String(_(";")),
                            String(_("KEY")),
                            String(_("ж")))->
@@ -469,7 +615,12 @@ bool window_thing::init() {
             bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
                                    [](window::UpdateUIEvent& event) {
                                        completion(event, _("ж"));
-                                   }));
+                                   }))->
+            bind<window::CLICK>(std::function<void()>([](){
+                        if (focus != nullptr) {
+                            focus->key_press(String(_("ж")));
+                        } 
+                    }));
         W<window::Button*>(String(_("'")),
                            String(_("KEY")),
                            String(_("э")))->
@@ -477,7 +628,12 @@ bool window_thing::init() {
             bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
                                    [](window::UpdateUIEvent& event) {
                                        completion(event, _("э"));
-                                   }));
+                                   }))->
+            bind<window::CLICK>(std::function<void()>([](){
+                        if (focus != nullptr) {
+                            focus->key_press(String(_("э")));
+                        } 
+                    }));
     }(W<window::Sizer*>(window::HORIZONTAL));
 
     [frame](window::Sizer* sizer) {
@@ -488,7 +644,12 @@ bool window_thing::init() {
             bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
                                    [](window::UpdateUIEvent& event) {
                                        completion(event, _("я"));
-                                   }));
+                                   }))->
+            bind<window::CLICK>(std::function<void()>([](){
+                        if (focus != nullptr) {
+                            focus->key_press(String(_("я")));
+                        } 
+                    }));
         W<window::Button*>(String(_("X")),
                            String(_("KEY")),
                            String(_("ч")))->
@@ -496,7 +657,12 @@ bool window_thing::init() {
             bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
                                    [](window::UpdateUIEvent& event) {
                                        completion(event, _("ч"));
-                                   }));
+                                   }))->
+            bind<window::CLICK>(std::function<void()>([](){
+                        if (focus != nullptr) {
+                            focus->key_press(String(_("ч")));
+                        } 
+                    }));
         W<window::Button*>(String(_("C")),
                            String(_("KEY")),
                            String(_("с")))->
@@ -504,7 +670,12 @@ bool window_thing::init() {
             bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
                                    [](window::UpdateUIEvent& event) {
                                        completion(event, _("с"));
-                                   }));
+                                   }))->
+            bind<window::CLICK>(std::function<void()>([](){
+                        if (focus != nullptr) {
+                            focus->key_press(String(_("с")));
+                        } 
+                    }));
         W<window::Button*>(String(_("V")),
                            String(_("KEY")),
                            String(_("м")))->
@@ -512,7 +683,12 @@ bool window_thing::init() {
             bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
                                    [](window::UpdateUIEvent& event) {
                                        completion(event, _("м"));
-                                   }));
+                                   }))->
+            bind<window::CLICK>(std::function<void()>([](){
+                        if (focus != nullptr) {
+                            focus->key_press(String(_("м")));
+                        } 
+                    }));
         W<window::Button*>(String(_("B")),
                            String(_("KEY")),
                            String(_("и")))->
@@ -520,7 +696,12 @@ bool window_thing::init() {
             bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
                                    [](window::UpdateUIEvent& event) {
                                        completion(event, _("и"));
-                                   }));
+                                   }))->
+            bind<window::CLICK>(std::function<void()>([](){
+                        if (focus != nullptr) {
+                            focus->key_press(String(_("и")));
+                        } 
+                    }));
         W<window::Button*>(String(_("N")),
                            String(_("KEY")),
                            String(_("т")))->
@@ -528,7 +709,12 @@ bool window_thing::init() {
             bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
                                    [](window::UpdateUIEvent& event) {
                                        completion(event, _("т"));
-                                   }));
+                                   }))->
+            bind<window::CLICK>(std::function<void()>([](){
+                        if (focus != nullptr) {
+                            focus->key_press(String(_("т")));
+                        } 
+                    }));
         W<window::Button*>(String(_("M")),
                            String(_("KEY")),
                            String(_("ь")))->
@@ -536,7 +722,12 @@ bool window_thing::init() {
             bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
                                    [](window::UpdateUIEvent& event) {
                                        completion(event, _("ь"));
-                                   }));
+                                   }))->
+            bind<window::CLICK>(std::function<void()>([](){
+                        if (focus != nullptr) {
+                            focus->key_press(String(_("ь")));
+                        } 
+                    }));
         W<window::Button*>(String(_(",")),
                            String(_("KEY")),
                            String(_("б")))->
@@ -544,7 +735,12 @@ bool window_thing::init() {
             bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
                                    [](window::UpdateUIEvent& event) {
                                        completion(event, _("б"));
-                                   }));
+                                   }))->
+            bind<window::CLICK>(std::function<void()>([](){
+                        if (focus != nullptr) {
+                            focus->key_press(String(_("б")));
+                        } 
+                    }));
         W<window::Button*>(String(_(".")),
                            String(_("KEY")),
                            String(_("ю")))->
@@ -552,7 +748,12 @@ bool window_thing::init() {
             bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
                                    [](window::UpdateUIEvent& event) {
                                        completion(event, _("ю"));
-                                   }));
+                                   }))->
+            bind<window::CLICK>(std::function<void()>([](){
+                        if (focus != nullptr) {
+                            focus->key_press(String(_("ю")));
+                        } 
+                    }));
     }(W<window::Sizer*>(window::HORIZONTAL));
 
     [frame](window::Sizer* sizer) {

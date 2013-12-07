@@ -210,11 +210,19 @@ engine::String window::Text::txt() {
 }
 
 window::Text* window::Text::key_press(const engine::String& key, bool dry) {
-    wxASSERT_MSG(win, _("call key_press<>() only after create()"));    
+    wxASSERT_MSG(win, _("call key_press() only after create()"));    
     if (dry) {
         static_cast<wxTextCtrl*>(win)->Clear();
     }
     static_cast<wxTextCtrl*>(win)->AppendText(key);
+    return this;
+}
+
+window::Text* window::Text::key_press(long key_code) {
+    wxASSERT_MSG(win, _("call key_press() only after create()"));    
+    wxKeyEvent key;
+    key.m_keyCode = key_code;
+    static_cast<wxTextCtrl*>(win)->EmulateKeyPress(key);
     return this;
 }
 

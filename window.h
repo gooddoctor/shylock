@@ -28,7 +28,8 @@ namespace window {
     const int ALIGN_CENTER = wxALIGN_CENTER_VERTICAL;
     const int OK = wxOK;
     const int ICON_ERROR = wxICON_ERROR;
-    
+    const long K_BACK = WXK_BACK;
+
     class RUN {};
 
     class Window {
@@ -132,6 +133,7 @@ namespace window {
                      int proportion = 0, int flag = 0, int border = 0) override;
         engine::String txt();
         Text* key_press(const engine::String& key, bool dry = false);
+        Text* key_press(long key_code);
         template <int S, typename... Args>
 	Text* bind(const std::function<void(Args...)>& callback);
     };
