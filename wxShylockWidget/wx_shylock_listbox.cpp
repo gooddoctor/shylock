@@ -1,12 +1,14 @@
 #include "widget.h"
 
 wxShylockListbox* wxShylockListbox::filter(wxString value) {
-    value = value.Trim().Trim(false);
+    value.Trim().Trim(false);
+    value.MakeLower();
     //filter items
     filter_data = all_data;
     filter_data.erase(std::remove_if(filter_data.begin(), filter_data.end(), 
                                      [&value](const std::pair<wxString, void*>& entry) {
-                                         return entry.first.Find(value) == wxNOT_FOUND;
+                                         wxString item = entry.first;
+                                         return item.MakeLower().Find(value) == wxNOT_FOUND;
                                      }), 
                       filter_data.end());
     //set it

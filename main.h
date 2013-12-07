@@ -15,6 +15,8 @@ namespace window_thing {
     void edt(window::Frame* frame);
     void pay(window::Frame* frame);
 
+    void completion(window::UpdateUIEvent& event, const wchar_t* letter);
+
     template <typename T>
     bool valid(engine::String value);
     template <>

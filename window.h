@@ -118,6 +118,8 @@ namespace window {
         int which();
 
         ListBox* filter(const engine::String& value);
+
+        std::vector<engine::String> entries();
     };
 
     class Text : public Window {

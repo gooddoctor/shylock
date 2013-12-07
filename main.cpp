@@ -302,133 +302,257 @@ bool window_thing::init() {
         W<window::Button*>(String(_("Q")),
                            String(_("KEY")),
                            String(_("й")))->
-            create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
+            create(frame->wx(), W<window::Size>(50, 30), sizer, 1)->
+            bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
+                                   [](window::UpdateUIEvent& event) {
+                                       completion(event, _("й"));
+                                   }));
         W<window::Button*>(String(_("W")),
                            String(_("KEY")),
                            String(_("ц")))->
-            create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
+            create(frame->wx(), W<window::Size>(50, 30), sizer, 1)->
+            bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
+                                   [](window::UpdateUIEvent& event) {
+                                       completion(event, _("ц"));
+                                   }));
         W<window::Button*>(String(_("E")),
                            String(_("KEY")),
                            String(_("у")))->
-            create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
+            create(frame->wx(), W<window::Size>(50, 30), sizer, 1)->
+            bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
+                                   [](window::UpdateUIEvent& event) {
+                                       completion(event, _("у"));
+                                   }));
         W<window::Button*>(String(_("R")),
                            String(_("KEY")),
                            String(_("к")))->
-            create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
+            create(frame->wx(), W<window::Size>(50, 30), sizer, 1)->
+            bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
+                                   [](window::UpdateUIEvent& event) {
+                                       completion(event, _("к"));
+                                   }));
         W<window::Button*>(String(_("T")),
                            String(_("KEY")),
                            String(_("е")))->
-            create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
+            create(frame->wx(), W<window::Size>(50, 30), sizer, 1)->
+            bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
+                                   [](window::UpdateUIEvent& event) {
+                                       completion(event, _("е"));
+                                   }));
         W<window::Button*>(String(_("Y")),
                            String(_("KEY")),
                            String(_("н")))->
-            create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
+            create(frame->wx(), W<window::Size>(50, 30), sizer, 1)->
+            bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
+                                   [](window::UpdateUIEvent& event) {
+                                       completion(event, _("н"));
+                                   }));
         W<window::Button*>(String(_("U")),
                            String(_("KEY")),
                            String(_("г")))->
-            create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
+            create(frame->wx(), W<window::Size>(50, 30), sizer, 1)->
+            bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
+                                   [](window::UpdateUIEvent& event) {
+                                       completion(event, _("г"));
+                                   }));
         W<window::Button*>(String(_("I")),
                            String(_("KEY")),
                            String(_("ш")))->
-            create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
+            create(frame->wx(), W<window::Size>(50, 30), sizer, 1)->
+            bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
+                                   [](window::UpdateUIEvent& event) {
+                                       completion(event, _("ш"));
+                                   }));
         W<window::Button*>(String(_("O")),
                            String(_("KEY")),
                            String(_("щ")))->
-            create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
+            create(frame->wx(), W<window::Size>(50, 30), sizer, 1)->
+            bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
+                                   [](window::UpdateUIEvent& event) {
+                                       completion(event, _("щ"));
+                                   }));
         W<window::Button*>(String(_("P")),
                            String(_("KEY")),
                            String(_("з")))->
-            create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
+            create(frame->wx(), W<window::Size>(50, 30), sizer, 1)->
+            bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
+                                   [](window::UpdateUIEvent& event) {
+                                       completion(event, _("з"));
+                                   }));
         W<window::Button*>(String(_("[")),
                            String(_("KEY")),
                            String(_("х")))->
-            create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
+            create(frame->wx(), W<window::Size>(50, 30), sizer, 1)->
+            bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
+                                   [](window::UpdateUIEvent& event) {
+                                       completion(event, _("х"));
+                                   }));
     }(W<window::Sizer*>(window::HORIZONTAL));
 
     [frame](window::Sizer* sizer) {
         W<window::Button*>(String(_("A")),
                            String(_("KEY")),
                            String(_("ф")))->
-            create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
+            create(frame->wx(), W<window::Size>(50, 30), sizer, 1)->
+            bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
+                                   [](window::UpdateUIEvent& event) {
+                                       completion(event, _("ф"));
+                                   }));
         W<window::Button*>(String(_("S")),
                            String(_("KEY")),
                            String(_("ы")))->
-            create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
+            create(frame->wx(), W<window::Size>(50, 30), sizer, 1)->
+            bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
+                                   [](window::UpdateUIEvent& event) {
+                                       completion(event, _("ы"));
+                                   }));
         W<window::Button*>(String(_("D")),
                            String(_("KEY")),
                            String(_("в")))->
-            create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
+            create(frame->wx(), W<window::Size>(50, 30), sizer, 1)->
+            bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
+                                   [](window::UpdateUIEvent& event) {
+                                       completion(event, _("в"));
+                                   }));
         W<window::Button*>(String(_("F")),
                            String(_("KEY")),
                            String(_("а")))->
-            create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
+            create(frame->wx(), W<window::Size>(50, 30), sizer, 1)->
+            bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
+                                   [](window::UpdateUIEvent& event) {
+                                       completion(event, _("а"));
+                                   }));
         W<window::Button*>(String(_("G")),
                            String(_("KEY")),
                            String(_("п")))->
-            create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
+            create(frame->wx(), W<window::Size>(50, 30), sizer, 1)->
+            bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
+                                   [](window::UpdateUIEvent& event) {
+                                       completion(event, _("п"));
+                                   }));
         W<window::Button*>(String(_("H")),
                            String(_("KEY")),
                            String(_("р")))->
-            create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
+            create(frame->wx(), W<window::Size>(50, 30), sizer, 1)->
+            bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
+                                   [](window::UpdateUIEvent& event) {
+                                       completion(event, _("р"));
+                                   }));
         W<window::Button*>(String(_("J")),
                            String(_("KEY")),
                            String(_("о")))->
-            create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
+            create(frame->wx(), W<window::Size>(50, 30), sizer, 1)->
+            bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
+                                   [](window::UpdateUIEvent& event) {
+                                       completion(event, _("о"));
+                                   }));
         W<window::Button*>(String(_("K")),
                            String(_("KEY")),
                            String(_("л")))->
-            create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
+            create(frame->wx(), W<window::Size>(50, 30), sizer, 1)->
+            bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
+                                   [](window::UpdateUIEvent& event) {
+                                       completion(event, _("л"));
+                                   }));
         W<window::Button*>(String(_("L")),
                            String(_("KEY")),
                            String(_("д")))->
-            create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
+            create(frame->wx(), W<window::Size>(50, 30), sizer, 1)->
+            bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
+                                   [](window::UpdateUIEvent& event) {
+                                       completion(event, _("д"));
+                                   }));
         W<window::Button*>(String(_(";")),
                            String(_("KEY")),
                            String(_("ж")))->
-            create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
+            create(frame->wx(), W<window::Size>(50, 30), sizer, 1)->
+            bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
+                                   [](window::UpdateUIEvent& event) {
+                                       completion(event, _("ж"));
+                                   }));
         W<window::Button*>(String(_("'")),
                            String(_("KEY")),
                            String(_("э")))->
-            create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
+            create(frame->wx(), W<window::Size>(50, 30), sizer, 1)->
+            bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
+                                   [](window::UpdateUIEvent& event) {
+                                       completion(event, _("э"));
+                                   }));
     }(W<window::Sizer*>(window::HORIZONTAL));
 
     [frame](window::Sizer* sizer) {
         W<window::Button*>(String(_("Z")),
                            String(_("KEY")),
                            String(_("я")))->
-            create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
+            create(frame->wx(), W<window::Size>(50, 30), sizer, 1)->
+            bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
+                                   [](window::UpdateUIEvent& event) {
+                                       completion(event, _("я"));
+                                   }));
         W<window::Button*>(String(_("X")),
                            String(_("KEY")),
                            String(_("ч")))->
-            create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
+            create(frame->wx(), W<window::Size>(50, 30), sizer, 1)->
+            bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
+                                   [](window::UpdateUIEvent& event) {
+                                       completion(event, _("ч"));
+                                   }));
         W<window::Button*>(String(_("C")),
                            String(_("KEY")),
                            String(_("с")))->
-            create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
+            create(frame->wx(), W<window::Size>(50, 30), sizer, 1)->
+            bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
+                                   [](window::UpdateUIEvent& event) {
+                                       completion(event, _("с"));
+                                   }));
         W<window::Button*>(String(_("V")),
                            String(_("KEY")),
                            String(_("м")))->
-            create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
+            create(frame->wx(), W<window::Size>(50, 30), sizer, 1)->
+            bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
+                                   [](window::UpdateUIEvent& event) {
+                                       completion(event, _("м"));
+                                   }));
         W<window::Button*>(String(_("B")),
                            String(_("KEY")),
                            String(_("и")))->
-            create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
+            create(frame->wx(), W<window::Size>(50, 30), sizer, 1)->
+            bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
+                                   [](window::UpdateUIEvent& event) {
+                                       completion(event, _("и"));
+                                   }));
         W<window::Button*>(String(_("N")),
                            String(_("KEY")),
                            String(_("т")))->
-            create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
+            create(frame->wx(), W<window::Size>(50, 30), sizer, 1)->
+            bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
+                                   [](window::UpdateUIEvent& event) {
+                                       completion(event, _("т"));
+                                   }));
         W<window::Button*>(String(_("M")),
                            String(_("KEY")),
                            String(_("ь")))->
-            create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
+            create(frame->wx(), W<window::Size>(50, 30), sizer, 1)->
+            bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
+                                   [](window::UpdateUIEvent& event) {
+                                       completion(event, _("ь"));
+                                   }));
         W<window::Button*>(String(_(",")),
                            String(_("KEY")),
                            String(_("б")))->
-            create(frame->wx(), W<window::Size>(50, 30), sizer, 1);
+            create(frame->wx(), W<window::Size>(50, 30), sizer, 1)->
+            bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
+                                   [](window::UpdateUIEvent& event) {
+                                       completion(event, _("б"));
+                                   }));
         W<window::Button*>(String(_(".")),
                            String(_("KEY")),
                            String(_("ю")))->
-            create(frame->wx(), W<window::Size>(150, 30), sizer, 0);
+            create(frame->wx(), W<window::Size>(150, 30), sizer, 0)->
+            bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
+                                   [](window::UpdateUIEvent& event) {
+                                       completion(event, _("ю"));
+                                   }));
     }(W<window::Sizer*>(window::HORIZONTAL));
 
     [frame](window::Sizer* sizer) {
@@ -738,6 +862,18 @@ void window_thing::pay(window::Frame* frame) {
 		   1, window::EXPAND);
     }(W<window::Sizer*>(window::VERTICAL));    
 }
+
+void window_thing::completion(window::UpdateUIEvent& event, const wchar_t* letter) {
+    auto entries = W<window::ListBox*>(String(_("ENT.LIST")))->entries();
+    auto flt = W<window::Text*>(String(_("ENT.FIND_TEXT")))->txt().MakeLower();
+    for (auto it = entries.begin(); it != entries.end(); it++)
+        if (it->MakeLower().Find(flt + letter) != wxNOT_FOUND) {
+            event.Enable(true);
+            return;
+        }
+    event.Enable(false);
+}
+
 
 template <>
 bool window_thing::valid<double>(engine::String value) {

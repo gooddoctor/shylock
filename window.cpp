@@ -175,6 +175,19 @@ window::ListBox* window::ListBox::filter(const engine::String& value) {
     return this;
 }
 
+std::vector<engine::String> window::ListBox::entries() {
+    wxASSERT_MSG(win, _("call entries only after create()"));
+    std::vector<engine::String> values = [this]() {
+        std::vector<engine::String> junk;
+        wxArrayString tmp = static_cast<wxShylockListbox*>(win)->GetStrings();
+        for (auto it = tmp.begin(); it != tmp.end(); it++)
+            junk.push_back(*it);
+        return junk;
+    }();
+    return values;
+}
+
+
 window::Text::Text(const engine::String& id_value,
                    const engine::String& category_value,
                    const engine::String& text_value) :
