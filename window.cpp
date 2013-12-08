@@ -226,6 +226,11 @@ window::Text* window::Text::key_press(long key_code) {
     return this;
 }
 
+window::Text* window::Text::require_focus() {
+    static_cast<wxTextCtrl*>(win)->SetFocus();
+    return this;
+}
+
 template <>
 window::Text* window::Text::bind<window::FOCUS>(const std::function<void()>& callback) {
     wxASSERT_MSG(win, _("call bind<>() only after create()"));    

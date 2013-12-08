@@ -9,11 +9,14 @@ namespace window_thing {
 
     window::Text* focus;
 
+    std::map<window::Text*, window::Text*> text_traverse;
+
     bool init();
     void ent(window::Frame* frame);
     void add(window::Frame* frame);
     void edt(window::Frame* frame);
     void pay(window::Frame* frame);
+    void gen_traverse();
 
     void completion(window::UpdateUIEvent& event, const wchar_t* letter);
 

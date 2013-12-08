@@ -42,9 +42,8 @@ namespace window {
 			       int proportion = 0, int flag = 0, int border = 0) = 0;
         virtual Window* show();
         virtual Window* hide();
-       virtual Window* enabled();
+        virtual Window* enabled();
         virtual Window* disabled();
-
         virtual wxWindow* wx();
     protected:
 	engine::String id;
@@ -134,6 +133,7 @@ namespace window {
         engine::String txt();
         Text* key_press(const engine::String& key, bool dry = false);
         Text* key_press(long key_code);
+        Text* require_focus();
         template <int S, typename... Args>
 	Text* bind(const std::function<void(Args...)>& callback);
     };

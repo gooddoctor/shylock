@@ -2,6 +2,8 @@
 
 #include "dep/prefix.h"
 
+#include <boost/date_time/gregorian/gregorian.hpp>
+
 using window::W;
 using data::D;
 using namespace engine;
@@ -17,12 +19,13 @@ only(const engine::String& value,
 }
 
 std::vector<engine::String> 
-only(const engine::String& value1, const engine::String& value2,
+only(const engine::String& value1, const engine::String& value2, 
+     std::function<String(const engine::String& value1, const engine::String& value2)> formatter,
      const std::vector<std::map<engine::String, engine::String> >& entries) {
     std::vector<String> items;
     for (auto it = entries.begin(); it != entries.end(); it++)
         if ((it->find(value1) != it->end()) && (it->find(value2) != it->end()))
-            items.push_back(it->at(value1) + _(":") + it->at(value2));
+            items.push_back(formatter(it->at(value1), it->at(value2)));
     return items;
 }
 
@@ -145,7 +148,12 @@ bool window_thing::init() {
                            String(_("NONE")),
                            String(_("enter")))->
 	    create(frame->wx(), W<window::Size>(120, 45), sizer,
-		   1, window::EXPAND);
+		   1, window::EXPAND)->
+            bind<window::CLICK>(std::function<void()>([](){
+                        if (focus != nullptr && text_traverse.find(focus) != text_traverse.end()) {
+                            text_traverse.at(focus)->require_focus();
+                        } 
+                    }));
     }(W<window::Sizer*>(window::HORIZONTAL));
 
     [frame](window::Sizer* sizer) {
@@ -280,7 +288,16 @@ bool window_thing::init() {
                             get<std::map<engine::String, engine::String> >(i);
                         W<window::ListBox*>(String(_("PAY.LIST")))->
                             set(only(engine::String(_("when")), engine::String(_("amt")),
-                                     D<data::XML*>(_("db"))->select<data::CHILD>(promiser)),
+                                     [](const String& value1, const String& value2) {
+                                         using namespace boost::gregorian;
+                                         //we need date to transform it to diffrent string repr
+                                         date when = 
+                                             from_undelimited_string(std::string(value1.mb_str()));
+                                         //return yyyy-mm-dd оплачено amout грн
+                                         return 
+                                             String::FromUTF8(to_iso_extended_string(when).c_str()) + 
+                                             _(" оплачено ") + value2 + _(" грн.");
+                                     },  D<data::XML*>(_("db"))->select<data::CHILD>(promiser)),
                                 D<data::XML*>(_("db"))->select<data::CHILD>(promiser));
                     }))->
             bind<window::IDLE>(std::function<void(window::UpdateUIEvent&)>(
@@ -770,6 +787,8 @@ bool window_thing::init() {
         sizer->Add(W<window::Sizer*>(_("KEYBOARD")), 1, window::EXPAND);
     }(W<window::Sizer*>(_("TOP")));
 
+    gen_traverse();
+
     frame->fit();
     frame->show();
 
@@ -796,7 +815,6 @@ void window_thing::ent(window::Frame* frame) {
 
     [frame](window::Sizer* sizer) {
         sizer->Add(W<window::Sizer*>(_("ENT.FIND_TEXT")), 0, window::EXPAND);
-        sizer->Hide(W<window::Sizer*>(_("ENT.FIND_TEXT")));
 
 	W<window::ListBox*>(String(_("ENT.LIST")),
                             String(_("NONE")))->
@@ -1063,6 +1081,22 @@ void window_thing::pay(window::Frame* frame) {
 		   1, window::EXPAND);
     }(W<window::Sizer*>(window::VERTICAL));    
 }
+
+void window_thing::gen_traverse() {
+    text_traverse.insert({W<window::Text*>(String(_("ADD.NOMINAL_TEXT"))),
+                          W<window::Text*>(String(_("ADD.COST_TEXT")))});
+    text_traverse.insert({W<window::Text*>(String(_("ADD.COST_TEXT"))),
+                          W<window::Text*>(String(_("ADD.NOMINAL_TEXT")))});
+    text_traverse.insert({W<window::Text*>(String(_("PAY.NOMINAL_TEXT"))),
+                          W<window::Text*>(String(_("PAY.COST_TEXT")))});
+    text_traverse.insert({W<window::Text*>(String(_("PAY.COST_TEXT"))),
+                          W<window::Text*>(String(_("PAY.NOMINAL_TEXT")))});
+    text_traverse.insert({W<window::Text*>(String(_("EDT.NOMINAL_TEXT"))),
+                          W<window::Text*>(String(_("EDT.COST_TEXT")))});
+    text_traverse.insert({W<window::Text*>(String(_("EDT.COST_TEXT"))),
+                          W<window::Text*>(String(_("EDT.NOMINAL_TEXT")))});
+}
+    
 
 void window_thing::completion(window::UpdateUIEvent& event, const wchar_t* letter) {
     auto entries = W<window::ListBox*>(String(_("ENT.LIST")))->entries();
