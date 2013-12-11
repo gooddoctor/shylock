@@ -1,0 +1,9 @@
+<?xml version="1.0" standalone="no" ?>
+<shylock>
+    <entity cost="132" nominal="Сергей" when="20131211" />
+    <entity cost="132" nominal="Андрей" when="20131211">
+        <payment amt="213" when="20131211" />
+        <payment amt="2132" when="20131211" />
+        <payment amt="2131" when="20131211" />
+    </entity>
+</shylock>

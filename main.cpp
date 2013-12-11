@@ -1118,7 +1118,7 @@ bool window_thing::valid<double>(engine::String value) {
 }
 
 bool data_thing::init() {
-    D<data::XML*>(String(_("db")), String::FromUTF8(DATADIR) + String(_("/db.xml")))->
+    D<data::XML*>(String(_("db")), String::FromUTF8(PREFIX) + String(_("/shylock/db.xml")))->
         bind<data::INSERT>([](std::map<engine::String, engine::String>& top,
                               std::map<engine::String, engine::String>& child) {
                                W<window::ListBox*>(String(_("ENT.LIST")))->
