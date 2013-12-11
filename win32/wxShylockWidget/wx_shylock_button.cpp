@@ -4,7 +4,6 @@
 
 BEGIN_EVENT_TABLE(wxShylockButton, wxPanel)
 EVT_PAINT(wxShylockButton::on_paint)
-EVT_ERASE_BACKGROUND(wxShylockButton::on_erase_background)
 EVT_UPDATE_UI(wxID_ANY, wxShylockButton::on_idle)
 EVT_LEFT_DOWN(wxShylockButton::on_mouse_down)
 EVT_LEFT_UP(wxShylockButton::on_mouse_up)
@@ -15,7 +14,6 @@ wxShylockButton::wxShylockButton(wxWindow* parent, wxWindowID id,
 				 const wxPoint& pos,
 				 const wxSize& size) : 
       wxPanel(parent, id, pos, size, wxFULL_REPAINT_ON_RESIZE | wxBORDER_NONE), text(text_value) {
-    SetBackgroundStyle(wxBG_STYLE_CUSTOM);
     Enable(true);
 }
 
@@ -53,6 +51,7 @@ void wxShylockButton::fire_idle_notification_callbacks(wxUpdateUIEvent& event) {
 }
 
 void wxShylockButton::on_paint(wxPaintEvent& event) {
+    on_erase_background(event);
     /* draw text in the middle */
     wxPaintDC dc(this);
     dc.SetFont(font);
@@ -75,15 +74,15 @@ void wxShylockButton::on_paint(wxPaintEvent& event) {
 }
 
 
-void wxShylockButton::on_erase_background(wxEraseEvent& event) {
+void wxShylockButton::on_erase_background(wxPaintEvent& event) {
     /* draw rounded background */
-    wxDC* dc = event.GetDC();
+    wxPaintDC dc(this);
 
     if (!clicked && IsEnabled())
-	dc->SetBrush(brush);
+	dc.SetBrush(brush);
     else
-        dc->SetBrush(clicked_brush);
-    dc->SetPen(pen);
+        dc.SetBrush(clicked_brush);
+    dc.SetPen(pen);
 
     int width = [this]() {
 	return GetSize().GetWidth();
@@ -92,10 +91,10 @@ void wxShylockButton::on_erase_background(wxEraseEvent& event) {
 	return GetSize().GetHeight();
     }();
 
-    dc->DrawRoundedRectangle(pen.GetWidth(),
-                             pen.GetWidth(),
-                             width - 2 * pen.GetWidth(),
-                             height - 2 * pen.GetWidth(), 10);
+    dc.DrawRoundedRectangle(pen.GetWidth(),
+                            pen.GetWidth(),
+                            width - 2 * pen.GetWidth(),
+                            height - 2 * pen.GetWidth(), 10);
 }
 
 void wxShylockButton::on_idle(wxUpdateUIEvent& event) {

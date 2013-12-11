@@ -29,6 +29,8 @@ namespace window {
     const int ALIGN_CENTER = wxALIGN_CENTER_VERTICAL;
     const int OK = wxOK;
     const int ICON_ERROR = wxICON_ERROR;
+    const int YES = wxYES;
+    const int YES_NO = wxYES_NO;
     const long K_BACK = WXK_BACK;
 
     class RUN {};

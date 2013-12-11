@@ -52,7 +52,7 @@ private:
     void fire_idle_notification_callbacks(wxUpdateUIEvent& event);
 handlers:
     void on_paint(wxPaintEvent& event);
-    void on_erase_background(wxEraseEvent& event);
+    void on_erase_background(wxPaintEvent& event);
     void on_idle(wxUpdateUIEvent& event);
     void on_mouse_up(wxMouseEvent& event);
     void on_mouse_down(wxMouseEvent& event);

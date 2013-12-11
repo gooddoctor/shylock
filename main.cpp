@@ -166,21 +166,16 @@ bool window_thing::init() {
                             focus->key_press(window::K_BACK);
                         } 
                     }));
-	W<window::Button*>(String(_("FIND_BTN")),
+	W<window::Button*>(String(_("EXIT_BTN")),
                            String(_("NONE")),
-                           String(_("поиск")))->
+                           String(_("Выход")))->
 	    create(frame->wx(), W<window::Size>(100, 45), sizer)->
             bind<window::CLICK>(std::function<void()>([](){
-                        static bool toggle = true;
-                        if (toggle) {
-                            W<window::Sizer*>(_("ENT.LIST"))->
-                                Hide(W<window::Sizer*>(_("ENT.FIND_LABEL")));
-                        } else {
-                            W<window::Sizer*>(_("ENT.LIST"))->
-                                Show(W<window::Sizer*>(_("ENT.FIND_LABEL")));
+                        if (W<window::MessageBox>(String(_("Выйти из программы?")),
+                                                  String(_("Подтверждение выхода.")), 
+                                                  window::YES_NO) == window::YES) {
+                            exit(1);
                         }
-                        W<window::Sizer*>(_("ENT.LIST"))->Layout();
-                        toggle = !toggle;
                     }));
     }(W<window::Sizer*>(window::HORIZONTAL));
 

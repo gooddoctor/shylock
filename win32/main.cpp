@@ -1123,14 +1123,15 @@ bool window_thing::valid<double>(engine::String value) {
 }
 
 bool data_thing::init() {
-    D<data::XML*>(String(_("db")), String::FromUTF8(DATADIR) + String(_("/db.xml")))->
+    D<data::XML*>(String(_("db")), String::FromUTF8("C:\\") + String(_("db.xml")))->
         bind<data::INSERT>([](std::map<engine::String, engine::String>& top,
                               std::map<engine::String, engine::String>& child) {
                                W<window::ListBox*>(String(_("ENT.LIST")))->
                                    set(only(engine::String(_("nominal")), 
                                             D<data::XML*>(_("db"))->select<data::TOP>()),
                                        D<data::XML*>(_("db"))->select<data::TOP>());
-                           })->
+                           });
+    D<data::XML*>(_("db"))->
         bind<data::UPDATE>([](std::map<engine::String, engine::String>& from,
                               std::map<engine::String, engine::String>& to) {
                                W<window::ListBox*>(String(_("ENT.LIST")))->
@@ -1143,7 +1144,6 @@ bool data_thing::init() {
 
 
 int main(int argc, char** argv) {
-    setlocale(LC_ALL, "en_US");
     D<data::RUN>(std::function<bool(void)>(data_thing::init), argc, argv);
     W<window::RUN>(std::function<bool(void)>(window_thing::init), argc, argv);
 }

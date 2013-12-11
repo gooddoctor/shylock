@@ -1,7 +1,10 @@
-CC=clang++
-CXX=clang++
+CC=i686-w64-mingw32-c++
+CXX=i686-w64-mingw32-c++
 
-CXXFLAGS=$(shell wx-config --cppflags)
+CXXFLAGS=-mthreads -DHAVE_W32API_H -D__WXMSW__ -DNDEBUG -D_UNICODE 
+CXXFLAGS+=-I../wxWidgets-2.9.5/lib/gcc_dll/mswu 
+CXXFLAGS+=-I../wxWidgets-2.9.5/include -DWXUSINGDLL -Wno-ctor-dtor-privacy -pipe 
+CXXFLAGS+=-fmessage-length=0  -fno-keep-inline-dllexport
 CXXFLAGS+=-I/home/gooddocteur/Programs/include
 CXXFLAGS+=-std=c++11
 

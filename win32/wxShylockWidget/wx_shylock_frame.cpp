@@ -21,6 +21,8 @@ wxShylockFrame::wxShylockFrame(const wxString& title) : wxFrame(nullptr, wxID_AN
 
     CreateStatusBar(1);
     SetStatusText(_("Добро пожаловать в ") + title);
+
+    SetBackgroundStyle(wxBG_STYLE_SYSTEM);
 }
 
 void wxShylockFrame::on_quit(wxCommandEvent& event) {
